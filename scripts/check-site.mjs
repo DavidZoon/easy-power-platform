@@ -72,6 +72,9 @@ for (const post of manifest.posts) {
 for (const filename of ['sitemap.xml', 'feed.xml', 'robots.txt']) assert(files.includes(path.join(root, filename)), `${filename} absent`);
 const rss = await fs.readFile(path.join(root, 'feed.xml'), 'utf8');
 assert(rss.includes('<feed'), 'Flux Atom invalide');
+const tagPage = load(await fs.readFile(path.join(root, 'tags', 'index.html'), 'utf8'));
+const tagCounts = tagPage('.tag-cloud .count').map((i, el) => Number(tagPage(el).text())).get();
+assert(tagCounts.length > 0 && tagCounts.every((count, i) => i === 0 || tagCounts[i - 1] >= count), 'Tags non tries par popularite');
 console.log(`${files.length} fichiers controles, ${manifest.posts.length} articles, ${index.length} entrees de recherche.`);
 if (failures.length) {
   console.error([...new Set(failures)].join('\n'));

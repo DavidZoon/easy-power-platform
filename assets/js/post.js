@@ -3,14 +3,41 @@
   const content = document.querySelector('#post-content');
   if (!content) return;
   content.querySelectorAll('pre').forEach(pre => {
-    const element = pre.querySelector('code') || pre;
-    const classes = `${element.className} ${pre.parentElement.className}`;
-    const language = classes.match(/language-([\w-]+)/)?.[1];
-    if (language) pre.dataset.language = language;
+    const label = pre.closest('.code-block')?.querySelector('.code-lang')?.textContent;
     pre.tabIndex = 0;
     pre.setAttribute('role', 'region');
-    pre.setAttribute('aria-label', `Extrait de code${language ? ` ${language}` : ''}`);
+    pre.setAttribute('aria-label', `Extrait de code${label ? ` ${label}` : ''}`);
   });
+  if (navigator.clipboard && window.isSecureContext) {
+    const status = document.createElement('p');
+    status.className = 'sr-only';
+    status.setAttribute('role', 'status');
+    content.append(status);
+    content.querySelectorAll('.code-copy').forEach(button => {
+      let timer;
+      button.hidden = false;
+      button.addEventListener('click', async () => {
+        const code = button.closest('.code-block').querySelector('pre code, pre');
+        let message;
+        try {
+          await navigator.clipboard.writeText(code.textContent.replace(/\n$/, ''));
+          button.textContent = 'Copié !';
+          button.classList.add('is-copied');
+          message = 'Code copié dans le presse-papier';
+        } catch {
+          button.textContent = 'Échec';
+          message = 'La copie a échoué';
+        }
+        status.textContent = message;
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          button.textContent = 'Copier';
+          button.classList.remove('is-copied');
+          status.textContent = '';
+        }, 2000);
+      });
+    });
+  }
   content.querySelectorAll('table').forEach(table => {
     if (!table.parentElement.classList.contains('table-scroll')) {
       const wrapper = document.createElement('div');

@@ -56,6 +56,15 @@ try {
   assert((await page.locator('#toc-list a').count()) > 0);
   assert((await page.locator('.language-powerfx .nf').count()) > 0, 'Coloration Power Fx absente');
   summary.behavior.push('Sommaire et coloration Power Fx');
+  const block = page.locator('.code-block.language-powerfx').first();
+  assert.equal(await block.locator('.code-lang').textContent(), 'Power Fx');
+  assert(await page.evaluate(() => [...document.querySelectorAll('.code-block pre')].every(pre => pre.getBoundingClientRect().height <= 301)), 'Bloc de code plus haut que 300px');
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(url).origin });
+  await block.locator('.code-copy').click();
+  await page.waitForFunction(() => document.querySelector('.code-copy.is-copied'));
+  const copied = (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n');
+  assert.equal(copied, (await block.locator('pre code').textContent()).replace(/\n$/, ''), 'Contenu copie different');
+  summary.behavior.push('Blocs de code : libelle du langage, hauteur maximale 300px, copie dans le presse-papier');
   await page.setViewportSize({ width: 1440, height: 1000 });
   for (const post of manifest.posts) {
     await page.goto(url + post.permalink.slice(1));

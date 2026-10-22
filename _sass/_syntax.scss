@@ -6,4 +6,13 @@
   .m, .mf, .mi, .mh, .il, .na, .nb, .nf, .nc { color: var(--pink); }
   .err { text-decoration: underline wavy; }
 }
-pre[data-language]::before { content: attr(data-language); display: block; color: var(--muted); font: .72rem $font-sans; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .75rem; }
+.code-block { margin-bottom: 1.4rem; border: $border solid var(--line); border-radius: $radius-small; background: var(--code-bg); overflow: hidden;
+  .highlight { margin: 0; }
+  pre { margin: 0; border: 0; border-radius: 0; max-height: 300px; overflow: auto; }
+}
+.code-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.5rem; padding: .25rem .5rem .25rem 1.25rem; border-bottom: $border solid var(--line); }
+.code-lang { color: var(--muted); font: 600 .72rem $font-sans; text-transform: uppercase; letter-spacing: .1em; }
+.code-copy { min-height: 2rem; padding: .25rem .75rem; border: $border solid var(--line); border-radius: $radius-small; background: transparent; color: var(--text); font: 600 .8rem $font-sans; cursor: pointer;
+  &:hover { border-color: var(--accent); color: var(--accent); }
+  &.is-copied { border-color: var(--accent); color: var(--accent); }
+}

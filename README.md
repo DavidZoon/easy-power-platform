@@ -299,6 +299,12 @@ ou `javascript`. Le lexer Power Fx est dans [_plugins/powerfx.rb](_plugins/power
 les autres sont fournis par Rouge. La migration détecte les langages usuels,
 mais les blocs ambigus restent en texte : corriger leur étiquette si nécessaire.
 
+Chaque bloc reçoit au build un en-tête avec le nom du langage (Power Fx, YAML…)
+et un bouton « Copier » ([_plugins/code_blocks.rb](_plugins/code_blocks.rb)).
+Sa hauteur est limitée à 300 px avec défilement vertical ; le libellé affiché
+pour un nouveau langage s’ajoute dans `LABELS`, le style est dans
+[_sass/_syntax.scss](_sass/_syntax.scss).
+
 Pour écrire du Liquid littéral dans un extrait, utiliser les balises
 `{% raw %}` / `{% endraw %}` autour du bloc. Le script protège automatiquement
 les séquences Liquid présentes dans le code WordPress.

@@ -8,6 +8,7 @@ import { load } from 'cheerio';
 import { stringify, parse } from 'yaml';
 import sharp from 'sharp';
 import { createCardImage } from './card-images.mjs';
+import { createNewsletterImage } from './newsletter-images.mjs';
 import { categoryHierarchy, escapeLiquid, inferLanguage, mediaKey, safePath, taxonomySlug } from './migration-utils.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -272,6 +273,7 @@ for (const item of published) {
   if (cover?.source) {
     cardImage = `/assets/images/cards/${id}.webp`;
     emit(cardImage.slice(1), await createCardImage(generated.get(cover.url.slice(1))));
+    emit(`assets/images/newsletter/${id}.jpg`, await createNewsletterImage(generated.get(cover.url.slice(1))));
   }
   const original = load(first(item, 'content:encoded'), null, false);
   const description = original('p').filter((_, el) => !/MIGRATION/.test(original(el).text())).first().text().trim().replace(/\s+/g, ' ').slice(0, 170);

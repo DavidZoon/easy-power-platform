@@ -1,0 +1,36 @@
+---
+layout: null
+sitemap: false
+---
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ site.lang | xml_escape }}">
+  <title>{{ site.title | xml_escape }}</title>
+  <subtitle>{{ site.description | xml_escape }}</subtitle>
+  <link href="{{ '/feed.xml' | absolute_url | xml_escape }}" rel="self" type="application/atom+xml"/>
+  <link href="{{ '/' | absolute_url | xml_escape }}" rel="alternate" type="text/html"/>
+  <id>{{ '/feed.xml' | absolute_url | xml_escape }}</id>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <author><name>{{ site.author.name | xml_escape }}</name></author>
+  {% for post in site.posts limit:20 %}
+  {% assign article_url = post.url | absolute_url %}
+  {% assign article_id = article_url %}
+  {% assign last_character = article_id | slice: -1 %}
+  {% if last_character == '/' %}{% assign id_length = article_id.size | minus: 1 %}{% assign article_id = article_id | slice: 0, id_length %}{% endif %}
+  {% assign newsletter_image = post.newsletter_image | default: post.image %}
+  {% assign jpeg_path = '/assets/images/newsletter/' | append: post.wordpress_id | append: '.jpg' %}
+  {% assign jpeg_file = site.static_files | where: 'path', jpeg_path | first %}
+  {% if jpeg_file and post.newsletter_image == nil %}{% assign newsletter_image = jpeg_path %}{% endif %}
+  {% capture newsletter_summary %}{% if newsletter_image %}<p style="margin:0 0 24px;"><img src="{{ newsletter_image | absolute_url | escape }}" alt="{{ post.title | escape }}" width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;border-radius:12px;"></p>{% endif %}<p style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:16px;line-height:1.6;color:#272836;">{{ post.description | default: post.excerpt | strip_html | normalize_whitespace | escape }}</p>{% endcapture %}
+  <entry>
+    <title type="text">{{ post.title | xml_escape }}</title>
+    <link href="{{ article_url | xml_escape }}" rel="alternate" type="text/html"/>
+    <id>{{ article_id | xml_escape }}</id>
+    <published>{{ post.date | date_to_xmlschema }}</published>
+    <updated>{{ post.last_modified_at | default: post.date | date_to_xmlschema }}</updated>
+    <author><name>{{ post.author | default: site.author.name | xml_escape }}</name></author>
+    {% for category in post.categories %}<category term="{{ category | xml_escape }}"/>{% endfor %}
+    <summary type="html">{{ newsletter_summary | strip | xml_escape }}</summary>
+    <content type="html">{{ newsletter_summary | strip | xml_escape }}</content>
+  </entry>
+  {% endfor %}
+</feed>

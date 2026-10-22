@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { load } from 'cheerio';
 import assert from 'node:assert/strict';
+import { parseStringPromise } from 'xml2js';
 
 const root = path.resolve(process.argv[2] || '_site');
 const manifest = JSON.parse(await fs.readFile('_data/migration.json', 'utf8'));
@@ -84,6 +85,27 @@ for (const post of manifest.posts) {
 for (const filename of ['sitemap.xml', 'feed.xml', 'robots.txt']) assert(files.includes(path.join(root, filename)), `${filename} absent`);
 const rss = await fs.readFile(path.join(root, 'feed.xml'), 'utf8');
 assert(rss.includes('<feed'), 'Flux Atom invalide');
+const atom = (await parseStringPromise(rss)).feed;
+assert.equal(atom.$.xmlns, 'http://www.w3.org/2005/Atom');
+assert.equal(atom.entry.length, Math.min(20, postCount), 'Nombre incorrect d’articles dans le flux');
+assert.equal(new Set(atom.entry.map(entry => entry.id[0])).size, atom.entry.length, 'Identifiants Atom dupliques');
+for (const entry of atom.entry) {
+  assert(!Number.isNaN(Date.parse(entry.updated[0])), 'Date de mise a jour Atom invalide');
+  assert(!Number.isNaN(Date.parse(entry.published[0])), 'Date de publication Atom invalide');
+  const article = new URL(entry.link.find(link => link.$.rel === 'alternate').$.href);
+  assert.equal(entry.id[0], article.href.replace(/\/$/, ''), 'Identifiant Atom modifie');
+  assert.equal(entry.summary[0].$.type, 'html');
+  const summary = load(entry.summary[0]._, null, false);
+  assert(summary('p').last().text().trim().length > 0, 'Resume newsletter absent');
+  assert.equal(summary('img').length, 1, 'Image principale absente du resume');
+  const image = new URL(summary('img').attr('src'));
+  assert.equal(image.origin, canonical.origin, 'Origine image newsletter incorrecte');
+  assert(image.pathname.startsWith(`${base}/assets/`), 'Image newsletter sans baseurl');
+  assert(image.pathname.endsWith('.jpg'), 'Image newsletter non JPEG');
+  assert(await targetFor(image), `Image newsletter introuvable : ${image.href}`);
+  assert.equal(entry.content[0]._, entry.summary[0]._, 'Contenu et resume newsletter differents');
+  assert(!summary('script, pre, iframe').length, 'Contenu complet ou actif dans le resume');
+}
 const tagPage = load(await fs.readFile(path.join(root, 'tags', 'index.html'), 'utf8'));
 const tagCounts = tagPage('.tag-cloud .count').map((i, el) => Number(tagPage(el).text())).get();
 assert(tagCounts.length > 0 && tagCounts.every((count, i) => i === 0 || tagCounts[i - 1] >= count), 'Tags non tries par popularite');

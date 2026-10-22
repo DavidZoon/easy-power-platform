@@ -437,6 +437,65 @@ que l’icône SVG monochrome ; il s’élargit au survol ou au focus clavier po
 le nom du réseau, qui reste toujours lu par les lecteurs d’écran.
 Aucun SDK social ou script de suivi n’est intégré.
 
+### Newsletter Power Automate depuis le flux
+
+Le fichier [feed.xml](feed.xml) conserve le format Atom et l’URL existante.
+Il expose les 20 derniers articles. Chaque entrée contient un `summary` HTML
+avec l’image principale en URL absolue et `description` (ou l’extrait si elle
+est absente). `content` reprend ce même résumé : les longs blocs de code de
+l’article ne sont plus envoyés dans le flux. Rédiger `description` dans le
+front matter pour maîtriser le texte envoyé par mail.
+
+Les articles migrés utilisent une copie JPEG de leur image principale
+(`assets/images/newsletter/ID.jpg`, largeur maximale 1200 px, sans agrandissement)
+pour les clients mail qui ne prennent pas en charge WebP, notamment Outlook
+classique. Lancer `npm run images:newsletter` après un changement d’image.
+Pour un nouvel article sans `wordpress_id`, définir `newsletter_image` dans le
+front matter avec le chemin d’une image JPEG dédiée. À défaut, le flux utilise
+`image`, dont le format doit être compatible avec les clients mail ciblés.
+
+Le fichier est explicitement inclus malgré l’exclusion des exports `*.xml`.
+`jekyll-feed` reste chargé pour le lien de découverte Atom dans le header,
+mais ne remplace pas ce fichier personnalisé.
+
+Avec le déclencheur RSS `OnNewFeed` et
+`splitOn: @triggerOutputs()?['body/value']`, chaque exécution reçoit un article :
+
+| Donnée | Expression Power Automate |
+|---|---|
+| Titre | `triggerBody()?['title']` |
+| URL de l’article | `triggerBody()?['primaryLink']` |
+| Résumé HTML avec image | `triggerBody()?['summary']` |
+| Date de publication | `triggerBody()?['publishDate']` |
+| Date de mise à jour | `triggerBody()?['updatedOn']` |
+| Identifiant à dédoublonner | `triggerBody()?['id']` |
+
+Copier [le modèle HTML](scripts/newsletter-email.html) dans le mode HTML (`</>`)
+du corps de l’action **Envoyer un courrier électronique (V2)**. Utiliser comme
+objet `Easy Power Platform — @{triggerBody()?['title']}`. Les expressions
+`@{...}` du modèle sont des expressions de flux, pas du Liquid/Jekyll.
+Le résumé contient déjà l’image : il n’est pas nécessaire de l’extraire du XML.
+Remplacer impérativement `REMPLACER_PAR_LE_LIEN_DE_DESABONNEMENT` par la procédure
+réelle de désabonnement avant envoi. Envoyer à chaque abonné individuellement,
+sans exposer les autres adresses.
+
+Le champ `updated` de chaque entrée vaut `last_modified_at` si renseigné, sinon
+sa date de publication (pas la date de reconstruction). Votre réglage
+`sinceProperty: UpdatedOn` reste donc utilisable. Pour notifier uniquement les
+nouvelles publications plutôt que les mises à jour, sélectionner `PublishDate`.
+Stocker les identifiants déjà envoyés (par exemple dans SharePoint) pour éviter
+les doublons après une réactivation du flux et vérifier le comportement initial
+sur une adresse de test avant d’activer la liste complète.
+
+Selon la [documentation du connecteur RSS](https://learn.microsoft.com/en-us/connectors/rss/),
+l’intervalle minimal est de **30 minutes** : une récurrence configurée à une minute
+ne garantit donc pas un contrôle chaque minute. Le flux est limité à 20 entrées ;
+éviter une interruption couvrant plus de 20 nouvelles publications sans rattrapage.
+Tester une nouvelle publication après déploiement, vérifier `summary` dans la
+sortie du déclencheur puis contrôler le mail reçu dans Outlook et sur mobile.
+Les clients mail peuvent bloquer les images distantes ; le résumé et le lien
+restent lisibles. Aucun flux Power Automate n’est déployé par ces fichiers.
+
 ## 11. Vérifications et objectifs Lighthouse
 
 ```powershell

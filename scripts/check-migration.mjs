@@ -32,4 +32,12 @@ for (const entry of [...manifest.posts, ...manifest.pages]) {
   assert.deepEqual(after, before, `Code modifie : ${entry.id}`);
   blocks += before.length;
 }
-console.log(`Migration verifiee : ${published.length} articles, titres/dates/taxonomies/permaliens/images et ${blocks} blocs de code identiques a WordPress.`);
+const wpCategories = tree.rss.channel[0]['wp:category'] || [];
+const wpName = slug => wpCategories.find(term => term['wp:category_nicename'][0] === slug)?.['wp:cat_name'][0];
+const hierarchy = parse(await fs.readFile('_data/category_hierarchy.yml', 'utf8')) || {};
+for (const [child, parent] of Object.entries(hierarchy)) {
+  const term = wpCategories.find(term => term['wp:cat_name'][0] === child);
+  assert(term, `Categorie absente de WordPress : ${child}`);
+  assert.equal(wpName(term['wp:category_parent']?.[0]), parent, `Parent de ${child}`);
+}
+console.log(`Migration verifiee : ${published.length} articles, titres/dates/taxonomies/permaliens/images, ${Object.keys(hierarchy).length} relations de categories et ${blocks} blocs de code identiques a WordPress.`);

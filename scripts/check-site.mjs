@@ -87,6 +87,25 @@ assert(rss.includes('<feed'), 'Flux Atom invalide');
 const tagPage = load(await fs.readFile(path.join(root, 'tags', 'index.html'), 'utf8'));
 const tagCounts = tagPage('.tag-cloud .count').map((i, el) => Number(tagPage(el).text())).get();
 assert(tagCounts.length > 0 && tagCounts.every((count, i) => i === 0 || tagCounts[i - 1] >= count), 'Tags non tries par popularite');
+const { parse: parseYaml } = await import('yaml');
+const hierarchy = parseYaml(await fs.readFile('_data/category_hierarchy.yml', 'utf8')) || {};
+const categoryPage = load(await fs.readFile(path.join(root, 'categories', 'index.html'), 'utf8'));
+const cardOf = name => categoryPage('.taxonomy-card').filter((i, el) => categoryPage(el).find('h2').text().trim() === name);
+for (const [child, parent] of Object.entries(hierarchy)) {
+  const linked = cardOf(parent).length ? cardOf(parent) : categoryPage(`.subcategory-list a`).filter((i, a) => categoryPage(a).find('span').first().text() === parent).closest('li');
+  assert(linked.find('.subcategory-list a span, .nested a span').filter((i, el) => categoryPage(el).text() === child).length, `${child} doit etre sous ${parent}`);
+  assert(!cardOf(child).length, `${child} ne doit pas etre une categorie racine`);
+}
+const posts = new Map();
+for (const href of categoryPage('.taxonomy-card a, .subcategory-list a').map((i, a) => categoryPage(a).attr('href')).get()) {
+  const page = load(await fs.readFile(path.join(root, decodeURIComponent(href.slice(base.length)), 'index.html'), 'utf8'));
+  posts.set(page('h1').text().replace(/^Catégorie : /, '').trim(), { page, urls: new Set(page('.post-list .post-card h2 a, .post-list .post-card h3 a').map((i, a) => page(a).attr('href')).get()) });
+}
+for (const [child, parent] of Object.entries(hierarchy)) {
+  assert(posts.get(parent).page('.breadcrumb').length, `Fil d'Ariane absent : ${parent}`);
+  assert(posts.get(child).page('.breadcrumb li').map((i, li) => posts.get(child).page(li).text().trim()).get().includes(parent), `Fil d'Ariane de ${child}`);
+  for (const url of posts.get(child).urls) assert(posts.get(parent).urls.has(url), `${parent} doit inclure les articles de ${child}`);
+}
 console.log(`${files.length} fichiers controles, ${manifest.posts.length} articles, ${index.length} entrees de recherche.`);
 if (failures.length) {
   console.error([...new Set(failures)].join('\n'));

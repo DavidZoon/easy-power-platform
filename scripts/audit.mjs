@@ -46,7 +46,7 @@ try {
   summary.behavior.push('Pagination');
   const sample = manifest.posts.find(post => post.id === '221');
   const latest = manifest.posts.at(-1);
-  const allPages = ['', 'page/2/', 'articles/', 'categories/', 'tags/', 'about/', 'search/', 'privacy/', '404.html', sample.permalink.slice(1), latest.permalink.slice(1)];
+  const allPages = ['', 'page/2/', 'articles/', 'categories/', 'categories/power-automate-39b3ce78/', 'categories/desktop-flows-ad7e270f/', 'tags/', 'about/', 'search/', 'privacy/', '404.html', sample.permalink.slice(1), latest.permalink.slice(1)];
   for (const theme of ['dark', 'light']) {
     await context.addInitScript(value => localStorage.setItem('epp-theme', value), theme);
     for (const pathname of allPages) {

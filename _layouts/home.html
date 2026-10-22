@@ -8,7 +8,8 @@ layout: default
   <p class="hero-description">Des tutoriels, du code et des retours d’expérience pour passer de l’idée à la solution. Par David Zoonekyndt.</p>
   <div class="button-row"><a class="button" href="#latest">Parcourir les articles <span aria-hidden="true">↓</span></a><a class="button secondary" href="{{ '/feed.xml' | relative_url }}">Suivre le flux RSS</a><a class="button secondary" href="#newsletter">S’abonner par e-mail</a>{% include share.html url="/" title=site.title label="Partager ce blog" %}</div>
   <div class="hero-topics" aria-label="Catégories populaires">
-    {% for term in site.data.taxonomies.categories limit:4 %}<a href="{{ '/categories/' | append: term.slug | append: '/' | relative_url }}">{{ term.name | escape }} <span>{{ term.count }}</span></a>{% endfor %}
+    {% assign hero_categories = site.data.taxonomies.categories | where: "depth", 0 %}
+    {% for term in hero_categories limit:4 %}<a href="{{ '/categories/' | append: term.slug | append: '/' | relative_url }}">{{ term.name | escape }} <span>{{ term.count }}</span></a>{% endfor %}
   </div>
 </section>
 {% else %}<h1>Articles — page {{ paginator.page }}</h1>

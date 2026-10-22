@@ -3,7 +3,12 @@ title: Catégories
 permalink: /categories/
 ---
 <div class="taxonomy-grid">
-{% for term in site.data.taxonomies.categories %}
-<a class="taxonomy-card" href="{{ '/categories/' | append: term.slug | append: '/' | relative_url }}"><span>{{ term.name | escape }}</span><span class="count">{{ term.count }} article{% if term.count > 1 %}s{% endif %}</span></a>
+{% assign roots = site.data.taxonomies.categories | where: "depth", 0 %}
+{% for term in roots %}
+<section class="taxonomy-card" aria-labelledby="category-{{ term.slug }}">
+  <h2 id="category-{{ term.slug }}"><a href="{{ '/categories/' | append: term.slug | append: '/' | relative_url }}">{{ term.name | escape }}</a></h2>
+  <p class="count">{{ term.count }} article{% if term.count > 1 %}s{% endif %}</p>
+  {% if term.children.size > 0 %}{% include category-tree.html terms=term.children class="subcategory-list" label=term.name %}{% endif %}
+</section>
 {% endfor %}
 </div>

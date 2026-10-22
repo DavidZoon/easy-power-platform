@@ -7,7 +7,7 @@ import { parseStringPromise, Builder } from 'xml2js';
 import { load } from 'cheerio';
 import { stringify, parse } from 'yaml';
 import sharp from 'sharp';
-import { escapeLiquid, inferLanguage, mediaKey, safePath, taxonomySlug } from './migration-utils.mjs';
+import { categoryHierarchy, escapeLiquid, inferLanguage, mediaKey, safePath, taxonomySlug } from './migration-utils.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const args = process.argv.slice(2);
@@ -113,6 +113,7 @@ const links = new Map(published.map(i => [new URL(first(i, 'link')).pathname.toL
 links.set('/articles/', '/articles/');
 links.set('/', '/');
 const terms = { categories: new Map(), tags: new Map() };
+const usedCategorySlugs = new Set();
 const protectedContent = new Map();
 let sequence = 0;
 function protect($, element, replacement) {
@@ -254,6 +255,7 @@ for (const item of published) {
   const pathname = new URL(first(item, 'link')).pathname;
   const isPost = first(item, 'wp:post_type') === 'post';
   const categories = (item.category || []).filter(t => t.$.domain === 'category').map(text);
+  (item.category || []).filter(t => t.$.domain === 'category').forEach(t => usedCategorySlugs.add(t.$.nicename));
   const tags = (item.category || []).filter(t => t.$.domain === 'post_tag').map(text);
   for (const [type, values] of [['categories', categories], ['tags', tags]]) {
     for (const value of values) {
@@ -293,6 +295,10 @@ for (const [type, entries] of Object.entries(terms)) {
 }
 const taxonomy = Object.fromEntries(Object.entries(terms).map(([type, entries]) => [type, [...entries.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'fr'))]));
 emit('_data/taxonomies.yml', stringify(taxonomy, { lineWidth: 0 }));
+const categoryDefinitions = (channel['wp:category'] || []).map(category => ({
+  slug: first(category, 'wp:category_nicename'), name: first(category, 'wp:cat_name'), parent: first(category, 'wp:category_parent')
+}));
+emit('_data/category_hierarchy.yml', stringify(categoryHierarchy(categoryDefinitions, usedCategorySlugs), { lineWidth: 0 }));
 const brand = media.get('2025/02/logo-easy-power-platform-color.png');
 if (!brand?.source) throw new Error('Logo WordPress introuvable');
 emit('assets/images/brand.webp', await sharp(brand.source).resize({ width: 640, withoutEnlargement: true }).webp({ quality: 90 }).toBuffer());

@@ -28,6 +28,23 @@ export function escapeLiquid(text) {
   return text.replace(/\{\{|\{%/g, token => token === '{{' ? '{{ "{{" }}' : '{{ "{%" }}');
 }
 
+// Maps each category name to its parent name, keeping only branches that lead to used categories.
+export function categoryHierarchy(definitions, usedSlugs) {
+  const bySlug = new Map(definitions.map(definition => [definition.slug, definition]));
+  const relations = {};
+  for (const slug of usedSlugs) {
+    const seen = new Set([slug]);
+    let current = bySlug.get(slug);
+    while (current?.parent && bySlug.has(current.parent) && !seen.has(current.parent)) {
+      seen.add(current.parent);
+      const parent = bySlug.get(current.parent);
+      relations[current.name] = parent.name;
+      current = parent;
+    }
+  }
+  return Object.fromEntries(Object.entries(relations).sort(([a], [b]) => a.localeCompare(b, 'fr')));
+}
+
 export function inferLanguage(code, classes = '') {
   const explicit = classes.match(/(?:language|lang)-([\w#+-]+)/)?.[1];
   const aliases = { 'c#': 'csharp', 'c-sharp': 'csharp', 'js': 'javascript', 'ps': 'powershell', 'power-fx': 'powerfx' };

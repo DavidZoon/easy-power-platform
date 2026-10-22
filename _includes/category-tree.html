@@ -1,0 +1,9 @@
+{% comment %}Recursive list of categories; `terms` holds {name, slug, count} summaries.{% endcomment %}
+<ul class="{{ include.class | default: 'category-list' }}"{% if include.label %} aria-label="Sous-catégories de {{ include.label | escape }}"{% endif %}>
+  {% for tree_summary in include.terms %}
+  {% assign tree_term = site.data.taxonomies.categories | where: "name", tree_summary.name | first %}
+  <li><a href="{{ '/categories/' | append: tree_term.slug | append: '/' | relative_url }}"><span>{{ tree_term.name | escape }}</span><span class="count">{{ tree_term.count }}</span></a>
+    {% if tree_term.children.size > 0 %}{% include category-tree.html terms=tree_term.children class="category-list nested" label=tree_term.name %}{% endif %}
+  </li>
+  {% endfor %}
+</ul>

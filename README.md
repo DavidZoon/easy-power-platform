@@ -281,6 +281,24 @@ mêmes slugs stables que la migration. Le registre `_data/taxonomies.yml` et les
 archives écrites lors de la migration servent de photographies initiales ;
 le générateur les actualise en mémoire, sans réécrire vos sources.
 
+### Hiérarchie des catégories
+
+La hiérarchie WordPress (`wp:category_parent`) est conservée dans
+[_data/category_hierarchy.yml](_data/category_hierarchy.yml), au format
+`Sous-catégorie: Catégorie parente` :
+
+```yaml
+Canvas Apps: Power Apps
+Desktop Flows: Power Automate
+```
+
+Comme dans WordPress, une catégorie parente affiche aussi les articles de ses
+sous-catégories, et son compteur les inclut (sans doublon). La page Catégories
+et la barre latérale affichent l’arborescence ; chaque archive comporte un fil
+d’Ariane et la liste de ses sous-catégories. Pour créer une sous-catégorie,
+ajouter une ligne à ce fichier : un article peut n’indiquer que la
+sous-catégorie. Les niveaux multiples sont pris en charge.
+
 Insérer les images ainsi pour respecter le sous-chemin et éviter les décalages :
 
 ```html

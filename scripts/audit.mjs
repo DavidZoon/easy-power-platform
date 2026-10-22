@@ -46,6 +46,33 @@ try {
   summary.behavior.push('Pagination');
   const sample = manifest.posts.find(post => post.id === '221');
   const latest = manifest.posts.at(-1);
+  for (const pathname of ['', 'page/2/', sample.permalink.slice(1)]) {
+    await page.goto(url + pathname);
+    for (const width of [390, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 1000 });
+      const gallery = await page.locator('.post-gallery').evaluate(element => {
+        const columns = getComputedStyle(element).gridTemplateColumns.split(' ').filter(track => parseFloat(track) > 0).length;
+        const cards = [...element.querySelectorAll('.post-card')];
+        return {
+          columns,
+          expected: Math.min(cards.length, Math.floor((element.clientWidth + 16) / 276)),
+          images: cards.filter(card => card.querySelector('img')).every(card => {
+            const image = card.querySelector('img');
+            const bounds = image.getBoundingClientRect();
+            const body = card.querySelector('.card-body').getBoundingClientRect();
+            return Math.abs(bounds.width - (card.clientWidth)) < 1 &&
+              Math.abs(bounds.height - 160) < 1 && bounds.bottom <= body.top + 1 &&
+              getComputedStyle(image).objectFit === 'cover' &&
+              parseFloat(getComputedStyle(image).borderTopLeftRadius) > 0;
+          })
+        };
+      });
+      assert.equal(gallery.columns, gallery.expected, `Colonnes de galerie : ${pathname}, ${width}px`);
+      assert(gallery.images, `Images des cartes verticales : ${pathname}, ${width}px`);
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Debordement galerie : ${pathname}, ${width}px`);
+    }
+  }
+  summary.behavior.push('Galeries verticales responsives : colonnes automatiques et images recadrees sur accueil, pagination et article');
   const allPages = ['', 'page/2/', 'articles/', 'categories/', 'categories/power-automate-39b3ce78/', 'categories/desktop-flows-ad7e270f/', 'tags/', 'about/', 'search/', 'privacy/', '404.html', sample.permalink.slice(1), latest.permalink.slice(1)];
   for (const theme of ['dark', 'light']) {
     await context.addInitScript(value => localStorage.setItem('epp-theme', value), theme);

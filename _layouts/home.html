@@ -18,7 +18,9 @@ layout: default
   {% include sidebar.html %}
   <section id="latest" class="post-list" aria-labelledby="latest-title">
     <div class="section-heading"><h2 id="latest-title">Derniers articles</h2><a href="{{ '/articles/' | relative_url }}">Tout voir →</a></div>
-    {% for post in paginator.posts %}{% include post-card.html post=post excerpt=true %}{% endfor %}
+    <div class="post-gallery">
+      {% for post in paginator.posts %}{% include post-card.html post=post %}{% endfor %}
+    </div>
     {% include pagination.html %}
   </section>
 </div>

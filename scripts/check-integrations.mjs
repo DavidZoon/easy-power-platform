@@ -29,6 +29,20 @@ try {
       return Boolean(share.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING);
     }), 'Partage attendu avant le contenu');
     for (const link of await links.all()) {
+      const label = link.locator('.share-label');
+      assert.match(await link.evaluate(element => element.textContent), /LinkedIn|Facebook|X|WhatsApp|E-mail/, 'Nom accessible du reseau absent');
+      assert(await label.evaluate(element => element.getBoundingClientRect().width < 1), 'Libelle visible au repos');
+      await link.hover();
+      await integrationPage.waitForTimeout(350);
+      assert(await label.evaluate(element => element.getBoundingClientRect().width > 5 && getComputedStyle(element).opacity === '1'), 'Libelle non affiche au survol');
+      await integrationPage.mouse.move(0, 0);
+      await link.focus();
+      await integrationPage.keyboard.press('Shift+Tab');
+      await integrationPage.keyboard.press('Tab');
+      await integrationPage.waitForTimeout(350);
+      assert(await label.evaluate(element => element.getBoundingClientRect().width > 5), 'Libelle non affiche au focus clavier');
+      await integrationPage.evaluate(() => document.activeElement.blur());
+      await integrationPage.waitForTimeout(350);
       const icon = link.locator('svg.share-icon');
       assert.equal(await icon.count(), 1);
       assert.equal(await icon.getAttribute('aria-hidden'), 'true');

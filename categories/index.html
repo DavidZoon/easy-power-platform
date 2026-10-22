@@ -1,0 +1,9 @@
+---
+title: Catégories
+permalink: /categories/
+---
+<div class="taxonomy-grid">
+{% for term in site.data.taxonomies.categories %}
+<a class="taxonomy-card" href="{{ '/categories/' | append: term.slug | append: '/' | relative_url }}"><span>{{ term.name | escape }}</span><span class="count">{{ term.count }} article{% if term.count > 1 %}s{% endif %}</span></a>
+{% endfor %}
+</div>

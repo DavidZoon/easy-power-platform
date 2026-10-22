@@ -1,0 +1,18 @@
+@use "variables" as *;
+.post-card { display: flex; align-items: center; gap: $space * 3; padding: $space * 3; border-radius: $radius; background: linear-gradient(115deg, var(--card-start), var(--card-end)); margin-bottom: $space * 2; border: $border solid transparent;
+  &:hover { border-color: var(--line); }
+  h2 { font-size: 1.2rem; font-weight: 600; margin: .35rem 0 .7rem; a { text-decoration: none; &:hover { text-decoration: underline; } } }
+}
+.card-image { flex: 0 0 145px; img { width: 145px; height: 105px; object-fit: contain; border-radius: $radius-small; } }
+.card-body { min-width: 0; flex: 1; }
+.card-meta { color: var(--muted); font-size: .78rem; }
+.card-excerpt { font-size: .9rem; color: var(--muted); margin: .75rem 0 0; }
+.chips { display: flex; flex-wrap: wrap; gap: .25rem .6rem; }
+.chip { color: var(--pink); font-size: .8rem; display: inline-flex; align-items: center; min-height: 28px; text-decoration: none; &:hover { text-decoration: underline; } &.tag { color: var(--accent); border: $border solid var(--line); border-radius: 999px; padding: .25rem .75rem; } }
+.tag-cloud { gap: .75rem; .chip { font-size: .95rem; min-height: 44px; } .count { margin-left: .6rem; } }
+.taxonomy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 1rem; }
+.taxonomy-card { display: flex; justify-content: space-between; gap: 1rem; padding: 1.5rem; background: var(--surface); border: $border solid var(--line); border-radius: $radius; text-decoration: none; .count { white-space: nowrap; } }
+.related { margin-top: 3rem; border-top: $border solid var(--line); padding-top: 2rem; }
+.related-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; .post-card { display: block; margin: 0; } .card-image { display: block; margin-bottom: 1rem; } }
+@media (max-width: $breakpoint) { .related-grid { grid-template-columns: 1fr; } }
+@media (max-width: 38rem) { .post-card { padding: 1rem; gap: 1rem; align-items: start; } .card-image { flex-basis: 72px; img { width: 72px; height: 72px; } } .card-excerpt { display: none; } .post-card h2 { font-size: 1.05rem; } }

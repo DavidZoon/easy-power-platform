@@ -1,0 +1,26 @@
+---
+layout: default
+---
+<article class="post">
+  <header class="post-heading">
+    <a href="{{ '/articles/' | relative_url }}">← Tous les articles</a>
+    <div class="chips">{% include taxonomy-links.html values=page.categories %}</div>
+    <h1>{{ page.title | escape }}</h1>
+    {% assign words = content | strip_html | number_of_words %}
+    <p class="post-meta">{% include date.html date=page.date %} <span aria-hidden="true">·</span> {{ page.author | default: site.author.name | escape }} <span aria-hidden="true">·</span> {{ words | plus: 219 | divided_by: 220 | at_least: 1 }} min de lecture</p>
+  </header>
+  <div class="article-grid">
+    <aside class="toc" aria-label="Sommaire de l’article" hidden>
+      <details open><summary>Dans cet article</summary><nav aria-label="Table des matières"><ol id="toc-list"></ol></nav></details>
+    </aside>
+    <div class="article-main">
+      <div class="prose" id="post-content" data-toc="{{ page.toc }}">{{ content }}</div>
+      <footer class="post-footer">
+        <div class="chips">{% include taxonomy-links.html values=page.tags type="tags" %}</div>
+        <a class="button secondary" href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer">Partager sur LinkedIn <span class="sr-only">(nouvel onglet)</span> ↗</a>
+      </footer>
+      {% include giscus.html %}
+    </div>
+  </div>
+</article>
+{% include related-posts.html %}

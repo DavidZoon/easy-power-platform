@@ -1,0 +1,13 @@
+---
+title: Tous les articles
+description: "Tutoriels, astuces et snippets : toutes les publications Easy Power Platform."
+layout: default
+permalink: /articles/
+---
+<header class="page-heading"><p class="eyebrow">{{ site.posts.size }} publications</p><h1>Tous les articles</h1></header>
+<div class="content-grid">
+  {% include sidebar.html %}
+  <section class="post-list" aria-label="Liste des articles">
+    {% for post in site.posts %}{% assign year = post.date | date: '%Y' %}{% if year != previous_year %}<h2 class="archive-year">{{ year }}</h2>{% assign previous_year = year %}{% endif %}{% include post-card.html post=post %}{% endfor %}
+  </section>
+</div>

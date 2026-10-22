@@ -1,0 +1,223 @@
+{
+  "posts": [
+    {
+      "id": "22",
+      "file": "_posts/2025-02-11-mise-en-forme-dune-valeur-numerique-avec-unites-dans-un-texte.md",
+      "permalink": "/2025/02/11/mise-en-forme-dune-valeur-numerique-avec-unites-dans-un-texte/",
+      "title": "Mise en forme d'une valeur numérique avec unités dans un texte"
+    },
+    {
+      "id": "39",
+      "file": "_posts/2025-02-11-premiere-lettre-dune-chaine-de-texte-en-majuscules.md",
+      "permalink": "/2025/02/11/premiere-lettre-dune-chaine-de-texte-en-majuscules/",
+      "title": "Première lettre d'une chaîne de texte en majuscules"
+    },
+    {
+      "id": "58",
+      "file": "_posts/2025-02-11-expanded-queries-requetes-etendues.md",
+      "permalink": "/2025/02/11/expanded-queries-requetes-etendues/",
+      "title": "Expanded queries / Requêtes étendues"
+    },
+    {
+      "id": "88",
+      "file": "_posts/2025-02-11-les-formulaires.md",
+      "permalink": "/2025/02/11/les-formulaires/",
+      "title": "Les formulaires"
+    },
+    {
+      "id": "96",
+      "file": "_posts/2025-02-11-creer-une-boite-de-dialogue.md",
+      "permalink": "/2025/02/11/creer-une-boite-de-dialogue/",
+      "title": "Créer une boîte de dialogue"
+    },
+    {
+      "id": "137",
+      "file": "_posts/2025-02-11-changer-taille-limite-de-fichier-ou-dimage-dune-colonne.md",
+      "permalink": "/2025/02/11/changer-taille-limite-de-fichier-ou-dimage-dune-colonne/",
+      "title": "Changer la taille maximale autorisée de fichier pour les colonnes Image ou Fichier"
+    },
+    {
+      "id": "147",
+      "file": "_posts/2025-02-11-generer-une-app-canvas-dapres-une-liste-sharepoint.md",
+      "permalink": "/2025/02/11/generer-une-app-canvas-dapres-une-liste-sharepoint/",
+      "title": "Générer une app Canvas d'après une liste SharePoint"
+    },
+    {
+      "id": "179",
+      "file": "_posts/2025-02-11-extraire-dynamiquement-les-colonnes-custom-dune-table-dataverse.md",
+      "permalink": "/2025/02/11/extraire-dynamiquement-les-colonnes-custom-dune-table-dataverse/",
+      "title": "Extraire dynamiquement les colonnes custom d'une table Dataverse"
+    },
+    {
+      "id": "189",
+      "file": "_posts/2025-02-11-inclure-les-pieces-jointes-dun-mail-vers-une-approbation.md",
+      "permalink": "/2025/02/11/inclure-les-pieces-jointes-dun-mail-vers-une-approbation/",
+      "title": "Inclure les pièces jointes d'un mail vers une approbation"
+    },
+    {
+      "id": "213",
+      "file": "_posts/2025-02-12-limiter-lacces-a-une-vue-via-les-roles-de-securite.md",
+      "permalink": "/2025/02/12/limiter-lacces-a-une-vue-via-les-roles-de-securite/",
+      "title": "Limiter l'accès à une vue via les rôles de sécurité"
+    },
+    {
+      "id": "221",
+      "file": "_posts/2025-02-13-fonctions-definies-par-lutilisateur-udf-guide-complet.md",
+      "permalink": "/2025/02/13/fonctions-definies-par-lutilisateur-udf-guide-complet/",
+      "title": "Fonctions définies par l'utilisateur (UDF) : Guide complet"
+    },
+    {
+      "id": "257",
+      "file": "_posts/2025-02-19-filtres-odata-sur-une-source-sharepoint.md",
+      "permalink": "/2025/02/19/filtres-odata-sur-une-source-sharepoint/",
+      "title": "Filtres OData sur une source SharePoint"
+    },
+    {
+      "id": "379",
+      "file": "_posts/2025-03-11-reduire-automatiquement-la-resolution-dune-image-et-sans-licence-tierce.md",
+      "permalink": "/2025/03/11/reduire-automatiquement-la-resolution-dune-image-et-sans-licence-tierce/",
+      "title": "Réduire automatiquement la résolution d'une image (et sans licence tierce)"
+    },
+    {
+      "id": "384",
+      "file": "_posts/2025-02-25-recuperer-le-contenu-dune-colonne-image-depuis-une-liste-sharepoint.md",
+      "permalink": "/2025/02/25/recuperer-le-contenu-dune-colonne-image-depuis-une-liste-sharepoint/",
+      "title": "Récupérer le contenu d'une colonne Image depuis une liste SharePoint"
+    },
+    {
+      "id": "445",
+      "file": "_posts/2025-03-01-ajouter-ou-mettre-a-jour-une-colonne-image-dans-une-liste-sharepoint-avec-power-automate.md",
+      "permalink": "/2025/03/01/ajouter-ou-mettre-a-jour-une-colonne-image-dans-une-liste-sharepoint-avec-power-automate/",
+      "title": "Ajouter ou mettre à jour une colonne Image dans une liste SharePoint avec Power Automate"
+    },
+    {
+      "id": "567",
+      "file": "_posts/2025-03-17-nouveautes-q1-2025.md",
+      "permalink": "/2025/03/17/nouveautes-q1-2025/",
+      "title": "Nouveautés Q1 2025"
+    },
+    {
+      "id": "619",
+      "file": "_posts/2026-01-24-power-apps-comprendre-et-maitriser-la-delegation-de-donnees.md",
+      "permalink": "/2026/01/24/power-apps-comprendre-et-maitriser-la-delegation-de-donnees/",
+      "title": "Power Apps : Comprendre et maîtriser la délégation de données"
+    },
+    {
+      "id": "626",
+      "file": "_posts/2025-04-15-optimiser-le-patch-de-tables-patcher-plusieurs-lignes.md",
+      "permalink": "/2025/04/15/optimiser-le-patch-de-tables-patcher-plusieurs-lignes/",
+      "title": "Optimiser le Patch de tables ( Et patcher comme un PRO !)"
+    },
+    {
+      "id": "672",
+      "file": "_posts/2025-05-01-60-raccourcis-incontournables-pour-devenir-un-maitre-ninja-de-la-barre-de-formules.md",
+      "permalink": "/2025/05/01/60-raccourcis-incontournables-pour-devenir-un-maitre-ninja-de-la-barre-de-formules/",
+      "title": "60 raccourcis incontournables pour devenir un maître ninja de la barre de formules !"
+    },
+    {
+      "id": "718",
+      "file": "_posts/2025-06-25-snippets-yaml.md",
+      "permalink": "/2025/06/25/snippets-yaml/",
+      "title": "Snippets YAML"
+    },
+    {
+      "id": "756",
+      "file": "_posts/2025-07-09-snippets-fonctions-definies-par-lutilisateur-udf.md",
+      "permalink": "/2025/07/09/snippets-fonctions-definies-par-lutilisateur-udf/",
+      "title": "Snippets Fonctions Définies par l'Utilisateur (UDF)"
+    },
+    {
+      "id": "816",
+      "file": "_posts/2025-08-09-comment-importer-un-snippet-yaml-de-composant-canvas.md",
+      "permalink": "/2025/08/09/comment-importer-un-snippet-yaml-de-composant-canvas/",
+      "title": "Comment importer un snippet YAML de composant Canvas"
+    },
+    {
+      "id": "838",
+      "file": "_posts/2025-10-18-naviguer-vers-une-vue-specifique-depuis-le-menu-dune-model-driven-app.md",
+      "permalink": "/2025/10/18/naviguer-vers-une-vue-specifique-depuis-le-menu-dune-model-driven-app/",
+      "title": "Naviguer vers une vue spécifique depuis le menu d'une Model-driven app"
+    },
+    {
+      "id": "860",
+      "file": "_posts/2025-10-19-creer-un-workflow-synchrone-dans-dataverse-pour-generer-des-noms-complexes-denregistrements.md",
+      "permalink": "/2025/10/19/creer-un-workflow-synchrone-dans-dataverse-pour-generer-des-noms-complexes-denregistrements/",
+      "title": "Créer un workflow synchrone dans Dataverse pour générer des noms complexes d’enregistrements"
+    },
+    {
+      "id": "972",
+      "file": "_posts/2026-02-11-power-fx-dites-adieu-aux-pop-ups-manuelles-avec-la-fonction-confirm.md",
+      "permalink": "/2026/02/11/power-fx-dites-adieu-aux-pop-ups-manuelles-avec-la-fonction-confirm/",
+      "title": "Power Fx : Dites adieu aux Pop-ups manuelles avec la fonction Confirm()"
+    },
+    {
+      "id": "1004",
+      "file": "_posts/2026-02-18-tuto-ouvrir-une-custom-page-en-dialog-ou-side-pane-depuis-un-formulaire.md",
+      "permalink": "/2026/02/18/tuto-ouvrir-une-custom-page-en-dialog-ou-side-pane-depuis-un-formulaire/",
+      "title": "Tuto : Ouvrir une Custom Page en Dialog ou Side Pane depuis un formulaire"
+    },
+    {
+      "id": "1039",
+      "file": "_posts/2026-02-24-responsive-design-partie-2-simplifier-linterface-avec-les-layout-containers-📐.md",
+      "permalink": "/2026/02/24/responsive-design-partie-2-simplifier-linterface-avec-les-layout-containers-%f0%9f%93%90/",
+      "title": "Responsive Design Partie 2 : Simplifier l'interface avec les \"Layout Containers\" 📐"
+    },
+    {
+      "id": "1055",
+      "file": "_posts/2026-02-23-responsive-design-partie-1-concepts-et-regles-fondamentales-🧠.md",
+      "permalink": "/2026/02/23/responsive-design-partie-1-concepts-et-regles-fondamentales-%f0%9f%a7%a0/",
+      "title": "Responsive Design Partie 1 : Concepts et règles fondamentales 🧠"
+    },
+    {
+      "id": "1229",
+      "file": "_posts/2026-03-01-responsive-design-partie-3-rendre-le-contenu-dynamique-et-adaptatif-🧩.md",
+      "permalink": "/2026/03/01/responsive-design-partie-3-rendre-le-contenu-dynamique-et-adaptatif-%f0%9f%a7%a9/",
+      "title": "Responsive Design Partie 3 : Rendre le contenu dynamique et adaptatif 🧩"
+    },
+    {
+      "id": "1334",
+      "file": "_posts/2026-02-26-mise-a-jour-majeure-des-controles-modernes-power-apps-fevrier-2026-ce-que-les-makers-doivent-savoir.md",
+      "permalink": "/2026/02/26/mise-a-jour-majeure-des-controles-modernes-power-apps-fevrier-2026-ce-que-les-makers-doivent-savoir/",
+      "title": "Mise à jour majeure des contrôles modernes Power Apps (Février 2026) : Ce que les Makers doivent savoir"
+    },
+    {
+      "id": "921",
+      "file": "_posts/2026-03-15-maitriser-lintegration-de-power-automate-dans-les-business-process-flows.md",
+      "permalink": "/2026/03/15/maitriser-lintegration-de-power-automate-dans-les-business-process-flows/",
+      "title": "Maîtriser l'intégration de Power Automate dans les Business Process Flows"
+    },
+    {
+      "id": "1285",
+      "file": "_posts/2026-03-08-responsive-design-partie-4-le-cas-particulier-des-formulaires-📝.md",
+      "permalink": "/2026/03/08/responsive-design-partie-4-le-cas-particulier-des-formulaires-%f0%9f%93%9d/",
+      "title": "Responsive Design Partie 4 : Le cas particulier des formulaires 📝"
+    },
+    {
+      "id": "1508",
+      "file": "_posts/2026-05-14-valider-un-iban-dans-power-apps-regex-et-modulo-97-code-snippet.md",
+      "permalink": "/2026/05/14/valider-un-iban-dans-power-apps-regex-et-modulo-97-code-snippet/",
+      "title": "Valider un IBAN dans Power Apps : Regex et Modulo 97 (Code Snippet)"
+    },
+    {
+      "id": "1525",
+      "file": "_posts/2026-05-27-studio-tweaks-ladd-on-script-qui-va-changer-votre-vie-de-maker.md",
+      "permalink": "/2026/05/27/studio-tweaks-ladd-on-script-qui-va-changer-votre-vie-de-maker/",
+      "title": "Studio Tweaks : L'add-on / script qui va changer votre vie de maker !"
+    },
+    {
+      "id": "1604",
+      "file": "_posts/2026-09-30-snippet-clavier-et-souris-svg-dynamiques-affichage.md",
+      "permalink": "/2026/09/30/snippet-clavier-et-souris-svg-dynamiques-affichage/",
+      "title": "Snippet Clavier et souris SVG dynamiques (affichage)"
+    }
+  ],
+  "pages": [
+    {
+      "id": "1",
+      "file": "about/index.md",
+      "permalink": "/about/",
+      "title": "Qui suis-je ?"
+    }
+  ],
+  "media": 409
+}

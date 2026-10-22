@@ -1,0 +1,12 @@
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div><strong>Easy Power Platform</strong><p>Partager, apprendre, créer. Ensemble.</p><p>© {{ 'now' | date: '%Y' }} David Zoon</p></div>
+    <div class="footer-links">
+      <a href="https://github.com/DavidZoon">GitHub de David Zoon</a>
+      <a href="{{ '/feed.xml' | relative_url }}">Flux RSS</a>
+      <a href="{{ '/privacy/' | relative_url }}">Confidentialité</a>
+      {% if site.clarity_id != '' %}<button type="button" class="text-button" data-consent-open>Gérer la mesure d’audience</button>{% endif %}
+      <small>Powered by Jekyll + GitHub Pages</small>
+    </div>
+  </div>
+</footer>

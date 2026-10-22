@@ -1,0 +1,13 @@
+{% if site.giscus.enabled and page.comments %}
+<section class="comments" aria-labelledby="comments-title"
+  data-giscus-repo="{{ site.giscus.repo | escape }}"
+  data-giscus-repo-id="{{ site.giscus.repo_id | escape }}"
+  data-giscus-category="{{ site.giscus.category | escape }}"
+  data-giscus-category-id="{{ site.giscus.category_id | escape }}">
+  <h2 id="comments-title">Échanger autour de cet article</h2>
+  <p>Les commentaires utilisent Giscus et GitHub Discussions. Le service externe n’est contacté qu’après activation.</p>
+  <button class="button secondary" type="button" data-comments-load>Charger les commentaires</button>
+  <p role="status" data-comments-status></p>
+  <div class="giscus"></div>
+</section>
+{% endif %}

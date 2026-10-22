@@ -1,0 +1,1 @@
+{% assign month = include.date | date: '%m' | plus: 0 | minus: 1 %}{% assign months = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre' | split: ',' %}<time datetime="{{ include.date | date_to_xmlschema }}">{{ include.date | date: '%-d' }} {{ months[month] }} {{ include.date | date: '%Y' }}</time>

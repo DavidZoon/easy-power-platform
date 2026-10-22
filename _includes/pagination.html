@@ -1,0 +1,7 @@
+{% if paginator.total_pages > 1 %}
+<nav class="pagination" aria-label="Pagination des articles">
+  {% if paginator.previous_page %}<a class="button secondary" href="{{ paginator.previous_page_path | relative_url }}" rel="prev">← Plus récents</a>{% endif %}
+  <span>Page {{ paginator.page }} sur {{ paginator.total_pages }}</span>
+  {% if paginator.next_page %}<a class="button secondary" href="{{ paginator.next_page_path | relative_url }}" rel="next">Plus anciens →</a>{% endif %}
+</nav>
+{% endif %}

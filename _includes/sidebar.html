@@ -1,0 +1,12 @@
+<aside class="sidebar" aria-label="Explorer le blog">
+  {% include search-form.html id="sidebar-search" %}
+  <section>
+    <h2>Catégories <span class="eyebrow">Explorer</span></h2>
+    <ul class="category-list">
+      {% for term in site.data.taxonomies.categories %}
+      <li><a href="{{ '/categories/' | append: term.slug | append: '/' | relative_url }}"><span>{{ term.name | escape }}</span><span class="count">{{ term.count }}</span></a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  <section class="sidebar-note"><h2>Le low-code, en pratique.</h2><p>Power Apps, Power Automate, Dataverse, Copilot Studio et Microsoft 365 : des idées concrètes pour vos projets.</p><a href="{{ '/about/' | relative_url }}">À propos de David →</a></section>
+</aside>

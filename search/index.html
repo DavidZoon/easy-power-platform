@@ -1,0 +1,12 @@
+---
+title: Recherche
+permalink: /search/
+search: true
+---
+<form id="local-search" class="search-form" role="search" data-index="{{ '/search.json' | relative_url }}">
+  <label for="search-input">Que souhaitez-vous apprendre ?</label>
+  <div class="search-controls"><input id="search-input" type="search" name="q" maxlength="200" placeholder="Un sujet, une fonction, un produit…"><button class="button" type="submit">Rechercher</button></div>
+</form>
+<p id="search-status" role="status" aria-live="polite">Recherche locale dans les titres, catégories, tags et contenus. Aucun envoi à un service externe.</p>
+<ul id="search-results" class="search-results"></ul>
+<noscript><p>La recherche nécessite JavaScript. Vous pouvez consulter <a href="{{ '/articles/' | relative_url }}">tous les articles</a> ou <a href="{{ '/categories/' | relative_url }}">les catégories</a> sans JavaScript.</p></noscript>

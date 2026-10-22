@@ -1,0 +1,194 @@
+categories:
+  - name: Power Apps
+    slug: power-apps-62bfdca0
+    count: 27
+  - name: Canvas Apps
+    slug: canvas-apps-d8c69b44
+    count: 22
+  - name: Dataverse
+    slug: dataverse-63d835cc
+    count: 11
+  - name: Power Automate
+    slug: power-automate-39b3ce78
+    count: 9
+  - name: Cloud Flows
+    slug: cloud-flows-70169fdc
+    count: 8
+  - name: Model-Driven Apps
+    slug: model-driven-apps-5252e5d2
+    count: 8
+  - name: SharePoint
+    slug: sharepoint-9b85c8e0
+    count: 7
+  - name: Listes
+    slug: listes-56ad398c
+    count: 5
+  - name: Approvals
+    slug: approvals-2bfc3471
+    count: 2
+  - name: Dataflows
+    slug: dataflows-5ad0cc6e
+    count: 2
+  - name: Power BI
+    slug: power-bi-d4347223
+    count: 2
+  - name: Power Query
+    slug: power-query-c4041911
+    count: 2
+  - name: Processus
+    slug: processus-c24442fb
+    count: 2
+  - name: Desktop Flows
+    slug: desktop-flows-ad7e270f
+    count: 1
+  - name: Uncategorized
+    slug: uncategorized-8d40d123
+    count: 1
+tags:
+  - name: 🔶Standard
+    slug: standard-d1218499
+    count: 22
+  - name: Power Fx
+    slug: power-fx-3282889d
+    count: 19
+  - name: ⭐⭐⭐Intermédiaire
+    slug: intermediaire-55cd47fe
+    count: 15
+  - name: Tutoriel
+    slug: tutoriel-932d334e
+    count: 15
+  - name: ⭐⭐Débutant
+    slug: debutant-67aa3f00
+    count: 11
+  - name: 💠Premium
+    slug: premium-f194f782
+    count: 9
+  - name: Requêtes
+    slug: requetes-2aa888e2
+    count: 7
+  - name: Design
+    slug: design-0072e6b9
+    count: 5
+  - name: UX /UI
+    slug: ux-ui-04a458c1
+    count: 5
+  - name: ⭐⭐⭐⭐Confirmé
+    slug: confirme-961b6e77
+    count: 4
+  - name: Responsive
+    slug: responsive-de779794
+    count: 4
+  - name: Images
+    slug: images-be7e2f20
+    count: 3
+  - name: Vidéo
+    slug: video-ffda1e93
+    count: 3
+  - name: ⭐Initiation
+    slug: initiation-ef4ecb73
+    count: 2
+  - name: Application
+    slug: application-e7ad522e
+    count: 2
+  - name: Approbations
+    slug: approbations-961e50d2
+    count: 2
+  - name: automatisation
+    slug: automatisation-36ae7d8d
+    count: 2
+  - name: code
+    slug: code-5694d08a
+    count: 2
+  - name: Colonnes
+    slug: colonnes-bd9a317f
+    count: 2
+  - name: snipet
+    slug: snipet-a2459cc6
+    count: 2
+  - name: texte
+    slug: texte-a41a6138
+    count: 2
+  - name: YAML
+    slug: yaml-9b6e8abe
+    count: 2
+  - name: ⭐⭐⭐⭐⭐Expert
+    slug: expert-812cbd91
+    count: 1
+  - name: Accès aux données
+    slug: acces-aux-donnees-2c88f92c
+    count: 1
+  - name: Accessibilité
+    slug: accessibilite-73ca7389
+    count: 1
+  - name: Add-on
+    slug: add-on-1d36d781
+    count: 1
+  - name: BPF
+    slug: bpf-6783beaf
+    count: 1
+  - name: Composants
+    slug: composants-ff69652d
+    count: 1
+  - name: Compression
+    slug: compression-278b1b2a
+    count: 1
+  - name: CRUD
+    slug: crud-afec20c6
+    count: 1
+  - name: custom page
+    slug: custom-page-1c3a5966
+    count: 1
+  - name: Fichiers
+    slug: fichiers-c7c15a8a
+    count: 1
+  - name: Http
+    slug: http-d17ab73b
+    count: 1
+  - name: M
+    slug: m-08f27188
+    count: 1
+  - name: Mails
+    slug: mails-e1dd7fef
+    count: 1
+  - name: MDD
+    slug: mdd-ddf3ad45
+    count: 1
+  - name: Modern controls
+    slug: modern-controls-f4c19996
+    count: 1
+  - name: News
+    slug: news-69752f23
+    count: 1
+  - name: Odata
+    slug: odata-90b97e4a
+    count: 1
+  - name: Pièces jointes
+    slug: pieces-jointes-4bd35b0f
+    count: 1
+  - name: Rôles de sécurité
+    slug: roles-de-securite-0bd3d346
+    count: 1
+  - name: Script
+    slug: script-102acc10
+    count: 1
+  - name: Sécurité
+    slug: securite-e20a865a
+    count: 1
+  - name: snippet
+    slug: snippet-d3086fc1
+    count: 1
+  - name: Solutions
+    slug: solutions-900fe12f
+    count: 1
+  - name: Studio Tweaks
+    slug: studio-tweaks-7a32b51a
+    count: 1
+  - name: svg
+    slug: svg-acdb1373
+    count: 1
+  - name: synchrone
+    slug: synchrone-600e2342
+    count: 1
+  - name: workflow
+    slug: workflow-da7f739f
+    count: 1

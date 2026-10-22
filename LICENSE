@@ -1,13 +1,26 @@
+CODE LICENSE
+
+The MIT License below applies to the site's source code and implementation:
+the Jekyll layouts, includes, stylesheets, JavaScript, migration and build scripts,
+and configuration files.
+
+It does NOT grant permission to reproduce or redistribute the blog articles
+in `_posts`, photographs, illustrations, screenshots, logos, or other media.
+Those materials remain subject to their respective copyright and third-party
+licences unless a separate licence or written permission says otherwise.
+The site owner must ensure that they have the necessary rights to publish each
+article and media item.
+
 MIT License
 
 Copyright (c) 2026 DavidZoon
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+of the software and associated documentation files identified above (the
+"Software"), to deal in the Software without restriction, including without
+limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom
+the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.

@@ -1,0 +1,12 @@
+{% assign related_count = 0 %}
+{% capture related_cards %}
+  {% for candidate in site.posts %}
+    {% if candidate.url != page.url %}
+      {% assign matches = false %}
+      {% for category in page.categories %}{% if candidate.categories contains category %}{% assign matches = true %}{% endif %}{% endfor %}
+      {% for tag in page.tags %}{% if candidate.tags contains tag %}{% assign matches = true %}{% endif %}{% endfor %}
+      {% if matches and related_count < 3 %}{% include post-card.html post=candidate %}{% assign related_count = related_count | plus: 1 %}{% endif %}
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+{% if related_count > 0 %}<section class="related"><h2>Pour continuer votre lecture</h2><div class="related-grid">{{ related_cards }}</div></section>{% endif %}

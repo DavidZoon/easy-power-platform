@@ -1,0 +1,14 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="Easy Power Platform — Accueil">
+      <img src="{{ '/assets/images/brand.webp' | relative_url }}" width="320" height="82" alt="Easy Power Platform" fetchpriority="high">
+      <span class="brand-caption">News, tutos et astuces <span>par David Zoonekyndt</span></span>
+    </a>
+    <button class="theme-toggle" type="button" aria-label="Activer le thème clair" aria-pressed="false" hidden>Thème clair</button>
+  </div>
+  <nav class="container primary-nav" aria-label="Navigation principale">
+    {% for item in site.data.navigation %}
+    <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title }}</a>
+    {% endfor %}
+  </nav>
+</header>

@@ -1,0 +1,83 @@
+title: Easy Power Platform
+tagline: "News, tutos et astuces low-code"
+description: "Tutoriels et retours d'expérience de David Zoonekyndt sur Power Apps, Power Automate, Dataverse, Copilot Studio et Microsoft 365."
+lang: fr-FR
+timezone: Europe/Paris
+url: "https://davidzoon.github.io"
+# Site de projet GitHub Pages : https://davidzoon.github.io/easy-power-platform/
+baseurl: "/easy-power-platform"
+author:
+  name: David Zoonekyndt
+  url: https://github.com/DavidZoon
+social:
+  name: David Zoonekyndt
+  links:
+    - https://github.com/DavidZoon
+logo: /assets/images/brand.webp
+image: /assets/images/social.png
+keywords:
+  - Power Platform
+  - Power Apps
+  - Power Automate
+  - Dataverse
+  - Copilot Studio
+  - Microsoft 365
+  - low-code
+permalink: /:year/:month/:day/:title/
+paginate: 8
+paginate_path: /page/:num/
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    default_lang: plaintext
+sass:
+  style: compressed
+  sourcemap: never
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-paginate
+feed:
+  path: feed.xml
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: page
+      image: /assets/images/social.png
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      author: David Zoonekyndt
+      toc: true
+      comments: true
+clarity_id: ""
+giscus:
+  enabled: false
+  repo: ""
+  repo_id: ""
+  category: ""
+  category_id: ""
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - package.json
+  - package-lock.json
+  - node_modules
+  - vendor
+  - scripts
+  - test
+  - reports
+  - "*.xml"
+  - "*.tar"
+  - "*.zip"
+  - .migration
+  - .github
+  - .bundle

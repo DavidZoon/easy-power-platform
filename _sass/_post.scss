@@ -1,0 +1,34 @@
+@use "variables" as *;
+.post-heading { max-width: 960px; margin: 0 auto 3rem; h1 { font-size: clamp(2rem, 4vw, 3.2rem); } .chips { margin-top: 1.5rem; } }
+.post-meta { color: var(--muted); font-size: .9rem; }
+.article-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: $space * 5; align-items: start; }
+.article-main { min-width: 0; max-width: $reading-width; }
+.toc { position: sticky; top: 1rem; max-height: 85vh; overflow-y: auto; font-size: .85rem;
+  summary { font-size: 1rem; font-weight: 650; cursor: pointer; }
+  ol { list-style: none; border-left: $border solid var(--line); padding-left: 1rem; margin: .5rem 0; }
+  li { margin-bottom: .6rem; &.toc-sub { padding-left: .7rem; } }
+  a { display: inline-block; padding-block: .2rem; text-decoration: none; &:hover { text-decoration: underline; } }
+}
+.prose { overflow-wrap: anywhere; max-width: $reading-width;
+  h2, h3, h4, h5 { margin: 2em 0 .75em; scroll-margin-top: 1rem; }
+  h2 { color: var(--accent); }
+  p, ul, ol, figure, blockquote, pre, table { margin-block: 0 1.4rem; }
+  li { margin-block: .3rem; }
+  li p { margin-bottom: .4rem; }
+  figure { margin-inline: 0; }
+  img { border-radius: $radius-small; }
+  figcaption { color: var(--muted); font-size: .9rem; margin-top: .5rem; }
+  blockquote { border-left: 3px solid var(--button); background: var(--surface); padding: 1rem 1.25rem; margin-inline: 0; > :last-child { margin-bottom: 0; } }
+  code { font: .88em/1.6 $font-mono; background: var(--code-bg); padding: .15em .3em; border-radius: .25rem; }
+  pre { max-width: 100%; overflow: auto; background: var(--code-bg); border: $border solid var(--line); padding: 1.25rem; border-radius: $radius-small; tab-size: 2; code { padding: 0; background: none; white-space: pre; } }
+  .highlight { margin-bottom: 1.4rem; pre { margin-bottom: 0; } }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  td, th { padding: .7rem; border: $border solid var(--line); text-align: left; }
+  th { background: var(--surface); }
+  .table-scroll { max-width: 100%; overflow: auto; margin-bottom: 1.4rem; }
+  details { border: $border solid var(--line); border-radius: $radius-small; padding: 1rem; margin-bottom: 1.5rem; summary { cursor: pointer; font-weight: 600; color: var(--accent); } }
+  mark { color: var(--text); background: var(--surface); font-weight: 700; }
+}
+.post-footer { border-top: $border solid var(--line); margin-top: 3rem; padding-top: 1.5rem; .button { margin-top: 1.5rem; } }
+.comments { margin-top: 3rem; }
+@media (max-width: $breakpoint) { .article-grid { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; } .toc { position: static; max-height: 24rem; } .article-main { max-width: 100%; } }

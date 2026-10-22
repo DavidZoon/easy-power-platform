@@ -1,0 +1,48 @@
+$font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+$font-mono: "Cascadia Code", Consolas, monospace;
+$space: .5rem;
+$radius: 1rem;
+$radius-small: .5rem;
+$border: 1px;
+$content-width: 1240px;
+$reading-width: 78ch;
+$breakpoint: 56rem;
+
+:root {
+  color-scheme: dark;
+  --bg: #272836;
+  --surface: #303140;
+  --text: #f5f5fa;
+  --muted: #c2c3d4;
+  --accent: #aaa5ff;
+  --button: #8982ff;
+  --button-text: #101126;
+  --pink: #ff9bc8;
+  --line: #535467;
+  --card-start: #0a1926;
+  --card-end: #3d205e;
+  --code-bg: #111422;
+  --focus: #ffd05f;
+}
+
+@mixin light-theme {
+  color-scheme: light;
+  --bg: #f7f7fc;
+  --surface: #fff;
+  --text: #202136;
+  --muted: #51546b;
+  --accent: #5141b3;
+  --button: #5141b3;
+  --button-text: #fff;
+  --pink: #9f165a;
+  --line: #c5c5d8;
+  --card-start: #fff;
+  --card-end: #ede8ff;
+  --code-bg: #eeeeF7;
+  --focus: #704900;
+}
+
+:root[data-theme="light"] { @include light-theme; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) { @include light-theme; }
+}

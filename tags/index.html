@@ -1,0 +1,10 @@
+---
+title: Tags
+permalink: /tags/
+---
+<div class="chips tag-cloud">
+{% assign terms = site.data.taxonomies.tags | sort: 'name' %}
+{% for term in terms %}
+<a class="chip tag" href="{{ '/tags/' | append: term.slug | append: '/' | relative_url }}">{{ term.name | escape }} <span class="count">{{ term.count }}</span></a>
+{% endfor %}
+</div>

@@ -1,0 +1,26 @@
+{
+  "name": "easy-power-platform",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "migrate": "node scripts/migrate.mjs",
+    "test": "node --test",
+    "check:site": "node scripts/check-site.mjs",
+    "check:migration": "node scripts/check-migration.mjs",
+    "check:integrations": "node scripts/check-integrations.mjs",
+    "preview": "node scripts/preview.mjs",
+    "audit": "node scripts/audit.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "cheerio": "^1.1.2",
+    "chrome-launcher": "^1.1.2",
+    "lighthouse": "^12.8.2",
+    "playwright": "^1.56.0",
+    "sharp": "^0.34.4",
+    "wordpress-export-to-markdown": "3.0.6",
+    "xml2js": "^0.6.2",
+    "yaml": "^2.8.1"
+  }
+}

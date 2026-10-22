@@ -1,0 +1,7 @@
+<form action="{{ '/search/' | relative_url }}" method="get" class="search-form" role="search">
+  <label for="{{ include.id | default: 'query' }}">Rechercher un tutoriel</label>
+  <div class="search-controls">
+    <input id="{{ include.id | default: 'query' }}" type="search" name="q" placeholder="Power Apps, Dataverse…" maxlength="200">
+    <button class="button" type="submit">Rechercher</button>
+  </div>
+</form>

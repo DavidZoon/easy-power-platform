@@ -1,0 +1,5 @@
+{% assign type = include.type | default: 'categories' %}
+{% for name in include.values %}
+  {% assign term = site.data.taxonomies[type] | where: 'name', name | first %}
+  {% if term %}<a class="chip{% if type == 'tags' %} tag{% endif %}" href="{{ '/' | append: type | append: '/' | append: term.slug | append: '/' | relative_url }}">{{ name | escape }}</a>{% endif %}
+{% endfor %}

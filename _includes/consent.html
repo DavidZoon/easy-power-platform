@@ -1,0 +1,11 @@
+{% if site.clarity_id != '' %}
+<section class="consent-panel" aria-labelledby="consent-title" data-clarity-id="{{ site.clarity_id | escape }}" hidden>
+  <h2 id="consent-title">Votre confidentialité compte</h2>
+  <p>Microsoft Clarity peut analyser votre navigation pour améliorer ce blog. Aucun script Clarity n’est chargé sans votre accord. <a href="{{ '/privacy/' | relative_url }}">En savoir plus</a>.</p>
+  <div class="button-row">
+    <button type="button" class="button" data-consent="granted">Accepter</button>
+    <button type="button" class="button secondary" data-consent="denied">Refuser</button>
+  </div>
+  <p role="status" data-consent-status></p>
+</section>
+{% endif %}

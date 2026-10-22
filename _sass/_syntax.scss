@@ -1,0 +1,9 @@
+@use "variables" as *;
+.highlight {
+  .c, .c1, .cm, .cp, .cs { color: var(--muted); font-style: italic; }
+  .k, .kd, .kn, .kp, .kr, .kt, .ow, .nt { color: var(--pink); font-weight: 600; }
+  .s, .s1, .s2, .sb, .sc, .sd, .se, .sh, .si, .sr, .ss { color: var(--accent); }
+  .m, .mf, .mi, .mh, .il, .na, .nb, .nf, .nc { color: var(--pink); }
+  .err { text-decoration: underline wavy; }
+}
+pre[data-language]::before { content: attr(data-language); display: block; color: var(--muted); font: .72rem $font-sans; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .75rem; }

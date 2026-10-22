@@ -1,0 +1,12 @@
+---
+layout: default
+---
+<header class="page-heading"><a href="{{ '/' | append: page.taxonomy | append: '/' | relative_url }}">← {% if page.taxonomy == 'tags' %}Tous les tags{% else %}Toutes les catégories{% endif %}</a><h1>{% if page.taxonomy == 'tags' %}Tag{% else %}Catégorie{% endif %} : {{ page.term | escape }}</h1></header>
+<div class="content-grid">
+  {% include sidebar.html %}
+  <section class="post-list" aria-label="Articles de {{ page.term | escape }}">
+    {% assign posts = site[page.taxonomy][page.term] %}
+    <p class="muted">{{ posts.size }} article{% if posts.size > 1 %}s{% endif %}</p>
+    {% for post in posts %}{% include post-card.html post=post excerpt=true %}{% endfor %}
+  </section>
+</div>

@@ -23,7 +23,17 @@ try {
     const canonical = await integrationPage.locator('link[rel="canonical"]').getAttribute('href');
     const links = integrationPage.locator('.share-links a');
     assert.equal(await links.count(), 5);
+    assert(await integrationPage.evaluate(() => {
+      const share = document.querySelector('.share-links');
+      const content = document.querySelector('#post-content, #latest');
+      return Boolean(share.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING);
+    }), 'Partage attendu avant le contenu');
     for (const link of await links.all()) {
+      const icon = link.locator('svg.share-icon');
+      assert.equal(await icon.count(), 1);
+      assert.equal(await icon.getAttribute('aria-hidden'), 'true');
+      assert(await icon.isVisible(), 'Icone de partage invisible');
+      assert.equal(await icon.evaluate(element => getComputedStyle(element).fill), await link.evaluate(element => getComputedStyle(element).color), 'Icone non monochrome');
       const href = new URL(await link.getAttribute('href'));
       const param = href.searchParams.get('url') || href.searchParams.get('u') || href.searchParams.get('body') || href.searchParams.get('text');
       assert(param.includes(canonical), `URL de partage incorrecte : ${href}`);

@@ -12,6 +12,7 @@ layout: default
   </div>
 </section>
 {% else %}<h1>Articles — page {{ paginator.page }}</h1>{% endif %}
+{% include share.html url="/" title=site.title label="Partager le blog" %}
 <div class="content-grid">
   {% include sidebar.html %}
   <section id="latest" class="post-list" aria-labelledby="latest-title">
@@ -20,5 +21,4 @@ layout: default
     {% include pagination.html %}
   </section>
 </div>
-{% include share.html url="/" title=site.title label="Partager le blog" %}
 {% include newsletter.html %}

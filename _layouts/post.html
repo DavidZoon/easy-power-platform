@@ -8,6 +8,7 @@ layout: default
     <h1>{{ page.title | escape }}</h1>
     {% assign words = content | strip_html | number_of_words %}
     <p class="post-meta">{% include date.html date=page.date %} <span aria-hidden="true">·</span> {{ page.author | default: site.author.name | escape }} <span aria-hidden="true">·</span> {{ words | plus: 219 | divided_by: 220 | at_least: 1 }} min de lecture</p>
+    {% include share.html %}
   </header>
   <div class="article-grid">
     <aside class="toc" aria-label="Sommaire de l’article" hidden>
@@ -17,7 +18,6 @@ layout: default
       <div class="prose" id="post-content" data-toc="{{ page.toc }}">{{ content }}</div>
       <footer class="post-footer">
         <div class="chips">{% include taxonomy-links.html values=page.tags type="tags" %}</div>
-        {% include share.html %}
       </footer>
       {% include newsletter.html %}
       {% include giscus.html %}

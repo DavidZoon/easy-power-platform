@@ -399,7 +399,10 @@ procédure de désabonnement et son lien dans chaque e-mail. Adapter la page
 
 Le composant `_includes/share.html` fournit les liens LinkedIn, Facebook, X,
 WhatsApp et e-mail sur l’accueil (URL du blog) et les articles (URL canonique de
-l’article). Aucun SDK social ou script de suivi n’est intégré.
+l’article). Les boutons sont placés avant la liste des articles sur l’accueil et
+sous les métadonnées de chaque article. Les icônes SVG monochromes suivent la
+couleur du texte et restent décoratives pour les lecteurs d’écran.
+Aucun SDK social ou script de suivi n’est intégré.
 
 ## 11. Vérifications et objectifs Lighthouse
 

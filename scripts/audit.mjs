@@ -56,6 +56,17 @@ try {
   assert((await page.locator('#toc-list a').count()) > 0);
   assert((await page.locator('.language-powerfx .nf').count()) > 0, 'Coloration Power Fx absente');
   summary.behavior.push('Sommaire et coloration Power Fx');
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  for (const post of manifest.posts) {
+    await page.goto(url + post.permalink.slice(1));
+    const layout = await page.evaluate(() => {
+      const grid = document.querySelector('.article-grid').getBoundingClientRect();
+      const main = document.querySelector('.article-main').getBoundingClientRect();
+      return { offset: main.left - grid.left, width: main.width, toc: !document.querySelector('.toc').hidden };
+    });
+    assert(layout.offset > 200 && layout.width > 500, `Contenu mal place (${JSON.stringify(layout)}) : ${post.permalink}`);
+  }
+  summary.behavior.push('Contenu des articles dans la colonne principale, avec ou sans sommaire');
   await context.addInitScript(() => localStorage.setItem('epp-theme', 'dark'));
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(url);

@@ -1,7 +1,6 @@
 @use "variables" as *;
-.hero { padding: $space * 3 0 $space * 6; border-bottom: $border solid var(--line); margin-bottom: $space * 6; position: relative;
+.hero { padding: $space * 3 0 $space * 6; border-bottom: $border solid var(--line); margin-bottom: $space * 6;
   h1 { margin: 1rem 0 1.25rem; max-width: 20ch; span { color: var(--accent); } }
-  &::after { content: ""; position: absolute; inset: 2rem 0 auto auto; width: 11rem; height: 11rem; background: linear-gradient(135deg, #ff008f, #080858); border-radius: 30% 70% 65% 35%; opacity: .45; z-index: -1; }
 }
 .hero-description { max-width: 62ch; color: var(--muted); font-size: 1.1rem; margin-bottom: 1.75rem; }
 .hero-topics { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; margin-top: 2rem; a { font-size: .88rem; text-decoration: none; padding-block: .35rem; span { color: var(--muted); padding-left: .4rem; } } }
@@ -12,5 +11,4 @@
 .page-content { max-width: 100%; }
 .archive-year { font-size: 1.2rem; color: var(--muted); margin-top: 0; }
 .pagination { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding-block: 2rem; span { color: var(--muted); font-size: .9rem; } }
-@media (max-width: $breakpoint) { .content-grid { grid-template-columns: minmax(0, 1fr); } .sidebar { order: 2; } .hero::after { width: 6rem; height: 6rem; } }
-@media (max-width: 38rem) { .hero::after { display: none; } }
+@media (max-width: $breakpoint) { .content-grid { grid-template-columns: minmax(0, 1fr); } .sidebar { order: 2; } }

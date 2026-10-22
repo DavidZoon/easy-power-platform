@@ -55,6 +55,25 @@
       panel.hidden = true;
     }));
   }
+  const newsletterButton = document.querySelector('[data-newsletter-load]');
+  if (newsletterButton) {
+    const newsletter = newsletterButton.closest('.newsletter');
+    const frame = newsletter.querySelector('[data-newsletter-src]');
+    const status = newsletter.querySelector('[data-newsletter-status]');
+    newsletterButton.hidden = false;
+    newsletterButton.addEventListener('click', () => {
+      newsletterButton.hidden = true;
+      status.textContent = 'Chargement de Microsoft Forms. Si le formulaire ne s’affiche pas, utilisez le lien direct.';
+      frame.addEventListener('load', () => {
+        status.textContent = 'Si le formulaire ne s’affiche pas ci-dessous, ouvrez-le avec le lien direct.';
+      }, { once: true });
+      frame.addEventListener('error', () => {
+        status.textContent = 'Impossible de charger le formulaire. Utilisez le lien direct vers Microsoft Forms.';
+      }, { once: true });
+      frame.src = frame.dataset.newsletterSrc;
+      frame.hidden = false;
+    });
+  }
   const comments = document.querySelector('[data-giscus-repo]');
   if (comments) {
     const button = comments.querySelector('[data-comments-load]');

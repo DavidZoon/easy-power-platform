@@ -6,7 +6,7 @@ layout: default
   <p class="eyebrow">Power Platform · Architecture · Développement low-code</p>
   <h1>La Power Platform.<br><span>Tout simplement.</span></h1>
   <p class="hero-description">Des tutoriels, du code et des retours d’expérience pour passer de l’idée à la solution. Par David Zoonekyndt.</p>
-  <div class="button-row"><a class="button" href="#latest">Parcourir les articles <span aria-hidden="true">↓</span></a><a class="button secondary" href="{{ '/feed.xml' | relative_url }}">Suivre le flux RSS</a></div>
+  <div class="button-row"><a class="button" href="#latest">Parcourir les articles <span aria-hidden="true">↓</span></a><a class="button secondary" href="{{ '/feed.xml' | relative_url }}">Suivre le flux RSS</a><a class="button secondary" href="#newsletter">S’abonner par e-mail</a></div>
   <div class="hero-topics" aria-label="Catégories populaires">
     {% for term in site.data.taxonomies.categories limit:4 %}<a href="{{ '/categories/' | append: term.slug | append: '/' | relative_url }}">{{ term.name | escape }} <span>{{ term.count }}</span></a>{% endfor %}
   </div>
@@ -20,3 +20,5 @@ layout: default
     {% include pagination.html %}
   </section>
 </div>
+{% include share.html url="/" title=site.title label="Partager le blog" %}
+{% include newsletter.html %}

@@ -59,11 +59,14 @@ defaults:
       comments: true
 clarity_id: ""
 giscus:
-  enabled: false
-  repo: ""
-  repo_id: ""
-  category: ""
-  category_id: ""
+  enabled: true
+  repo: DavidZoon/easy-power-platform
+  repo_id: R_kgDOVTQcTA
+  category: Announcements
+  category_id: DIC_kwDOVTQcTM4DJVUi
+newsletter:
+  url: https://forms.cloud.microsoft/e/zdZVJ9fLx7
+  embed_url: https://forms.cloud.microsoft/e/zdZVJ9fLx7?embed=true
 exclude:
   - README.md
   - Gemfile

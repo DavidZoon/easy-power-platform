@@ -17,8 +17,9 @@ layout: default
       <div class="prose" id="post-content" data-toc="{{ page.toc }}">{{ content }}</div>
       <footer class="post-footer">
         <div class="chips">{% include taxonomy-links.html values=page.tags type="tags" %}</div>
-        <a class="button secondary" href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener noreferrer">Partager sur LinkedIn <span class="sr-only">(nouvel onglet)</span> ↗</a>
+        {% include share.html %}
       </footer>
+      {% include newsletter.html %}
       {% include giscus.html %}
     </div>
   </div>

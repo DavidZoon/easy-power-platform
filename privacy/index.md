@@ -3,8 +3,9 @@ title: Confidentialité
 permalink: /privacy/
 ---
 
-Ce blog statique ne propose ni compte utilisateur ni formulaire de collecte de données.
-La recherche s’exécute localement dans votre navigateur.
+Ce blog statique ne propose pas de compte utilisateur propre au site.
+La recherche s’exécute localement dans votre navigateur. Les commentaires et
+l’inscription par e-mail utilisent les services externes décrits ci-dessous.
 
 ## Hébergement
 
@@ -40,9 +41,28 @@ et [documentation Clarity](https://learn.microsoft.com/en-us/clarity/).
 
 ## Commentaires et liens externes
 
-Les commentaires Giscus sont désactivés par défaut. S’ils sont activés, leur chargement
-nécessite une action explicite et fait appel à GitHub et Giscus.
-Les liens de partage LinkedIn ne contactent LinkedIn qu’au clic.
+Les commentaires utilisent Giscus et GitHub Discussions. Le bouton « Charger les
+commentaires » contacte ces services ; publier un commentaire nécessite un compte
+GitHub. Les commentaires et votre profil GitHub associé sont publics.
+Consultez les [règles de confidentialité Giscus](https://github.com/giscus/giscus/blob/main/PRIVACY-POLICY.md)
+et la déclaration de confidentialité de GitHub.
+
+Les boutons de partage LinkedIn, Facebook, X, WhatsApp et e-mail sont de simples
+liens : aucun script de réseau social n’est chargé par le site. Les plateformes
+concernées ne sont contactées qu’après utilisation du lien.
+
+## Abonnement aux articles
+
+L’inscription est proposée via Microsoft Forms, chargé uniquement après un clic
+sur « Afficher le formulaire d’abonnement », ou ouvert directement sur Microsoft.
+Les réponses au formulaire sont transmises à Microsoft et accessibles à David
+Zoonekyndt pour gérer les abonnements et l’envoi des nouveaux articles via Power
+Automate. Le site Jekyll ne stocke pas les réponses.
+
+Consultez les informations de consentement et de désabonnement du formulaire avant
+de vous inscrire, ainsi que la [déclaration de confidentialité de Microsoft](https://privacy.microsoft.com/fr-fr/privacystatement).
+Pour demander le retrait de votre abonnement ou exercer vos droits sur vos données,
+contactez l’auteur via le lien ci-dessous.
 
 ## Contact
 

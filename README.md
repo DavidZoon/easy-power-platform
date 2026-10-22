@@ -24,7 +24,7 @@ page « À propos » restent en Markdown.
   navigation clavier, lien d’évitement et respect des mouvements réduits.
 - SEO, Open Graph, Twitter Cards et données structurées via `jekyll-seo-tag`,
   sitemap et flux Atom/RSS accessible sous `feed.xml`.
-- Clarity configurable avec consentement préalable, Giscus désactivé par défaut.
+- Clarity configurable avec consentement préalable, Giscus et abonnement Microsoft Forms au clic.
 
 Le design reprend les références fournies : anthracite `#272836`, lavande,
 rose du logo et cartes en dégradé bleu nuit/violet. Les liens utilisent une
@@ -372,7 +372,8 @@ du service et à vos coordonnées de contact avant activation.
 
 ## 10. Giscus
 
-`giscus.enabled` est `false` par défaut. Pour l’activer :
+Giscus est activé pour `DavidZoon/easy-power-platform`, catégorie `Announcements`.
+Les identifiants publics sont renseignés dans `_config.yml`. Pour un autre dépôt :
 
 1. Activer GitHub Discussions dans un repository public.
 2. Installer l’application Giscus.
@@ -381,6 +382,24 @@ du service et à vos coordonnées de contact avant activation.
 
 Les visiteurs doivent cliquer « Charger les commentaires » avant tout appel à
 Giscus/GitHub. `comments: false` masque la section pour un article donné.
+
+### Abonnement Microsoft Forms et partage
+
+Le formulaire d’abonnement est proposé sur l’accueil et sous chaque article.
+`newsletter.url` et `newsletter.embed_url` dans `_config.yml` définissent le lien
+direct et l’iframe. Microsoft Forms n’est contacté qu’après clic sur le bouton de
+chargement ; le lien direct fonctionne aussi sans JavaScript.
+
+La gestion des abonnés et l’envoi des notifications par Power Automate sont externes
+au site : aucun flux ni envoi d’e-mail n’est créé par cette intégration.
+Avant de collecter des adresses, prévoir dans Forms une information et un accord
+explicites pour l’abonnement, préciser la durée de conservation, puis prévoir une
+procédure de désabonnement et son lien dans chaque e-mail. Adapter la page
+`privacy/index.md` aux champs réellement collectés et à cette procédure.
+
+Le composant `_includes/share.html` fournit les liens LinkedIn, Facebook, X,
+WhatsApp et e-mail sur l’accueil (URL du blog) et les articles (URL canonique de
+l’article). Aucun SDK social ou script de suivi n’est intégré.
 
 ## 11. Vérifications et objectifs Lighthouse
 
@@ -403,8 +422,9 @@ npm run audit
   permaliens, couvertures et le texte de chaque bloc de code au WXR original.
   Cette commande nécessite l’export local ; elle n’est pas lancée dans GitHub Actions.
 - Tests Playwright de recherche, pagination, thème persistant, sommaire et Rouge.
-- Tests isolés Clarity/Giscus avec requêtes interceptées : aucun contact avec
-  Microsoft/Giscus pendant les vérifications ; refus, accord et retrait testés.
+- Tests isolés Clarity/Giscus/Forms avec requêtes interceptées : aucun contact avec
+  Microsoft/Giscus pendant les vérifications ; refus, accord, retrait, chargement
+  du formulaire au clic, absence de débordement mobile et URL de partage testés.
 - Axe WCAG A/AA sur 11 pages représentatives, en clair et sombre, viewport mobile.
 - Lighthouse **mobile** sur l’accueil et l’article le plus récent ; le script
   échoue si l’un des quatre scores est inférieur ou égal à 95.
@@ -415,7 +435,7 @@ pages ou tous les réseaux. Refaire les mesures sur le domaine public après
 publication et après activation éventuelle de Clarity/Giscus. GitHub Pages gère
 la compression et les en-têtes HTTP ; ce dépôt ne peut pas les imposer.
 
-Mesure locale mobile effectuée le 22 octobre 2026, Clarity/Giscus désactivés :
+Mesure locale mobile effectuée le 22 octobre 2026, sans chargement des services tiers :
 
 | Page | Performance | Accessibilité | Bonnes pratiques | SEO |
 |---|---:|---:|---:|---:|

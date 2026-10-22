@@ -39,6 +39,18 @@ for (const file of files.filter(file => file.endsWith('.html'))) {
   const $ = load(html);
   if ($('article.post').length) postCount++;
   const relative = path.relative(root, file);
+  if ($('article.post').length) {
+    const postUrl = $('link[rel="canonical"]').attr('href');
+    const shareLinks = $('.share-links a').toArray();
+    if (shareLinks.length !== 5) failures.push(`${relative}: boutons de partage manquants`);
+    for (const element of shareLinks) {
+      const url = new URL($(element).attr('href'));
+      const value = url.searchParams.get('url') || url.searchParams.get('u') || url.searchParams.get('body') || url.searchParams.get('text') || '';
+      if (!value.includes(postUrl)) failures.push(`${relative}: URL de partage incorrecte`);
+    }
+    if (!$('.newsletter a[target="_blank"]').length) failures.push(`${relative}: lien d'abonnement manquant`);
+    if ($('.newsletter-frame[src]').length) failures.push(`${relative}: formulaire charge avant action`);
+  }
   if ($('h1').length !== 1) failures.push(`${relative}: attendu exactement un h1, obtenu ${$('h1').length}`);
   if (!$('title').text() || !$('meta[name="description"]').attr('content')) failures.push(`${relative}: metadonnees incompletes`);
   if (!$('html').attr('lang')) failures.push(`${relative}: langue manquante`);

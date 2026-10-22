@@ -1,0 +1,15 @@
+{% if site.newsletter.url != blank %}
+<section class="newsletter" id="newsletter" aria-labelledby="newsletter-title">
+  <h2 id="newsletter-title">Recevoir les nouveaux articles par e-mail</h2>
+  <p>Inscrivez-vous avec Microsoft Forms. Le formulaire externe ne sera chargé qu’après votre clic.</p>
+  <p><a href="{{ '/privacy/' | relative_url }}">En savoir plus sur vos données personnelles</a></p>
+  <div class="button-row">
+    <button class="button" type="button" data-newsletter-load hidden>Afficher le formulaire d’abonnement</button>
+    <a href="{{ site.newsletter.url | escape }}" target="_blank" rel="noopener noreferrer">Ouvrir le formulaire sur Microsoft Forms <span class="sr-only">(nouvel onglet)</span> ↗</a>
+  </div>
+  <p role="status" data-newsletter-status></p>
+  <iframe class="newsletter-frame" title="Inscription aux nouveaux articles Easy Power Platform"
+    width="640" height="480" data-newsletter-src="{{ site.newsletter.embed_url | escape }}"
+    referrerpolicy="no-referrer" allowfullscreen hidden></iframe>
+</section>
+{% endif %}

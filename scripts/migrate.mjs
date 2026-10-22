@@ -7,6 +7,7 @@ import { parseStringPromise, Builder } from 'xml2js';
 import { load } from 'cheerio';
 import { stringify, parse } from 'yaml';
 import sharp from 'sharp';
+import { createCardImage } from './card-images.mjs';
 import { categoryHierarchy, escapeLiquid, inferLanguage, mediaKey, safePath, taxonomySlug } from './migration-utils.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -270,7 +271,7 @@ for (const item of published) {
   let cardImage;
   if (cover?.source) {
     cardImage = `/assets/images/cards/${id}.webp`;
-    emit(cardImage.slice(1), await sharp(cover.source).rotate().resize(360, 240, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 80 }).toBuffer());
+    emit(cardImage.slice(1), await createCardImage(generated.get(cover.url.slice(1))));
   }
   const original = load(first(item, 'content:encoded'), null, false);
   const description = original('p').filter((_, el) => !/MIGRATION/.test(original(el).text())).first().text().trim().replace(/\s+/g, ' ').slice(0, 170);

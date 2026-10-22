@@ -5,6 +5,7 @@
   "engines": { "node": ">=22" },
   "scripts": {
     "migrate": "node scripts/migrate.mjs",
+    "images:cards": "node scripts/card-images.mjs",
     "test": "node --test",
     "check:site": "node scripts/check-site.mjs",
     "check:migration": "node scripts/check-migration.mjs",

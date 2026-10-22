@@ -353,6 +353,13 @@ similaires partagent la classe `post-gallery` : cartes verticales avec image
 recadrée en haut, date, temps de lecture, titre et catégories. La grille adapte
 automatiquement le nombre de colonnes à l’espace disponible, avec une largeur
 minimale de carte de 260 px et une seule colonne sur les petits écrans.
+Les miniatures WebP sont générées à 960 px de large au maximum, sans limite
+de hauteur qui dégraderait les portraits et sans agrandissement artificiel.
+Le recadrage est effectué à l’affichage avec `object-fit: cover`. Après un
+changement d’image mise en avant (`image`), lancer `npm run images:cards`
+pour régénérer les miniatures référencées par `card_image`. La commande utilise
+les médias locaux, ne modifie pas les articles et signale les sources de moins
+de 640 px de large, à remplacer par un original plus grand si disponible.
 Sans choix enregistré, le thème suit les préférences du système.
 
 ## 9. Microsoft Clarity

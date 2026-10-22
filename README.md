@@ -20,7 +20,7 @@ page « À propos » restent en Markdown.
   mots combinés par ET, titres et taxonomies prioritaires.
 - Sommaire automatique progressif, temps de lecture estimé à 220 mots/minute,
   articles associés par catégories/tags communs et partage LinkedIn.
-- Thème clair/sombre persistant, CSS Sass modulaire minifié, police système,
+- Thème sombre par défaut, bascule clair/sombre persistante, CSS Sass modulaire minifié, police système,
   navigation clavier, lien d’évitement et respect des mouvements réduits.
 - SEO, Open Graph, Twitter Cards et données structurées via `jekyll-seo-tag`,
   sitemap et flux Atom/RSS accessible sous `feed.xml`.

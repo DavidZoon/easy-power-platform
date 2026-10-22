@@ -43,6 +43,3 @@ $breakpoint: 56rem;
 }
 
 :root[data-theme="light"] { @include light-theme; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) { @include light-theme; }
-}

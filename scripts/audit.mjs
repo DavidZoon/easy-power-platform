@@ -14,6 +14,13 @@ const manifest = JSON.parse(await fs.readFile('_data/migration.json', 'utf8'));
 const summary = { testedAt: new Date().toISOString(), accessibility: [], lighthouse: [], behavior: [] };
 let chrome;
 try {
+  const firstVisit = await browser.newContext({ colorScheme: 'light' });
+  const firstPage = await firstVisit.newPage();
+  await firstPage.goto(url);
+  assert.equal(await firstPage.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()), '#272836', 'Theme sombre attendu par defaut');
+  assert.equal(await firstPage.getByRole('button', { name: 'Activer le thème clair' }).count(), 1);
+  await firstVisit.close();
+  summary.behavior.push('Theme sombre par defaut, meme si le systeme est en mode clair');
   const context = await browser.newContext({ colorScheme: 'dark', viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
   const errors = [];

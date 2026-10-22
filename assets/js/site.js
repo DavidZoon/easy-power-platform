@@ -1,9 +1,8 @@
 (() => {
   'use strict';
   const button = document.querySelector('.theme-toggle');
-  const preference = matchMedia('(prefers-color-scheme: dark)');
   function currentTheme() {
-    return document.documentElement.dataset.theme || (preference.matches ? 'dark' : 'light');
+    return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
   }
   function update() {
     const dark = currentTheme() === 'dark';
@@ -21,7 +20,6 @@
       update();
       document.dispatchEvent(new CustomEvent('epp-theme-change', { detail: currentTheme() }));
     });
-    preference.addEventListener('change', update);
     update();
   }
 })();

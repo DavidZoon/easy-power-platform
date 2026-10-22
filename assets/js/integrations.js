@@ -72,7 +72,7 @@
         repo: comments.dataset.giscusRepo, 'repo-id': comments.dataset.giscusRepoId,
         category: comments.dataset.giscusCategory, 'category-id': comments.dataset.giscusCategoryId,
         mapping: 'pathname', strict: '1', 'reactions-enabled': '1', 'emit-metadata': '0',
-        'input-position': 'top', lang: 'fr', theme: document.documentElement.dataset.theme || 'preferred_color_scheme',
+        'input-position': 'top', lang: 'fr', theme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
         loading: 'lazy'
       };
       Object.entries(data).forEach(([key, value]) => script.setAttribute(`data-${key}`, value));

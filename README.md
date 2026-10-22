@@ -348,8 +348,9 @@ partageant une catégorie ou un tag.
 
 Les modules Sass utilisent `@use`. Les couleurs sont des variables CSS :
 la personnalisation d’un thème n’impose pas de dupliquer les composants.
-Les galeries de l’accueil (y compris les pages suivantes) et des articles
-similaires partagent la classe `post-gallery` : cartes verticales avec image
+Les galeries de l’accueil (y compris les pages suivantes), des articles
+similaires et des archives de tags et catégories partagent la classe
+`post-gallery` : cartes verticales avec image
 recadrée en haut, date, temps de lecture, titre et catégories. La grille adapte
 automatiquement le nombre de colonnes à l’espace disponible, avec une largeur
 minimale de carte de 260 px et une seule colonne sur les petits écrans.

@@ -29,6 +29,8 @@ layout: default
   <section class="post-list" aria-label="Articles de {{ page.term | escape }}">
     {% assign posts = page.term_posts | default: site[page.taxonomy][page.term] %}
     <p class="muted">{{ posts.size }} article{% if posts.size > 1 %}s{% endif %}{% if page.children.size > 0 %}, sous-catégories incluses{% endif %}</p>
-    {% for post in posts %}{% include post-card.html post=post excerpt=true %}{% endfor %}
+    <div class="post-gallery">
+      {% for post in posts %}{% include post-card.html post=post %}{% endfor %}
+    </div>
   </section>
 </div>

@@ -46,7 +46,7 @@ try {
   summary.behavior.push('Pagination');
   const sample = manifest.posts.find(post => post.id === '221');
   const latest = manifest.posts.at(-1);
-  for (const pathname of ['', 'page/2/', sample.permalink.slice(1)]) {
+  for (const pathname of ['', 'page/2/', sample.permalink.slice(1), 'categories/power-automate-39b3ce78/', 'categories/desktop-flows-ad7e270f/', 'tags/power-fx-3282889d/']) {
     await page.goto(url + pathname);
     for (const width of [390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 1000 });
@@ -72,8 +72,8 @@ try {
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Debordement galerie : ${pathname}, ${width}px`);
     }
   }
-  summary.behavior.push('Galeries verticales responsives : colonnes automatiques et images recadrees sur accueil, pagination et article');
-  const allPages = ['', 'page/2/', 'articles/', 'categories/', 'categories/power-automate-39b3ce78/', 'categories/desktop-flows-ad7e270f/', 'tags/', 'about/', 'search/', 'privacy/', '404.html', sample.permalink.slice(1), latest.permalink.slice(1)];
+  summary.behavior.push('Galeries verticales responsives : colonnes automatiques et images recadrees sur accueil, pagination, article, categories et tags');
+  const allPages = ['', 'page/2/', 'articles/', 'categories/', 'categories/power-automate-39b3ce78/', 'categories/desktop-flows-ad7e270f/', 'tags/', 'tags/power-fx-3282889d/', 'about/', 'search/', 'privacy/', '404.html', sample.permalink.slice(1), latest.permalink.slice(1)];
   for (const theme of ['dark', 'light']) {
     await context.addInitScript(value => localStorage.setItem('epp-theme', value), theme);
     for (const pathname of allPages) {

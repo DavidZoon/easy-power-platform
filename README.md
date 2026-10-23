@@ -190,6 +190,12 @@ en charge les plugins `jekyll-seo-tag`, `jekyll-feed`,
 Le workflow ne nécessite ni token personnel ni secret de déploiement. Ses droits
 d’écriture Pages et OIDC sont limités au job de publication.
 
+Chaque action GitHub est épinglée sur le SHA complet d’un commit (la version
+lisible figure en commentaire), afin qu’un tag déplacé ou compromis ne puisse
+pas modifier le code exécuté. [.github/dependabot.yml](.github/dependabot.yml)
+propose chaque semaine une pull request groupée pour mettre à jour ces SHA :
+vérifier les notes de version, laisser le workflow passer, puis fusionner.
+
 ## 6. Migration reproductible WordPress → Markdown
 
 La conversion utilise réellement

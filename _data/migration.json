@@ -116,13 +116,13 @@
     },
     {
       "id": "718",
-      "file": "_posts/2025-06-25-snippets-yaml.md",
+      "file": "snippets/yaml.md",
       "permalink": "/2025/06/25/snippets-yaml/",
       "title": "Snippets YAML"
     },
     {
       "id": "756",
-      "file": "_posts/2025-07-09-snippets-fonctions-definies-par-lutilisateur-udf.md",
+      "file": "snippets/fonctions-definies-par-lutilisateur-udf.md",
       "permalink": "/2025/07/09/snippets-fonctions-definies-par-lutilisateur-udf/",
       "title": "Snippets Fonctions Définies par l'Utilisateur (UDF)"
     },

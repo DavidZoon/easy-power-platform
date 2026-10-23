@@ -22,4 +22,8 @@
     });
     update();
   }
+  // Old anchors of split articles (e.g. #notification-toaster) lead to the new article.
+  const anchor = decodeURIComponent(location.hash.slice(1));
+  const moved = anchor && [...document.querySelectorAll('[data-redirect]')].find(element => element.id === anchor);
+  if (moved) location.replace(moved.dataset.redirect);
 })();

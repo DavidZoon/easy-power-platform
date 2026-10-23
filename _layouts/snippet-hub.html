@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<article class="page-content snippet-hub">
+  <header class="page-heading"><p class="eyebrow">Collection de snippets</p><h1>{{ page.title | escape }}</h1>{% if page.description %}<p>{{ page.description | escape }}</p>{% endif %}</header>
+  <div class="prose">{{ content }}</div>
+  {% assign snippets = site.posts | where: "snippet_source", page.snippet_source | sort: "snippet_order" %}
+  <div class="post-list snippet-list">
+    {% for post in snippets %}
+    {% assign target = post.url | relative_url %}
+    <div class="snippet-item" id="{{ post.snippet_anchors | first }}" data-redirect="{{ target }}">
+      {% for anchor in post.snippet_anchors offset: 1 %}{% assign section = anchor | split: "-" | first %}<span id="{{ anchor }}" data-redirect="{{ target }}#{{ section }}"></span>{% endfor %}
+      {% include post-card.html post=post excerpt=true %}
+    </div>
+    {% endfor %}
+  </div>
+</article>

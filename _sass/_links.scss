@@ -1,0 +1,20 @@
+@use "variables" as *;
+.link-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: $space * 2; }
+.prose .link-grid > li { margin: 0; }
+.link-card { position: relative; display: grid; grid-template-columns: 3rem 1fr; align-items: center; gap: .35rem $space * 2; padding: $space * 3; border-radius: $radius; background: linear-gradient(115deg, var(--card-start), var(--card-end)); border: $border solid var(--line); transition: border-color .2s, transform .2s;
+  &:hover, &:focus-within { border-color: var(--accent); transform: translateY(-2px); }
+  h2 { font-size: 1.1rem; margin: 0; line-height: 1.3; }
+  // The whole card is clickable through the title link.
+  h2 a { color: var(--text); text-decoration: none; &::after { content: ""; position: absolute; inset: 0; border-radius: inherit; } &:focus-visible { outline: none; } }
+  &:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+}
+.link-monogram { grid-row: span 2; width: 3rem; height: 3rem; display: grid; place-items: center; border-radius: $radius-small; background: var(--accent); color: var(--bg); font-weight: 750; font-size: 1.3rem; }
+.link-body { display: contents; }
+.prose .link-card p { margin: 0; }
+.link-host { color: var(--pink); font-size: .85rem; }
+.prose .link-card .link-description { grid-column: 1 / -1; margin-top: .75rem; color: var(--muted); font-size: .92rem; }
+.link-tags { grid-column: 1 / -1; list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0 0; padding: 0;
+  li { margin: 0; font-size: .78rem; color: var(--accent); border: $border solid var(--line); border-radius: 999px; padding: .15rem .65rem; }
+}
+.link-suggest { margin-top: $space * 4; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .link-card { transition: none; &:hover, &:focus-within { transform: none; } } }

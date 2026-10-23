@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Snippets Fonctions Définies par l'Utilisateur (UDF)
+title: "Snippet UDF : Contraste entre deux couleurs (Accessibilité)"
 date: 2025-07-09T08:45:44.000Z
 categories:
   - Canvas Apps
@@ -9,27 +9,17 @@ tags:
   - ⭐⭐⭐⭐Confirmé
   - 🔶Standard
   - Power Fx
-  - snipet
-permalink: /2025/07/09/snippets-fonctions-definies-par-lutilisateur-udf/
+  - Snippet
+permalink: /2025/07/09/snippet-udf-contraste-entre-deux-couleurs-accessibilite/
 author: David Zoonekyndt
-wordpress_id: 756
-description: Comme pour les snipets de code YAML, je partagerai de temps à autres des snipets de code Power Fx de fonctions définies par l'utilisateur (UDF).
-image: /assets/media/2025/07/copilot_20250709_103531.png.webp
-card_image: /assets/images/cards/756.webp
+description: "Fonction Power Fx définie par l’utilisateur (UDF) qui calcule le ratio de contraste entre deux couleurs et son niveau WCAG 2.2."
+image: /assets/media/2025/07/image-1.png.webp
+card_image: /assets/images/cards/snippet-udf-contraste-entre-deux-couleurs-accessibilite.webp
+newsletter_image: /assets/images/newsletter/snippet-udf-contraste-entre-deux-couleurs-accessibilite.jpg
+snippet_source: 756
+snippet_order: 1
+snippet_anchors: [contraste-entre-deux-couleurs-accessibilite, instructions]
 ---
-
-Comme pour les [snipets de code YAML](https://dz13n.wordpress.com/2025/06/25/snipets-yaml/), je partagerai de temps à autres des snipets de code Power Fx de fonctions définies par l'utilisateur (UDF).
-
-1. [Contraste entre deux couleurs (Accessibilité)]({{ '/2025/07/09/snippets-fonctions-definies-par-lutilisateur-udf/' | relative_url }}#contraste-entre-deux-couleurs-accessibilite)
-    1. [Instructions:]({{ '/2025/07/09/snippets-fonctions-definies-par-lutilisateur-udf/' | relative_url }}#instructions)
-2. [Confirmation de suppression]({{ '/2025/07/09/snippets-fonctions-definies-par-lutilisateur-udf/' | relative_url }}#confirmation-de-suppression)
-    1. [Instructions:]({{ '/2025/07/09/snippets-fonctions-definies-par-lutilisateur-udf/' | relative_url }}#instructions)
-
-
-
-## Contraste entre deux couleurs (Accessibilité) {#contraste-entre-deux-couleurs-accessibilite}
-
-
 
 <img src="{{ '/assets/media/2025/07/image-1.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="1142" height="363">
 
@@ -39,11 +29,7 @@ Cette fonction permet de calculer le ratio de contraste entre deux couleurs et d
 <summary>Voir le code et les instructions</summary>
 
 
-
-
-
-### Instructions: {#instructions}
-
+## Instructions {#instructions}
 
 
 - Vous devez activer les **fonction définies par l'utilisateur** et **les types définis par l'utilisateur** dans les fonctionnalités en préversion et expérimentales.
@@ -51,7 +37,6 @@ Cette fonction permet de calculer le ratio de contraste entre deux couleurs et d
 <img src="{{ '/assets/media/2025/07/image.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="360" height="202">
 
 - Copiez le code et collez le dans l'objet App.Formulas de votre application
-
 
 
 ```javascript
@@ -129,9 +114,7 @@ udfContrastRatioRGBA(couleurHex1: Color, couleurHex2: Color):udtContrast = With(
 ```
 
 
-
 - Utilisez la fonction **udfContrastRatioHex()** pour calculer le contraste entre deux valeurs de couleur Hexadécimales
-
 
 
 ```text
@@ -139,9 +122,7 @@ udfContrastRatioHex("#000000";"#ffffff")
 ```
 
 
-
 - Utilisez la fonction **udfContrastRatioRGBA()** pour calculer le contraste entre deux valeurs de couleur RGBA (Power Fx)
-
 
 
 ```text
@@ -149,9 +130,7 @@ udfContrastRatioRGBA( RGBA(0;0;0;1) ; RGBA(255;255;255;1) )
 ```
 
 
-
 Voici un snipet YAML qui présente un exemple d'utilisation de ces fonctions :
-
 
 
 ```yaml
@@ -277,49 +256,8 @@ Voici un snipet YAML qui présente un exemple d'utilisation de ces fonctions :
 ```
 
 
-
-
-
 </details>
 
+---
 
-
-## Confirmation de suppression {#confirmation-de-suppression}
-
-
-
-Cette fonction permet de supprimer simplement un élément après confirmation
-
-<img src="{{ '/assets/media/2025/07/image-2.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="970" height="542">
-
-<details markdown="1">
-<summary>Voir le code et les instructions</summary>
-
-
-
-
-
-### Instructions: {#instructions}
-
-
-
-- Vous devez activer les **fonction définies par l'utilisateur** et **les types définis par l'utilisateur** dans les fonctionnalités en préversion et expérimentales.
-
-<img src="{{ '/assets/media/2025/07/image.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="360" height="202">
-
-- Copiez le code et collez le dans l'objet App.Formulas de votre application
-
-
-
-```powerfx
-udtProjetRecord:=Type(RecordOf(Projet));;
-udfConfirmRemoveProjet(Item:udtProjetRecord):Void = {If(Confirm($"Supprimer {Item.Titre} ?");Remove(Projet;Item))} ;;
-```
-
-
-
-- Remplacez "**Projet**" par le nom de votre source de données : Liste table etc...
-
-
-
-</details>
+Ce snippet fait partie de la collection [Snippets Fonctions Définies par l'Utilisateur (UDF)]({{ '/2025/07/09/snippets-fonctions-definies-par-lutilisateur-udf/' | relative_url }}). Retrouvez tous les snippets avec le tag [Snippet]({{ '/tags/snippet-48f55cb8/' | relative_url }}).

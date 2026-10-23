@@ -1,0 +1,21 @@
+---
+layout: page
+title: Liens utiles
+permalink: /liens-utiles/
+description: Une sélection de sites, portfolios et ressources recommandés autour de la Power Platform.
+---
+<ul class="link-grid" role="list">
+  {% for link in site.data.links %}
+  {% assign host = link.url | split: "//" | last | split: "/" | first | remove_first: "www." %}
+  <li class="link-card">
+    <span class="link-monogram" aria-hidden="true">{{ link.name | slice: 0 | upcase }}</span>
+    <div class="link-body">
+      <h2><a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.name | escape }}<span class="sr-only"> (nouvel onglet)</span></a></h2>
+      <p class="link-host">{{ host | escape }} <span aria-hidden="true">↗</span></p>
+      {% if link.description %}<p class="link-description">{{ link.description | escape }}</p>{% endif %}
+      {% if link.tags %}<ul class="link-tags" aria-label="Thèmes">{% for tag in link.tags %}<li>{{ tag | escape }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+<p class="link-suggest">Vous connaissez une ressource utile ? <a href="https://github.com/DavidZoon/easy-power-platform/issues">Proposez-la sur GitHub</a>.</p>

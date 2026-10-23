@@ -1,0 +1,9 @@
+# Liens utiles affichés sur /liens-utiles/.
+# Champs : name (obligatoire), url (obligatoire, https), description, tags (liste).
+- name: Portfolio de Nelson Boruchowitch
+  url: https://nelsonboruchowitch.com/index.html
+  description: Développeur Power Platform & Kotlin. Bibliothèque de composants Canvas Power Apps réutilisables, livrés en source YAML avec aperçu interactif et code Power Fx prêt à coller.
+  tags:
+    - Power Apps
+    - Composants
+    - YAML

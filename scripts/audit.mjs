@@ -100,14 +100,15 @@ try {
   assert.equal(copied, (await block.locator('pre code').textContent()).replace(/\n$/, ''), 'Contenu copie different');
   summary.behavior.push('Blocs de code : libelle du langage, hauteur maximale 300px, copie dans le presse-papier');
   await page.setViewportSize({ width: 1440, height: 1000 });
-  for (const post of manifest.posts) {
-    await page.goto(url + post.permalink.slice(1));
+  const posts = JSON.parse(await fs.readFile('_site/search.json', 'utf8'));
+  for (const post of posts) {
+    await page.goto(new URL(post.url, url).href);
     const layout = await page.evaluate(() => {
       const grid = document.querySelector('.article-grid').getBoundingClientRect();
       const main = document.querySelector('.article-main').getBoundingClientRect();
       return { offset: main.left - grid.left, width: main.width, toc: !document.querySelector('.toc').hidden };
     });
-    assert(layout.offset > 200 && layout.width > 500, `Contenu mal place (${JSON.stringify(layout)}) : ${post.permalink}`);
+    assert(layout.offset > 200 && layout.width > 500, `Contenu mal place (${JSON.stringify(layout)}) : ${post.url}`);
   }
   summary.behavior.push('Contenu des articles dans la colonne principale, avec ou sans sommaire');
   await context.addInitScript(() => localStorage.setItem('epp-theme', 'dark'));

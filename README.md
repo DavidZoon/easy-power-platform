@@ -521,6 +521,59 @@ le générateur les actualise en mémoire, sans réécrire vos sources.
 Vérifier l’orthographe exacte sur les pages **Catégories** et **Tags** avant
 d’en créer une nouvelle : `Power Apps` et `PowerApps` produiraient deux archives.
 
+Pour **renommer** un tag existant (par exemple `snipet` → `Snippet`), remplacer
+le nom dans les articles, retirer l’entrée de `_data/taxonomies.yml`, puis
+transformer l’ancienne archive (`tags/<ancien-slug>.html`) en page de redirection,
+pour ne pas casser les liens déjà partagés :
+
+```yaml
+---
+layout: page
+title: Tag « snipet » renommé
+description: Le tag snipet a été renommé Snippet.
+permalink: /tags/snipet-a2459cc6/
+redirect_to: /tags/snippet-48f55cb8/
+noindex: true
+sitemap: false
+---
+```
+
+`redirect_to` produit une redirection immédiate (`meta refresh`) ; `noindex`
+et `sitemap: false` retirent l’ancienne adresse des moteurs de recherche.
+Ajouter aussi le renommage à `renamedTags` dans
+[scripts/check-migration.mjs](scripts/check-migration.mjs).
+
+### Snippets
+
+Chaque snippet est un article autonome portant le tag `Snippet`, avec un titre
+de la forme `Snippet YAML : …` ou `Snippet UDF : …`. Les anciens articles
+WordPress « Snippets YAML » et « Snippets Fonctions Définies par l’Utilisateur
+(UDF) » ont été découpés en un article par snippet. Leurs dates de publication
+d’origine sont conservées (sans `last_modified_at`), ce qui évite de déclencher
+la newsletter.
+
+Les anciennes adresses restent valides : ce sont des pages sommaires
+([snippets/yaml.md](snippets/yaml.md),
+[snippets/fonctions-definies-par-lutilisateur-udf.md](snippets/fonctions-definies-par-lutilisateur-udf.md),
+layout [_layouts/snippet-hub.html](_layouts/snippet-hub.html)). Elles listent
+automatiquement les articles dont `snippet_source` correspond, triés par
+`snippet_order`. Les anciennes ancres (`#notification-toaster`, `#code-2`…),
+déclarées dans `snippet_anchors`, redirigent vers le bon article.
+
+Pour ajouter un snippet à une collection existante :
+
+```yaml
+tags:
+  - Power Fx
+  - YAML
+  - Snippet
+snippet_source: 718   # 718 = Snippets YAML, 756 = Snippets UDF
+snippet_order: 8
+snippet_anchors: [mon-nouveau-snippet]
+```
+
+Un snippet indépendant n’a besoin que du tag `Snippet`.
+
 ### Hiérarchie des catégories
 
 La hiérarchie WordPress (`wp:category_parent`) est conservée dans
@@ -610,8 +663,27 @@ partageant une catégorie ou un tag.
 | Cartes | `_includes/post-card.html`, `_sass/_cards.scss` |
 | Articles et sommaire | `_layouts/post.html`, `_sass/_post.scss` |
 | Barre latérale | `_includes/sidebar.html`, `_sass/_sidebar.scss` |
+| Page Liens utiles | `_data/links.yml`, `liens-utiles/index.html`, `_sass/_links.scss` |
 | Styles de code | `_sass/_syntax.scss` |
 | Feuille d’entrée | `assets/css/main.scss` |
+
+### Page Liens utiles
+
+La page [/liens-utiles/](liens-utiles/index.html), accessible depuis la
+navigation, affiche une grille de cartes générée à partir de
+[_data/links.yml](_data/links.yml). Pour ajouter un site, ajouter une entrée :
+
+```yaml
+- name: Nom du site
+  url: https://exemple.com/
+  description: Une ou deux phrases qui présentent le site.
+  tags:
+    - Power Apps
+```
+
+Le domaine et l’initiale sont déduits automatiquement. Les liens s’ouvrent
+dans un nouvel onglet (`rel="noopener noreferrer"`, annoncé aux lecteurs
+d’écran), et toute la carte est cliquable et accessible au clavier.
 
 Les modules Sass utilisent `@use`. Les couleurs sont des variables CSS :
 la personnalisation d’un thème n’impose pas de dupliquer les composants.
@@ -789,6 +861,8 @@ npm run audit
   images dimensionnées avec `alt`, index de recherche, sitemap, flux, exclusions.
 - `check:migration` compare réellement les titres, dates, catégories, tags,
   permaliens, couvertures et le texte de chaque bloc de code au WXR original.
+  Pour les articles découpés en snippets, le code des nouveaux articles réunis
+  doit être identique à l’original, avec les mêmes dates, catégories et tags.
   Cette commande nécessite l’export local ; elle n’est pas lancée dans GitHub Actions.
 - Tests Playwright de recherche, pagination, thème persistant, sommaire et Rouge.
 - Tests isolés Clarity/Giscus/Forms avec requêtes interceptées : aucun contact avec

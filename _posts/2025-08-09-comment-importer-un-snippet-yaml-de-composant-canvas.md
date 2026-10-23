@@ -22,7 +22,7 @@ card_image: /assets/images/cards/816.webp
 
 La fonctionnalité permettant de copier-coller du code YAML a eu quelques évolutions : la copie d'écran et désormais la copie de composants ! Voici un guide étape par étape pour importer facilement un composant qui vous a été fourni sous forme de Snippet YAML.
 
-Pour ce guide nous allons utiliser le composant suivant : [notification-toaster]({{ '/2025/06/25/snippets-yaml/' | relative_url }}#notification-toaster)
+Pour ce guide nous allons utiliser le composant suivant : [notification-toaster]({{ '/2025/06/25/snippet-yaml-notification-toaster/' | relative_url }})
 
 ## Ouvrir votre application
 

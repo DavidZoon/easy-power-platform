@@ -10,7 +10,7 @@ tags:
   - code
   - 🔶Standard
   - Power Fx
-  - snipet
+  - Snippet
 permalink: /2026/05/14/valider-un-iban-dans-power-apps-regex-et-modulo-97-code-snippet/
 author: David Zoonekyndt
 wordpress_id: 1508

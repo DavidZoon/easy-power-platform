@@ -1,7 +1,10 @@
+import { initializePowerFx } from './powerfx.js';
+
 (() => {
   'use strict';
   const content = document.querySelector('#post-content');
   if (!content) return;
+  initializePowerFx(content);
   content.querySelectorAll('pre').forEach(pre => {
     const label = pre.closest('.code-block')?.querySelector('.code-lang')?.textContent;
     pre.tabIndex = 0;

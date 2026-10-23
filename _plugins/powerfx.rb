@@ -6,7 +6,7 @@ module Rouge
       title "Power Fx"
       desc "Microsoft Power Fx formulas"
       tag "powerfx"
-      aliases "power-fx"
+      aliases "power-fx", "powerfx-comma", "powerfx-semicolon"
       filenames "*.fx"
 
       state :root do

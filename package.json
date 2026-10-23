@@ -11,6 +11,7 @@
     "check:site": "node scripts/check-site.mjs",
     "check:migration": "node scripts/check-migration.mjs",
     "check:integrations": "node scripts/check-integrations.mjs",
+    "check:powerfx": "node scripts/check-powerfx.mjs",
     "preview": "node scripts/preview.mjs",
     "audit": "node scripts/audit.mjs"
   },

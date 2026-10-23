@@ -17,10 +17,15 @@
     const script = document.createElement('script');
     script.src = `https://www.clarity.ms/tag/${id}`;
     script.async = true;
+    panel.querySelector('[data-consent-status]').textContent = '';
+    panel.querySelector('[data-consent="granted"]').textContent = 'Accepter';
     script.onerror = () => {
       console.error('Chargement Microsoft Clarity impossible');
+      clarityLoaded = false;
+      script.remove();
       panel.hidden = false;
-      panel.querySelector('[data-consent-status]').textContent = 'Microsoft Clarity n’a pas pu être chargé. Vous pouvez refuser la mesure d’audience.';
+      panel.querySelector('[data-consent="granted"]').textContent = 'Réessayer';
+      panel.querySelector('[data-consent-status]').textContent = 'Microsoft Clarity n’a pas pu être chargé. Un bloqueur de publicités, une protection contre le suivi ou un problème réseau peut en être la cause. Ce blog ne contient aucune publicité : la mesure d’audience m’aide à mieux cibler et améliorer les contenus que je mets gratuitement à votre disposition. Si vous le souhaitez, autorisez Clarity pour ce site dans votre bloqueur ou votre protection contre le suivi, puis cliquez sur « Réessayer ». Vous pouvez aussi refuser : tous les contenus restent accessibles.';
     };
     document.head.append(script);
     clarityLoaded = true;

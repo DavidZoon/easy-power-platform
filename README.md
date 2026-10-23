@@ -275,9 +275,241 @@ entre tags avec accents/emoji et noms similaires.
 
 ## 7. Écrire un article et gérer les taxonomies
 
-Créer un fichier dans `_posts`, avec un nom `YYYY-MM-DD-mon-article.md` et le
-front matter ci-dessus (sans `wordpress_id` pour un nouveau billet).
-Les dates futures ne sont pas publiées par défaut par Jekyll.
+### Organisation multi-auteurs
+
+Le dépôt `DavidZoon/easy-power-platform` reste **la seule source publiée**. Chaque
+auteur rédige dans **son propre dépôt**, un *fork* du blog, puis propose ses
+articles par **pull request**. Le mainteneur relit et fusionne ; la fusion sur
+`main` déclenche automatiquement la publication.
+
+```text
+Dépôt de l’auteur (fork)          Dépôt du blog                  GitHub Pages
+branche article/mon-article  ──►  pull request ──► main  ──►  build + déploiement
+```
+
+Ce fonctionnement ne donne aucun droit d’écriture sur le blog aux auteurs et ne
+nécessite ni jeton ni secret partagé. Les droits de déploiement restent dans le
+dépôt du blog : les workflows d’un fork n’y ont pas accès. Il convient aussi à
+un auteur unique : David peut suivre les mêmes étapes depuis une branche du
+dépôt principal, sans fork.
+
+> Un dépôt de contenu totalement séparé, qui pousserait seul ses articles dans
+> le blog, est possible mais demanderait un jeton ou une GitHub App avec droit
+> d’écriture sur ce dépôt. Cette option est plus risquée et plus complexe à
+> maintenir : le fork avec pull request reste recommandé.
+
+### Étape 1 – Préparer son dépôt (une seule fois par auteur)
+
+1. Sur GitHub, ouvrir le dépôt du blog et cliquer sur **Fork**.
+2. Installer les prérequis de la section 2 (Ruby 3.3 et Node.js 24).
+3. Cloner son fork et déclarer le dépôt du blog comme source de référence :
+
+   ```powershell
+   git clone https://github.com/<compte-auteur>/easy-power-platform.git
+   Set-Location easy-power-platform
+   git remote add upstream https://github.com/DavidZoon/easy-power-platform.git
+   bundle install
+   npm ci
+   ```
+
+4. Choisir une fois pour toutes l’orthographe de son nom d’auteur. Le champ
+   `author` est affiché tel quel sur l’article, dans le flux RSS et dans les
+   métadonnées SEO : il doit être **identique** dans tous ses articles. Sans ce
+   champ, l’auteur par défaut est David Zoonekyndt (`defaults` de
+   [_config.yml](_config.yml)).
+
+### Étape 2 – Créer une branche à jour
+
+Une branche et une pull request **par article** :
+
+```powershell
+git fetch upstream
+git switch -c article/mon-article upstream/main
+```
+
+Partir de `upstream/main` garantit d’utiliser la dernière version du thème et
+évite les conflits avec les articles des autres auteurs.
+
+### Étape 3 – Créer le fichier de l’article
+
+Créer `_posts/AAAA-MM-JJ-mon-article.md` :
+
+- la date du nom de fichier est la date de publication ;
+- `mon-article` devient l’adresse définitive de l’article
+  (`/AAAA/MM/JJ/mon-article/`) : minuscules, sans accent ni espace, mots
+  séparés par des tirets. **Ne plus le modifier après publication**, sous
+  peine de casser les liens et le référencement.
+
+Front matter d’un nouvel article :
+
+```yaml
+---
+title: "Automatiser l'archivage des pièces jointes avec Power Automate"
+date: 2026-11-05T08:00:00+01:00
+author: Prénom Nom
+description: "Résumé unique de 150 à 160 caractères, affiché dans les cartes, les moteurs de recherche et la newsletter."
+categories:
+  - Power Automate
+tags:
+  - SharePoint
+  - Tutoriel
+image: /assets/images/posts/2026-11-05-mon-article/couverture.webp
+card_image: /assets/images/cards/2026-11-05-mon-article.webp
+newsletter_image: /assets/images/newsletter/2026-11-05-mon-article.jpg
+---
+```
+
+| Champ | Rôle |
+|---|---|
+| `title` | Titre affiché, onglet du navigateur, partages et newsletter. |
+| `date` | Date et heure de publication, avec le fuseau (`+01:00` en hiver, `+02:00` en été). |
+| `author` | Nom de l’auteur (voir étape 1). |
+| `description` | Résumé des cartes, de la balise meta description et du mail de newsletter. |
+| `categories` | Une ou deux catégories existantes, de préférence la plus précise (une sous-catégorie suffit). |
+| `tags` | Mots-clés libres ; réutiliser les tags existants de la page **Tags**. |
+| `image` | Image principale : partages sociaux et source des miniatures. |
+| `card_image` | Miniature des cartes, générée à l’étape 4. |
+| `newsletter_image` | Copie JPEG pour les clients mail, générée à l’étape 4. |
+| `toc` | `false` pour masquer le sommaire (facultatif). |
+| `comments` | `false` pour désactiver Giscus sur l’article (facultatif). |
+
+`layout`, `toc: true` et `comments: true` sont appliqués par défaut. Ne pas
+ajouter `permalink` ni `wordpress_id` : ces champs sont réservés aux articles
+migrés depuis WordPress.
+
+**Date future :** Jekyll ne publie pas un article daté dans le futur. Le
+workflow ne s’exécute qu’à chaque push : après la date prévue, relancer
+**Actions → Build and deploy GitHub Pages → Run workflow**, sinon l’article
+n’apparaîtra qu’au prochain push.
+
+**Brouillon :** un article en cours peut être placé dans `_drafts/mon-article.md`,
+sans date dans le nom. Il est visible localement avec
+`bundle exec jekyll serve --drafts --baseurl ""` et n’est jamais publié. Le
+déplacer dans `_posts` avec le nom daté une fois terminé.
+
+### Étape 4 – Ajouter les images
+
+Ranger les images de l’article dans un dossier qui lui est propre, nommé comme
+le fichier, pour éviter toute collision entre auteurs :
+`assets/images/posts/2026-11-05-mon-article/`. Privilégier le WebP, d’au moins
+1200 px de large pour l’image principale, et ne publier que des images dont on
+détient les droits.
+
+Insérer les images ainsi pour respecter le sous-chemin et éviter les décalages :
+
+```html
+<img src="{{ '/assets/images/posts/2026-11-05-mon-article/etape-1.webp' | relative_url }}"
+     alt="Description précise de ce que montre la capture"
+     width="1200" height="800" loading="lazy" decoding="async">
+```
+
+`width` et `height` sont les dimensions réelles de l’image. Les images
+décoratives doivent avoir `alt=""`. Relire notamment les captures de tutoriels
+migrées : une légende n’est pas toujours un substitut suffisant.
+
+Générer ensuite la miniature et l’image de newsletter à partir de `image` :
+
+```powershell
+npm run images:cards
+npm run images:newsletter
+```
+
+Les deux commandes traitent tous les articles ; seuls les fichiers du nouvel
+article doivent apparaître comme nouveaux dans `git status`.
+
+### Étape 5 – Vérifier localement
+
+```powershell
+bundle exec jekyll serve --livereload --baseurl ""
+```
+
+Relire l’article sur `http://127.0.0.1:4000/` : mise en page, images, sommaire,
+catégories, tags, carte sur l’accueil et en mode clair comme sombre. Lancer
+ensuite les mêmes contrôles que le workflow de publication :
+
+```powershell
+$env:JEKYLL_ENV = "production"
+bundle exec jekyll build --strict_front_matter
+npm run check:site
+```
+
+### Étape 6 – Proposer l’article
+
+```powershell
+git status
+git add _posts/2026-11-05-mon-article.md assets/images
+git commit -m "Add post: Automatiser l'archivage des pièces jointes"
+git push -u origin article/mon-article
+```
+
+Sur GitHub, cliquer sur **Compare & pull request**, avec comme cible
+`DavidZoon/easy-power-platform`, branche `main`. Dans la description, indiquer
+la date de publication souhaitée et confirmer les points suivants :
+
+- [ ] build et `npm run check:site` réussis localement ;
+- [ ] textes alternatifs renseignés sur toutes les images ;
+- [ ] droits d’utilisation des images et des contenus vérifiés ;
+- [ ] aucune donnée confidentielle (URL d’environnement, identifiants, e-mails clients…).
+
+Les corrections demandées en relecture se font sur la même branche : un nouveau
+`git push` met la pull request à jour.
+
+### Étape 7 – Relecture et publication (mainteneur)
+
+1. Récupérer la pull request localement (remplacer `12` par son numéro) :
+
+   ```powershell
+   git fetch origin pull/12/head:pr-12
+   git switch pr-12
+   ```
+
+2. Lancer le build et `npm run check:site` (étape 5), puis relire le rendu.
+3. Vérifier en particulier :
+   - le champ `author` et la cohérence des catégories et tags ;
+   - que seuls `_posts` et le dossier d’images de l’article sont modifiés ;
+     toute modification de `_layouts`, `_includes`, `_plugins`, `assets/js`,
+     `.github` ou `_config.yml` doit faire l’objet d’une pull request dédiée ;
+   - l’absence de `<script>`, d’`<iframe>`, de formulaire ou d’image hébergée
+     sur un autre site dans le Markdown : le HTML brut est publié tel quel.
+4. Fusionner avec **Squash and merge**. Le push sur `main` publie le site en
+   quelques minutes. Le flux Power Automate envoie ensuite la newsletter lors
+   de sa prochaine vérification du flux RSS (toutes les 30 minutes au plus).
+5. Revenir sur `main` et supprimer la branche locale :
+   `git switch main` puis `git branch -D pr-12`.
+
+Réglages conseillés dans **Settings** quand plusieurs auteurs contribuent :
+
+- **Branches → Add branch ruleset** sur `main` : pull request obligatoire avec
+  au moins une approbation, et blocage des force-push ;
+- **Actions → General → Fork pull request workflows** : exiger une approbation
+  pour les contributeurs externes ;
+- un fichier `.github/CODEOWNERS` contenant `* @DavidZoon`, pour demander
+  automatiquement la relecture du mainteneur.
+
+> Évolution possible : ajouter au workflow un déclencheur `pull_request` limité
+> au job `build`, afin de vérifier chaque proposition avant fusion. Le job
+> `deploy` doit rester réservé à `main`.
+
+### Mettre à jour un article publié ou synchroniser son fork
+
+Même procédure : nouvelle branche depuis `upstream/main`, modification, pull
+request. Pour signaler une mise à jour importante, ajouter
+`last_modified_at: 2026-11-20T10:00:00+01:00` au front matter.
+**Attention :** cette date alimente le champ `updated` du flux, que le
+déclencheur Power Automate surveille (`sinceProperty: UpdatedOn`) : elle
+provoque un **nouvel envoi de la newsletter**. Ne pas l’utiliser pour une simple
+correction de faute.
+
+Pour remettre la branche `main` de son fork à jour :
+
+```powershell
+git fetch upstream
+git switch main
+git merge --ff-only upstream/main
+git push origin main
+```
+
+### Nouvelles catégories et nouveaux tags
 
 Pour ajouter une **nouvelle** catégorie ou un **nouveau** tag après la migration,
 ajouter simplement son nom au front matter. Le générateur
@@ -286,6 +518,8 @@ automatiquement les nouvelles archives à chaque construction. Il utilise les
 mêmes slugs stables que la migration. Le registre `_data/taxonomies.yml` et les
 archives écrites lors de la migration servent de photographies initiales ;
 le générateur les actualise en mémoire, sans réécrire vos sources.
+Vérifier l’orthographe exacte sur les pages **Catégories** et **Tags** avant
+d’en créer une nouvelle : `Power Apps` et `PowerApps` produiraient deux archives.
 
 ### Hiérarchie des catégories
 
@@ -305,17 +539,6 @@ d’Ariane et la liste de ses sous-catégories. Pour créer une sous-catégorie,
 ajouter une ligne à ce fichier : un article peut n’indiquer que la
 sous-catégorie. Les niveaux multiples sont pris en charge.
 
-Insérer les images ainsi pour respecter le sous-chemin et éviter les décalages :
-
-```html
-<img src="{{ '/assets/images/mon-image.webp' | relative_url }}"
-     alt="Description précise de ce que montre la capture"
-     width="1200" height="800" loading="lazy" decoding="async">
-```
-
-Les images décoratives doivent avoir `alt=""`. Relire notamment les captures
-de tutoriels migrées : une légende n’est pas toujours un substitut suffisant.
-
 ### Code
 
 Employer des blocs clôturés avec `powerfx`, `json`, `powershell`, `csharp`, `yaml`
@@ -332,6 +555,44 @@ pour un nouveau langage s’ajoute dans `LABELS`, le style est dans
 Pour écrire du Liquid littéral dans un extrait, utiliser les balises
 `{% raw %}` / `{% endraw %}` autour du bloc. Le script protège automatiquement
 les séquences Liquid présentes dans le code WordPress.
+
+#### Séparateurs Power Fx selon la langue du lecteur
+
+Les blocs `powerfx` (alias `power-fx`) disposent d’un sélecteur **Séparateur
+d’arguments**. Son choix initial suit le séparateur décimal de la langue du
+navigateur : virgule décimale → arguments `;`, sinon arguments `,`.
+Chaque bloc peut ensuite être basculé indépendamment. Le bouton **Copier**
+copie la version affichée, sans modifier le fichier Markdown.
+
+La conversion adapte les arguments et les champs d’enregistrements (` , ` ↔
+` ; `), les décimales (`1.5` ↔ `1,5`) et l’enchaînement des actions (`;` ↔
+`;;`). Les commentaires, les chaînes et les noms entre apostrophes restent
+inchangés ; dans une chaîne interpolée `$"..."`, seules les expressions
+entre accolades sont converties. Les formats textuels passés à `Text()`
+restent donc ceux choisis par l’auteur.
+
+La détection est volontairement prudente : `[1,2]` peut désigner deux nombres
+en syntaxe virgule ou un seul nombre décimal en syntaxe point-virgule.
+Les extraits ambigus, incomplets ou mélangeant les syntaxes affichent
+**« Syntaxe ambiguë ou mixte : code original conservé. »** avec le sélecteur
+désactivé. Ils ne sont jamais convertis arbitrairement.
+
+Pour lever cette ambiguïté, préciser **la syntaxe source**, et non celle à
+afficher par défaut, dans l’étiquette du bloc :
+
+````markdown
+```powerfx-comma
+Set(total, 1.5); Notify("Terminé")
+```
+
+```powerfx-semicolon
+Set(total; 1,5);; Notify("Terminé")
+```
+````
+
+Séparer les exemples français et anglais dans deux blocs distincts. Ces
+étiquettes conservent la coloration Power Fx. Sans JavaScript, seul le code
+original est affiché et le sélecteur est masqué.
 
 Le sommaire est généré depuis les titres H2/H3 avec JavaScript. Les titres et
 leurs ancres restent accessibles sans JavaScript ; désactiver le sommaire avec
@@ -400,6 +661,12 @@ L’inclusion de ce fichier est volontaire : une valeur placée seulement dans
 - Consent API v2 : `analytics_Storage` accordé uniquement après accord,
   `ad_Storage` toujours refusé.
 - Contenu principal marqué `data-clarity-mask="true"`.
+- En cas d’échec du chargement après accord, un message explique qu’un bloqueur,
+  une protection contre le suivi ou un problème réseau peut en être la cause
+  (le navigateur ne permet pas de les distinguer avec certitude). Il rappelle
+  l’absence de publicité et l’utilité de la mesure pour les contenus gratuits,
+  et propose d’autoriser Clarity uniquement pour ce site puis de réessayer.
+  Le refus reste accessible et ne limite jamais l’accès aux contenus.
 
 Configurer aussi **Strict masking** dans le tableau de bord Clarity et vérifier
 les enregistrements après activation. Le code seul ne remplace ni les réglages
@@ -457,7 +724,8 @@ Les articles migrés utilisent une copie JPEG de leur image principale
 pour les clients mail qui ne prennent pas en charge WebP, notamment Outlook
 classique. Lancer `npm run images:newsletter` après un changement d’image.
 Pour un nouvel article sans `wordpress_id`, définir `newsletter_image` dans le
-front matter avec le chemin d’une image JPEG dédiée. À défaut, le flux utilise
+front matter (`/assets/images/newsletter/mon-article.jpg`) : la même commande
+génère alors ce JPEG à partir de `image`. À défaut, le flux utilise
 `image`, dont le format doit être compatible avec les clients mail ciblés.
 
 Le fichier est explicitement inclus malgré l’exclusion des exports `*.xml`.

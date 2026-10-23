@@ -26,7 +26,7 @@ test('all published card thumbnails use the available source resolution', async 
   for (const filename of await fs.readdir(new URL('_posts/', root))) {
     if (!filename.endsWith('.md')) continue;
     const markdown = await fs.readFile(new URL(`_posts/${filename}`, root), 'utf8');
-    const frontmatter = parse(markdown.match(/^---\r?\n([\s\S]+?)\r?\n---/)[1]);
+    const frontmatter = parse(markdown.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]+?)\r?\n---/)[1]);
     if (!frontmatter.card_image) continue;
     const source = await sharp(await fs.readFile(new URL(frontmatter.image.slice(1), root))).metadata();
     const thumbnail = await sharp(await fs.readFile(new URL(frontmatter.card_image.slice(1), root))).metadata();

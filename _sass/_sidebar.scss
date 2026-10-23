@@ -3,8 +3,15 @@
 .search-form { margin-bottom: 1.5rem; label { display: block; font-size: .95rem; font-weight: 600; margin-bottom: .6rem; } input { min-width: 0; width: 100%; background: var(--surface); color: var(--text); border: $border solid var(--line); border-radius: 999px; padding: .6rem 1rem; &::placeholder { color: var(--muted); opacity: 1; } } }
 .search-controls { display: flex; gap: .6rem; }
 .sidebar .search-controls { flex-wrap: wrap; .button { padding: .45rem 1rem; font-size: .85rem; } }
-.category-list { list-style: none; padding: 0; margin: 0; li + li { border-top: $border solid var(--line); } a { display: flex; justify-content: space-between; align-items: center; gap: .75rem; min-height: 44px; font-size: .9rem; text-decoration: none; &:hover { text-decoration: underline; } }
-  &.nested { margin-left: .9rem; padding-left: .9rem; border-left: $border solid var(--line); li, li + li { border-top: 0; } a { min-height: 36px; font-size: .85rem; color: var(--muted); } }
+// Sidebar explorer: one card per root category, sub-categories inside without separators.
+.category-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .75rem;
+  > li { padding: .25rem 1rem; background: var(--surface); border: $border solid var(--line); border-radius: $radius; }
+  a { display: flex; justify-content: space-between; align-items: center; gap: .75rem; min-height: 44px; font-size: .9rem; font-weight: 600; text-decoration: none; &:hover { text-decoration: underline; } }
+  &.nested { display: block; margin: 0 0 .5rem; padding: 0 0 0 .75rem;
+    > li { padding: 0; background: none; border: 0; border-radius: 0; }
+    a { min-height: 36px; font-size: .85rem; font-weight: 400; color: var(--muted); }
+    .nested { margin-bottom: 0; }
+  }
 }
 .count { color: var(--muted); font-size: .8rem; }
 .sidebar-note { padding: 1.25rem; background: var(--surface); border-left: 3px solid var(--button); border-radius: 0 $radius $radius 0; font-size: .9rem; p { color: var(--muted); } }

@@ -15,7 +15,7 @@ async function regenerate() {
   for (const filename of await fs.readdir(path.join(root, '_posts'))) {
     if (!filename.endsWith('.md')) continue;
     const markdown = await fs.readFile(path.join(root, '_posts', filename), 'utf8');
-    const frontmatter = parse(markdown.match(/^---\r?\n([\s\S]+?)\r?\n---/)[1]);
+    const frontmatter = parse(markdown.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]+?)\r?\n---/)[1]);
     if (!frontmatter.card_image) continue;
     const source = safePath(root, frontmatter.image.replace(/^\//, ''));
     const target = safePath(root, frontmatter.card_image.replace(/^\//, ''));
@@ -23,7 +23,7 @@ async function regenerate() {
     const { width, height } = await sharp(bytes).metadata();
     await fs.mkdir(path.dirname(target), { recursive: true });
     await fs.writeFile(target, bytes);
-    console.log(`${frontmatter.wordpress_id}: ${width}x${height}`);
+    console.log(`${frontmatter.wordpress_id || filename}: ${width}x${height}`);
     if (width < 640) console.warn(`Source de faible resolution : ${frontmatter.image} (${width}px, aucun agrandissement artificiel).`);
     count++;
   }

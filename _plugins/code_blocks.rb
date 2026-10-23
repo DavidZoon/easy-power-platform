@@ -35,10 +35,22 @@ module EasyPowerPlatform
     def self.decorate(html)
       html.gsub(PATTERN) do
         language = Regexp.last_match(1)
-        label = label(language)
-        %(<div class="code-block language-#{language} highlighter-rouge">) +
+        powerfx = %w[powerfx power-fx powerfx-comma powerfx-semicolon].include?(language)
+        label = powerfx ? 'Power Fx' : label(language)
+        source = language.delete_prefix('powerfx-')
+        attribute = powerfx ? %( data-powerfx="#{source}") : ''
+        control = if powerfx
+                    %(<label class="code-separator" data-powerfx-control hidden>Séparateur d’arguments ) +
+                      %(<select data-powerfx-select><option value="comma">Virgule (,)</option>) +
+                      %(<option value="semicolon">Point-virgule (;)</option></select></label>)
+                  else
+                    ''
+                  end
+        %(<div class="code-block language-#{language} highlighter-rouge"#{attribute}>) +
           %(<div class="code-toolbar"><span class="code-lang">#{label}</span>) +
+          control +
           %(<button type="button" class="code-copy" hidden aria-label="Copier le code #{label}">Copier</button></div>) +
+          (powerfx ? %(<p class="code-syntax-status" data-powerfx-status role="status" hidden></p>) : '') +
           %(<div class="highlight">)
       end
     end

@@ -16,10 +16,12 @@ async function regenerate() {
   for (const filename of await fs.readdir(path.join(root, '_posts'))) {
     if (!filename.endsWith('.md')) continue;
     const markdown = await fs.readFile(path.join(root, '_posts', filename), 'utf8');
-    const frontmatter = parse(markdown.match(/^---\r?\n([\s\S]+?)\r?\n---/)[1]);
-    if (!frontmatter.image || !frontmatter.wordpress_id) continue;
+    const frontmatter = parse(markdown.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]+?)\r?\n---/)[1]);
+    if (!frontmatter.image || !(frontmatter.newsletter_image || frontmatter.wordpress_id)) continue;
+    const output = frontmatter.newsletter_image || `/assets/images/newsletter/${frontmatter.wordpress_id}.jpg`;
+    if (!/^\/assets\/images\/newsletter\/[^/]+\.jpg$/.test(output)) throw new Error(`newsletter_image invalide dans ${filename} : ${output}`);
     const source = safePath(root, frontmatter.image.replace(/^\//, ''));
-    const target = safePath(root, `assets/images/newsletter/${frontmatter.wordpress_id}.jpg`);
+    const target = safePath(root, output.replace(/^\//, ''));
     await fs.mkdir(path.dirname(target), { recursive: true });
     await fs.writeFile(target, await createNewsletterImage(source));
     count++;

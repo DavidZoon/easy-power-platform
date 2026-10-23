@@ -130,6 +130,38 @@ try {
   assert(await page.locator('[data-consent-status]').isVisible());
   assert.match(await page.locator('[data-consent-status]').textContent(), /invalide/);
   assert.deepEqual(calls, ['clarity', 'giscus']);
+  const blockedPage = await browser.newPage();
+  let attempts = 0;
+  await blockedPage.route('https://www.clarity.ms/**', route => {
+    attempts++;
+    return route.abort('blockedbyclient');
+  });
+  await blockedPage.goto(url);
+  await blockedPage.evaluate(() => {
+    const section = document.createElement('section');
+    section.innerHTML = `<section data-clarity-id="test123" hidden>
+      <button data-consent="granted">Accepter</button><button data-consent="denied">Refuser</button>
+      <p role="status" data-consent-status></p></section>`;
+    document.body.append(section);
+  });
+  await blockedPage.addScriptTag({ url: `${url}assets/js/integrations.js` });
+  assert.equal(attempts, 0, 'Aucun test de blocage avant consentement');
+  await blockedPage.locator('[data-consent="granted"]').click();
+  await blockedPage.waitForFunction(() => document.querySelector('[data-consent-status]').textContent.includes('bloqueur'));
+  assert(await blockedPage.locator('[data-clarity-id]').isVisible());
+  const message = await blockedPage.locator('[data-consent-status]').textContent();
+  assert.match(message, /aucune publicité/);
+  assert.match(message, /gratuitement/);
+  assert.match(message, /problème réseau/);
+  assert.match(message, /tous les contenus restent accessibles/);
+  await blockedPage.getByRole('button', { name: 'Réessayer', exact: true }).click();
+  await blockedPage.waitForFunction(() => document.querySelector('[data-consent-status]').textContent.includes('bloqueur'));
+  assert.equal(attempts, 2, 'Le chargement peut etre retente apres un blocage');
+  await blockedPage.locator('[data-consent="denied"]').click();
+  assert(await blockedPage.locator('[data-clarity-id]').isHidden());
+  await blockedPage.reload();
+  assert.equal(attempts, 2, 'Aucun nouvel appel apres refus');
+  await blockedPage.close();
   console.log('Integrations : consentement Clarity, Giscus et Forms au clic, liens de partage et formulaire mobile : OK.');
 } finally {
   await browser.close();

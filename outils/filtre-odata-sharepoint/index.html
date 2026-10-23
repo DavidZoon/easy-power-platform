@@ -1,0 +1,58 @@
+---
+layout: page
+title: Constructeur de filtre OData SharePoint pour Power Automate
+description: Construisez visuellement la requête de filtre OData de l’action SharePoint « Obtenir les éléments » de Power Automate à partir de son JSON de sortie.
+permalink: /outils/filtre-odata-sharepoint/
+tools: true
+odata_builder: true
+---
+<p><a href="{{ '/outils/' | relative_url }}">← Tous les outils</a></p>
+<div class="tool-content odata-tool" data-odata-builder data-clarity-mask="true">
+  <p>Collez la sortie de l’action SharePoint <strong>Obtenir les éléments</strong> (<em>Get items</em>) : les colonnes sont détectées automatiquement, puis vous combinez vos conditions avec des <strong>ET</strong> et des <strong>OU</strong>, comme dans l’éditeur de filtres d’une application pilotée par modèle.</p>
+  <noscript><p>Activez JavaScript pour utiliser le constructeur de filtre OData.</p></noscript>
+
+  <section class="odata-step" aria-labelledby="odata-step-json">
+    <h2 id="odata-step-json">1. Collez le JSON de sortie</h2>
+    <p class="muted" id="odata-json-help">Dans l’historique d’exécution du flux, ouvrez l’action « Obtenir les éléments », affichez les sorties brutes, puis copiez le JSON complet ou le contenu de <code>body</code>. Un ou deux éléments suffisent.</p>
+    <div class="converter-heading">
+      <label for="odata-json">JSON de l’action « Obtenir les éléments »</label>
+      <button type="button" class="button secondary" id="odata-sample" disabled>Charger un exemple</button>
+    </div>
+    <textarea id="odata-json" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="odata-json-help odata-json-status" placeholder='{ "body": { "value": [ { "ID": 1, "Title": "…" } ] } }' disabled></textarea>
+    <p class="converter-status muted" id="odata-json-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <details class="odata-columns" id="odata-columns" hidden>
+      <summary>Colonnes détectées (<span id="odata-columns-count">0</span>)</summary>
+      <div class="odata-table">
+        <table>
+          <caption class="sr-only">Colonnes détectées et noms utilisables dans le filtre</caption>
+          <thead><tr><th scope="col">Colonne</th><th scope="col">Type</th><th scope="col">Nom pour le filtre</th></tr></thead>
+          <tbody id="odata-columns-body"></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <section class="odata-step" aria-labelledby="odata-step-filter">
+    <div class="converter-heading">
+      <h2 id="odata-step-filter">2. Construisez le filtre</h2>
+      <button type="button" class="button secondary" id="odata-reset" disabled>Réinitialiser le filtre</button>
+    </div>
+    <div class="odata-builder" id="odata-builder">
+      <p class="muted">Les champs apparaîtront ici après l’analyse du JSON.</p>
+    </div>
+    <div id="odata-datalists"></div>
+  </section>
+
+  <section class="odata-step" aria-labelledby="odata-step-result">
+    <h2 id="odata-step-result">3. Copiez la requête de filtre</h2>
+    <div class="converter-heading">
+      <label for="odata-output">Requête de filtre à coller dans le paramètre « Filtrer la requête »</label>
+      <button type="button" class="button" id="odata-copy" disabled>Copier</button>
+    </div>
+    <textarea id="odata-output" rows="4" spellcheck="false" readonly aria-describedby="odata-status"></textarea>
+    <p class="converter-status muted" id="odata-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <ul class="odata-warnings" id="odata-warnings" aria-label="Points d’attention" hidden></ul>
+  </section>
+
+  <p class="muted">L’analyse s’effectue dans votre navigateur, sans envoi du JSON à un service externe. Les valeurs commençant par <code>@{</code> (expressions Power Automate) sont conservées telles quelles. Les colonnes « Plusieurs lignes de texte » et « Métadonnées gérées » ne sont pas filtrables par OData : filtrez-les ensuite avec l’action « Filtrer un tableau ».</p>
+</div>

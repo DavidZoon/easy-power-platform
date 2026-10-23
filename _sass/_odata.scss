@@ -1,0 +1,78 @@
+@use "variables" as *;
+
+.odata-tool {
+  select, textarea, input[type="text"] { font: inherit; border: $border solid var(--line); border-radius: $radius-small; background: var(--bg); color: var(--text); }
+  select, input[type="text"] { width: 100%; min-width: 0; min-height: 44px; padding: .5rem; }
+  textarea { display: block; width: 100%; padding: 1rem; resize: vertical; font: .9rem/1.65 $font-mono; }
+  textarea[readonly] { background: var(--code-bg); }
+  textarea::placeholder, input::placeholder { color: var(--muted); opacity: 1; }
+  :is(select, textarea, input):focus-visible, summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  :is(select, textarea, input, button):disabled { cursor: not-allowed; }
+  [aria-invalid="true"] { border-color: var(--pink); }
+  code { overflow-wrap: anywhere; }
+}
+.odata-step { min-width: 0; margin: 2rem 0; padding: 1.5rem; border: $border solid var(--line); border-radius: $radius; background: var(--surface);
+  > h2, .converter-heading h2 { margin: 0; font-size: 1.25rem; }
+  > h2 { margin-bottom: .75rem; }
+}
+.odata-columns { margin-top: .5rem;
+  > summary { cursor: pointer; font-weight: 650; display: flex; align-items: center; }
+}
+.odata-table { overflow-x: auto; margin-top: .5rem;
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th, td { padding: .5rem; border-bottom: $border solid var(--line); text-align: left; vertical-align: top; }
+  td:last-child { font-family: $font-mono; overflow-wrap: anywhere; }
+}
+.odata-group { min-width: 0; padding: 1rem; border: $border solid var(--line); border-radius: $radius-small; background: var(--bg);
+  &.is-root { padding: 0; border: 0; background: none; }
+  &.is-disabled > .odata-list, &.is-disabled > .odata-empty { opacity: .6; }
+}
+.odata-group-header { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem 1rem; margin-bottom: .75rem;
+  select { width: auto; max-width: 100%; }
+}
+.odata-group-name { font-weight: 650; color: var(--accent); }
+.odata-logic-label { font-weight: 650; }
+.odata-list { list-style: none; margin: 0 0 .75rem; padding: 0; display: grid; gap: .75rem;
+  > li { margin: 0; min-width: 0; }
+}
+.odata-row { display: grid; grid-template-columns: auto minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.4fr) auto; align-items: start; gap: .5rem; padding: .5rem; border-radius: $radius-small; background: linear-gradient(115deg, var(--card-start), var(--card-end));
+  &.is-disabled .odata-cell { opacity: .6; }
+}
+.odata-check { display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px;
+  input { width: 1.25rem; height: 1.25rem; min-height: 0; margin: 0; accent-color: var(--accent); }
+}
+.odata-cell { min-width: 0; display: flex; flex-direction: column; }
+.odata-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.odata-value { display: flex; flex-direction: column; gap: .25rem; }
+.odata-no-value { display: flex; align-items: center; min-height: 44px; font-size: .9rem; }
+.odata-error { color: var(--pink); font-size: .85rem; }
+.odata-empty { margin: 0 0 .75rem; }
+.odata-menu, .prose .odata-menu { position: relative; margin: 0; padding: 0; border: 0; border-radius: 0; background: none;
+  > summary { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; padding: 0 .75rem; border: $border solid var(--line); border-radius: $radius-small; cursor: pointer; list-style: none; font-weight: 650; background: var(--surface); color: var(--text);
+    &::-webkit-details-marker { display: none; }
+    &:hover { border-color: var(--accent); }
+  }
+  &[open] > summary { border-color: var(--accent); }
+  &.odata-add > summary { color: var(--accent); }
+  .odata-group-header > &.odata-row-menu { margin-left: auto; }
+}
+.odata-menu-list { position: absolute; z-index: 5; top: calc(100% + .25rem); left: 0; display: grid; min-width: 12rem; padding: .25rem; border: $border solid var(--line); border-radius: $radius-small; background: var(--surface); box-shadow: 0 .5rem 1.5rem rgb(0 0 0 / .3);
+  .odata-row-menu & { left: auto; right: 0; }
+  button { min-height: 44px; padding: .5rem .75rem; border: 0; border-radius: calc(#{$radius-small} / 2); background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer;
+    &:hover, &:focus-visible { background: var(--bg); }
+    &:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
+  }
+}
+.odata-warnings { margin: .5rem 0 0; padding-left: 1.25rem; color: var(--muted); font-size: .9rem;
+  li { margin: .25rem 0; }
+}
+@media (max-width: $breakpoint) {
+  .odata-step { padding: 1rem; }
+  .odata-row { grid-template-columns: auto minmax(0, 1fr) auto; padding: .75rem .5rem;
+    .odata-cell { grid-column: 1 / -1; }
+    .odata-check { grid-row: 1; grid-column: 1; }
+    .odata-row-menu { grid-row: 1; grid-column: 3; }
+  }
+  .odata-label { position: static; width: auto; height: auto; margin: 0 0 .25rem; overflow: visible; clip: auto; white-space: normal; font-size: .85rem; font-weight: 650; color: var(--muted); }
+  .odata-group:not(.is-root) { padding: .75rem; }
+}

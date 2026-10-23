@@ -1,0 +1,8 @@
+- name: Convertisseur de syntaxe Power Fx EN ↔ FR
+  url: /outils/convertisseur-power-fx/
+  image: /assets/images/tools/convertisseur-power-fx.svg
+  description: Convertissez facilement votre code Power Fx entre les formats EN et FR, avec détection automatique de la syntaxe et copie du résultat.
+- name: Constructeur de filtre OData SharePoint pour Power Automate
+  url: /outils/filtre-odata-sharepoint/
+  image: /assets/images/tools/filtre-odata-sharepoint.svg
+  description: Collez le JSON de l’action « Obtenir les éléments », combinez vos conditions avec des ET et des OU, puis copiez la requête de filtre OData prête à l’emploi.

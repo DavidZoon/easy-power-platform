@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <defs>
+    <linearGradient id="background" x2="1" y2="1">
+      <stop stop-color="#0a1926"/>
+      <stop offset="1" stop-color="#3d205e"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#background)"/>
+  <g fill="#111422" stroke="#535467" stroke-width="2">
+    <rect x="40" y="90" width="240" height="180" rx="16"/>
+    <rect x="360" y="90" width="240" height="180" rx="16"/>
+  </g>
+  <g font-family="system-ui, sans-serif" font-size="24" font-weight="700">
+    <text x="64" y="132" fill="#aaa5ff">EN</text>
+    <text x="384" y="132" fill="#ff9bc8">FR</text>
+  </g>
+  <g font-family="Consolas, monospace" font-size="19" fill="#f5f5fa">
+    <text x="64" y="182">Set(x, 1.5);</text>
+    <text x="64" y="216">Notify("OK")</text>
+    <text x="384" y="182">Set(x; 1,5);;</text>
+    <text x="384" y="216">Notify("OK")</text>
+  </g>
+  <path d="M298 166h44l-9-9m9 9-9 9M342 194h-44l9-9m-9 9 9 9" fill="none" stroke="#aaa5ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

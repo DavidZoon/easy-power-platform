@@ -664,6 +664,9 @@ partageant une catégorie ou un tag.
 | Articles et sommaire | `_layouts/post.html`, `_sass/_post.scss` |
 | Barre latérale | `_includes/sidebar.html`, `_sass/_sidebar.scss` |
 | Page Liens utiles | `_data/links.yml`, `liens-utiles/index.html`, `_sass/_links.scss` |
+| Catalogue Outils | `_data/tools.yml`, `outils/index.html`, `_sass/_tools.scss` |
+| Convertisseur Power Fx | `outils/convertisseur-power-fx/index.html`, `assets/js/tools.js` |
+| Filtre OData SharePoint | `outils/filtre-odata-sharepoint/index.html`, `assets/js/odata.js`, `assets/js/odata-builder.js`, `_sass/_odata.scss` |
 | Styles de code | `_sass/_syntax.scss` |
 | Feuille d’entrée | `assets/css/main.scss` |
 
@@ -701,6 +704,101 @@ pour régénérer les miniatures référencées par `card_image`. La commande ut
 les médias locaux, ne modifie pas les articles et signale les sources de moins
 de 640 px de large, à remplacer par un original plus grand si disponible.
 Sans choix enregistré, le thème suit les préférences du système.
+
+### Page Outils
+
+La page [Outils](outils/index.html) est accessible dans la navigation. Elle
+présente une grille de cartes avec le nom, une illustration et une courte
+description de chaque outil. Toute la carte est un lien accessible au clavier
+vers une page dédiée, sans limiter l’espace disponible pour les outils complexes.
+
+Pour ajouter un outil, créer sa page sous `outils/<nom>/index.html`, puis ajouter
+une entrée à [_data/tools.yml](_data/tools.yml) :
+
+```yaml
+- name: Nom de l’outil
+  url: /outils/nom-de-l-outil/
+  image: /assets/images/tools/nom-de-l-outil.svg
+  description: Une courte description de son utilité.
+```
+
+Utiliser une illustration locale au format 16:9 et le front matter `tools: true`
+pour une page pleine largeur. Le
+[convertisseur Power Fx](outils/convertisseur-power-fx/index.html) se trouve à
+`/outils/convertisseur-power-fx/` et propose un lien de retour vers le catalogue.
+Son JavaScript est chargé uniquement sur sa page (`powerfx_converter: true`).
+
+Le **convertisseur Power Fx EN ↔ FR** partage le moteur
+[assets/js/powerfx.js](assets/js/powerfx.js) avec les blocs de code des articles :
+
+- coller ou saisir du code dans le premier champ déclenche la détection du
+  format source et la conversion vers l’autre format dans un champ en lecture seule ;
+- conversion des arguments (`,` ↔ `;`), des décimales (`.` ↔ `,`) et des
+  enchaînements d’actions (`;` ↔ `;;`), sans traduire les noms des fonctions ;
+- les chaînes, commentaires et noms entre apostrophes sont préservés, ainsi
+  que le texte des chaînes interpolées (seules leurs expressions sont converties) ;
+- si le format est ambigu, mixte ou incomplet, aucun résultat n’est proposé.
+  Corriger le code ou préciser son format source EN/FR avec le sélecteur ;
+- un code neutre est conservé à l’identique. L’outil ne valide pas les formules ;
+- le bouton **Copier** copie exactement le résultat. En cas d’échec ou
+  d’indisponibilité du presse-papier, un message indique comment copier manuellement.
+
+Le traitement est entièrement local : aucun code n’est envoyé à un service
+de conversion ni enregistré. Le composant porte `data-clarity-mask="true"`
+pour masquer son contenu dans les enregistrements Clarity. JavaScript est
+nécessaire ; sans lui, un message est affiché et les champs sont désactivés.
+
+Validation dédiée : `npm run check:tools` (conversion, ambiguïtés, copie,
+absence de requêtes pendant la conversion, cartes et navigation au clavier, affichage
+responsive et axe en clair/sombre).
+
+Le **constructeur de filtre OData SharePoint**
+([outils/filtre-odata-sharepoint/index.html](outils/filtre-odata-sharepoint/index.html),
+`/outils/filtre-odata-sharepoint/`) aide à rédiger le paramètre
+« Filtrer la requête » de l’action Power Automate SharePoint « Obtenir les éléments » :
+
+1. coller la sortie de l’action (JSON complet, `body`, tableau `value` ou un seul
+   élément) ; le bouton **Charger un exemple** fournit un jeu de démonstration ;
+2. les colonnes sont détectées et typées à partir des valeurs. Les métadonnées
+   (`@odata.*`, `{Link}`, `Champ#Id`, `ItemInternalId`…) sont ignorées, le préfixe
+   `OData_` est retiré des noms internes, et le tableau **Colonnes détectées**
+   indique le nom à utiliser dans le filtre ;
+3. le filtre se construit comme dans une application pilotée par modèle :
+   sélecteur **ET/OU**, lignes Champ / Opérateur / Valeur, case pour inclure ou
+   exclure une ligne ou un groupe, menu **…** (dupliquer, supprimer) et
+   **+ Ajouter** (ligne ou groupe imbriqué, mis entre parenthèses) ;
+4. la requête est recalculée dès qu’un champ, un opérateur, une valeur ou la
+   combinaison **ET/OU** change, puis copiée avec **Copier**. À la sélection
+   d’un champ, une valeur vide est préremplie avec le premier exemple valide
+   du JSON (ou **Oui** pour un booléen). Une valeur déjà saisie est conservée
+   entre champs de même type. Sans exemple disponible, la valeur reste à
+   renseigner : le texte grisé n’est qu’une indication de format.
+
+| Type de colonne détecté | Filtre généré |
+| --- | --- |
+| Texte | `eq`, `ne`, `startswith(Champ, 'x')`, `substringof('x', Champ)` |
+| Nombre, date | `eq`, `ne`, `gt`, `ge`, `lt`, `le` (dates ISO entre apostrophes) |
+| Oui/Non | `Champ eq 1` ou `Champ eq 0` |
+| Choix | `Champ eq 'valeur'` |
+| Recherche | `Champ/Id eq 12` ou `Champ/Title eq 'x'` |
+| Personne | `Champ/EMail eq 'a@b.com'` ou `Champ/Title eq 'Nom'` |
+| Valeurs multiples | `Champ eq 'valeur'` (contient la valeur) |
+| Toutes (sauf Oui/Non et multiples) | `Champ eq null`, `Champ ne null` |
+
+Les apostrophes sont doublées (`d'accès` → `'d''accès'`) et les valeurs `@{…}`
+(expressions Power Automate) sont conservées. Un choix et une recherche ayant la
+même forme JSON, l’outil propose les deux syntaxes quand l’`Id` ne permet pas de
+les distinguer. Les colonnes « Plusieurs lignes de texte » et « Métadonnées
+gérées » sont signalées comme non filtrables par OData. Les valeurs invalides
+(nombre, date) sont signalées sur la ligne et ignorées dans la requête.
+
+Le moteur pur [assets/js/odata.js](assets/js/odata.js) est testé par
+`npm test`. L’interface [assets/js/odata-builder.js](assets/js/odata-builder.js)
+est chargée uniquement sur sa page (`odata_builder: true`), avec ses styles
+[_sass/_odata.scss](_sass/_odata.scss). Le traitement est local et le composant
+porte `data-clarity-mask="true"`. Validation dédiée : `npm run check:odata`
+(analyse, groupes ET/OU, clavier et focus, validation, échappement, sécurité
+HTML, copie, absence de requêtes, responsive et axe en clair/sombre).
 
 ## 9. Microsoft Clarity
 

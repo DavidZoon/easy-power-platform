@@ -18,6 +18,12 @@
 {% if page.search %}
 <script src="{{ '/assets/js/search.js' | relative_url }}" defer></script>
 {% endif %}
+{% if page.powerfx_converter %}
+<script src="{{ '/assets/js/tools.js' | relative_url }}" type="module"></script>
+{% endif %}
+{% if page.odata_builder %}
+<script src="{{ '/assets/js/odata-builder.js' | relative_url }}" type="module"></script>
+{% endif %}
 {% if site.clarity_id != '' or site.giscus.enabled or site.newsletter.url %}
 <script src="{{ '/assets/js/integrations.js' | relative_url }}" defer></script>
 {% endif %}

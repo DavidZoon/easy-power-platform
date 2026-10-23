@@ -1,0 +1,43 @@
+---
+layout: page
+title: Convertisseur de syntaxe Power Fx EN ↔ FR
+description: Convertissez votre code Power Fx entre les syntaxes EN et FR, directement dans votre navigateur.
+permalink: /outils/convertisseur-power-fx/
+tools: true
+powerfx_converter: true
+---
+<p><a href="{{ '/outils/' | relative_url }}">← Tous les outils</a></p>
+<div class="tool-content">
+      <p>Traduisez facilement la syntaxe de votre code Power Fx entre les formats EN et FR : séparateurs d’arguments, décimales et enchaînements d’actions.</p>
+      <p class="muted" id="powerfx-help">Collez votre code : le format est détecté automatiquement et le résultat apparaît dans l’autre format. Les noms des fonctions ne sont pas traduits. En cas d’ambiguïté, précisez le format source.</p>
+      <noscript><p>Activez JavaScript pour utiliser le convertisseur Power Fx.</p></noscript>
+      <fieldset class="powerfx-converter" data-powerfx-converter data-clarity-mask="true" disabled aria-describedby="powerfx-help">
+        <legend class="sr-only">Conversion de code Power Fx</legend>
+        <div class="tool-options">
+          <label for="powerfx-source-format">Format source</label>
+          <select id="powerfx-source-format">
+            <option value="auto">Détection automatique</option>
+            <option value="comma">EN — arguments « , », décimales « . »</option>
+            <option value="semicolon">FR — arguments « ; », décimales « , »</option>
+          </select>
+        </div>
+        <div class="converter-grid">
+          <div class="converter-field">
+            <div class="converter-heading">
+              <label for="powerfx-input">Collez votre code Power Fx ici</label>
+              <span id="powerfx-detected" class="muted">Format : en attente</span>
+            </div>
+            <textarea id="powerfx-input" rows="12" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="powerfx-conversion-status" placeholder="Navigate(home; ScreenTransition.Fade)"></textarea>
+          </div>
+          <div class="converter-field">
+            <div class="converter-heading">
+              <label for="powerfx-output" id="powerfx-output-label">Code converti</label>
+              <button type="button" class="button secondary" id="powerfx-copy" disabled>Copier</button>
+            </div>
+            <textarea id="powerfx-output" rows="12" spellcheck="false" readonly aria-describedby="powerfx-conversion-status"></textarea>
+          </div>
+        </div>
+        <p class="converter-status muted" id="powerfx-conversion-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      </fieldset>
+      <p class="muted">La conversion s’effectue dans votre navigateur, sans envoi du code à un service externe. Vérifiez le résultat dans Power Apps avant de l’utiliser : cet outil convertit la syntaxe régionale, il ne valide pas vos formules.</p>
+</div>

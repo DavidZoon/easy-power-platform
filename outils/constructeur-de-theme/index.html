@@ -83,6 +83,15 @@ theme_builder: true
       <label class="sr-only" for="theme-code">Code Power Fx généré</label>
       <textarea id="theme-code" rows="10" spellcheck="false" readonly aria-describedby="theme-code-status"></textarea>
       <p class="converter-status muted" id="theme-code-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="converter-heading">
+        <h3 id="theme-screen-heading">Ecran de visualisation du theme</h3>
+        <button type="button" class="button secondary" id="theme-screen-copy" disabled>Copier le YAML</button>
+      </div>
+      <p id="theme-screen-help">Collez cet écran dans votre application, il vous permettra de visualiser votre thème et de récupérer facilement les valeurs et les noms des variables</p>
+      <p class="muted">Définissez d’abord les formules du thème ci-dessus (ou exécutez App.OnStart). Le YAML utilise la syntaxe Power Fx EN, indépendante de la langue de Studio. L’écran reprend les contrôles modernes de l’exemple ; leur disponibilité dépend de votre version de Power Apps. Son logo est chargé depuis le site Easy Power Platform.</p>
+      <label class="sr-only" for="theme-screen-code">Code YAML de l’écran de visualisation du thème</label>
+      <textarea id="theme-screen-code" rows="10" spellcheck="false" readonly aria-describedby="theme-screen-help theme-screen-status"></textarea>
+      <p class="converter-status muted" id="theme-screen-status" role="status" aria-live="polite" aria-atomic="true"></p>
     </section>
     <p class="theme-warning" id="theme-onstart-warning" hidden>Privilégiez <strong>App.Formulas</strong> pour définir votre thème. Avec des variables globales dans App.OnStart, les couleurs peuvent apparaître noires au démarrage tant que les variables ne sont pas initialisées. <a href="https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/working-with-formulas">Bien démarrer avec les formules d’applications canevas — Microsoft Learn</a>.</p>
     <dialog id="theme-text-dialog" aria-labelledby="theme-text-dialog-title" aria-describedby="theme-text-dialog-help">

@@ -1,4 +1,5 @@
 import { detectColors, generateThemeCode, parseThemeColor, readHarmonyPalette, themeAlpha, themeRgba, themeCombinations } from './theme-builder.js';
+import { generateThemeScreen } from './theme-screen.js';
 
 const tool = document.querySelector('[data-theme-builder]');
 if (tool) {
@@ -11,6 +12,9 @@ if (tool) {
   const output = tool.querySelector('#theme-code');
   const status = tool.querySelector('#theme-code-status');
   const copy = tool.querySelector('#theme-copy');
+  const screenOutput = tool.querySelector('#theme-screen-code');
+  const screenCopy = tool.querySelector('#theme-screen-copy');
+  const screenStatus = tool.querySelector('#theme-screen-status');
   const add = tool.querySelector('#theme-add');
   const textDialog = tool.querySelector('#theme-text-dialog');
   const combinationsGallery = tool.querySelector('#theme-combinations');
@@ -98,6 +102,9 @@ if (tool) {
     name.setAttribute('aria-invalid', String(!name.value.trim()));
     output.value = '';
     copy.disabled = true;
+    screenOutput.value = '';
+    screenCopy.disabled = true;
+    screenStatus.textContent = 'Le YAML sera disponible lorsque le code du thème sera valide.';
     if (rows.some(row => row.colorError || row.roleError || row.name.getAttribute('aria-invalid') === 'true')) {
       combinationsGallery.replaceChildren();
       combinationsStatus.textContent = 'Corrigez les erreurs de la palette pour actualiser les associations.';
@@ -113,12 +120,16 @@ if (tool) {
       const colors = paletteColors();
       renderCombinations(colors);
       output.value = generateThemeCode(name.value, colors, locale(), target);
+      screenOutput.value = generateThemeScreen(name.value, colors, target);
     } catch (error) {
       if (!(error instanceof RangeError)) throw error;
       status.textContent = error.message;
       return;
     }
     copy.disabled = !canCopy;
+    screenCopy.disabled = !canCopy;
+    screenStatus.textContent = 'Écran YAML prêt à coller après la définition du thème.'
+      + (canCopy ? '' : ' Copie automatique indisponible : sélectionnez le YAML et copiez-le manuellement.');
     status.textContent = `Code prêt pour ${target === 'formulas' ? 'App.Formulas' : 'App.OnStart'} (${locale().toUpperCase()}).`
       + (canCopy ? '' : ' Copie automatique indisponible : sélectionnez le code et copiez-le manuellement.');
   }
@@ -300,18 +311,23 @@ if (tool) {
       updateCode();
     });
   }
-  copy.addEventListener('click', async () => {
-    const code = output.value;
-    try {
-      await navigator.clipboard.writeText(code);
-      if (output.value === code) status.textContent = 'Code Power Fx copié dans le presse-papier.';
-    } catch (error) {
-      console.warn('Copie du thème Power Fx impossible :', error);
-      status.textContent = 'La copie a échoué. Sélectionnez le code et copiez-le manuellement.';
-      output.focus();
-      output.select();
-    }
-  });
+  for (const [button, field, message, label] of [
+    [copy, output, status, 'Code Power Fx'],
+    [screenCopy, screenOutput, screenStatus, 'Code YAML']
+  ]) {
+    button.addEventListener('click', async () => {
+      const code = field.value;
+      try {
+        await navigator.clipboard.writeText(code);
+        if (field.value === code) message.textContent = `${label} copié dans le presse-papier.`;
+      } catch (error) {
+        console.warn(`Copie du ${label} impossible :`, error);
+        message.textContent = 'La copie a échoué. Sélectionnez le code et copiez-le manuellement.';
+        field.focus();
+        field.select();
+      }
+    });
+  }
   window.addEventListener('pageshow', updateCode);
   tool.disabled = false;
   try {

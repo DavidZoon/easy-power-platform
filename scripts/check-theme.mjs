@@ -3,6 +3,8 @@ import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 import { preview } from './preview.mjs';
 import { generateThemeCode } from '../assets/js/theme-builder.js';
+import { generateThemeScreen } from '../assets/js/theme-screen.js';
+import { parse } from 'yaml';
 import { bestTextColor, createPalette } from '../assets/js/color-harmonizer.js';
 
 const { server, url } = await preview(0);
@@ -10,6 +12,27 @@ const toolUrl = url + 'outils/constructeur-de-theme/';
 let browser;
 try {
   browser = await chromium.launch();
+  const bannerContext = await browser.newContext();
+  const bannerPage = await bannerContext.newPage();
+  const screen = parse(generateThemeScreen('Aperçu', [{ name: 'fond', hex: '#FFFFFF' }])).Screens['Ecran visualiseur de theme'];
+  const htmlFormula = screen.Children[0].ctn_ecran.Children[2].FooterContainer1.Children[0].htm_Infos.Properties.HtmlText;
+  assert(htmlFormula.startsWith('="') && htmlFormula.endsWith('"'));
+  const bannerHtml = htmlFormula.slice(2, -1).replaceAll('""', '"');
+  await bannerPage.setContent(`<html lang="fr"><head><title>Bandeau</title></head><body style="margin:0">${bannerHtml}</body></html>`);
+  for (const width of [280, 320, 768, 1440]) {
+    await bannerPage.setViewportSize({ width, height: 100 });
+    const banner = bannerPage.locator('a');
+    const box = await banner.boundingBox();
+    assert.equal(box.height, 75);
+    assert.equal(box.width, width);
+    assert(await banner.evaluate(element => [...element.children].every(child =>
+      child.getBoundingClientRect().bottom <= element.getBoundingClientRect().bottom)
+      && element.scrollWidth === element.clientWidth), `Bandeau sans texte coupé : ${width}px`);
+    assert.equal(await banner.getAttribute('href'), 'https://davidzoon.github.io/easy-power-platform/');
+  }
+  const bannerAxe = await new AxeBuilder({ page: bannerPage }).withRules(['color-contrast']).analyze();
+  assert.deepEqual(bannerAxe.violations, []);
+  await bannerContext.close();
   const context = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
   await context.addInitScript(() => {
     window.copiedTheme = null;
@@ -37,8 +60,13 @@ try {
   const output = page.locator('#theme-code');
   const copy = page.locator('#theme-copy');
   const status = page.locator('#theme-code-status');
+  const screenOutput = page.locator('#theme-screen-code');
+  const screenCopy = page.locator('#theme-screen-copy');
+  const screenStatus = page.locator('#theme-screen-status');
   assert.equal(await page.locator('h1').textContent(), 'Constructeur de thème');
   assert(await copy.isDisabled());
+  assert(await screenCopy.isDisabled());
+  assert.equal(await screenOutput.inputValue(), '');
   assert.equal(await output.getAttribute('readonly'), '');
   assert(await page.locator('#theme-onstart-warning').isHidden());
   await detect.click();
@@ -105,6 +133,9 @@ try {
     for (const target of ['formulas', 'onstart']) {
       await page.locator(`[name="theme-target"][value="${target}"]`).check();
       assert.equal(await output.inputValue(), generateThemeCode('Ocean', colors, locale, target));
+      assert.equal(await screenOutput.inputValue(), generateThemeScreen('Ocean', colors, target));
+      await screenCopy.click();
+      assert.equal(await page.evaluate(() => window.copiedTheme), await screenOutput.inputValue());
       assert.equal(await page.locator('#theme-onstart-warning').isVisible(), target === 'onstart');
       if (target === 'onstart') assert.equal(await page.locator('#theme-onstart-warning a').getAttribute('href'), 'https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/working-with-formulas');
       await copy.click();
@@ -112,6 +143,9 @@ try {
     }
   }
   await page.evaluate(() => { window.rejectCopy = true; });
+  await screenCopy.click();
+  assert.match(await screenStatus.textContent(), /échoué/);
+  assert(await screenOutput.evaluate(element => document.activeElement === element && element.selectionEnd === element.value.length));
   await copy.click();
   assert.match(await status.textContent(), /échoué/);
   assert(await output.evaluate(element => document.activeElement === element && element.selectionEnd === element.value.length));
@@ -122,6 +156,8 @@ try {
   assert.equal(await first.locator('.theme-color-open').getAttribute('aria-expanded'), 'true');
   await first.locator('.theme-hex').fill('#badvalue');
   assert(await copy.isDisabled());
+  assert(await screenCopy.isDisabled());
+  assert.equal(await screenOutput.inputValue(), '');
   assert.equal(await output.inputValue(), '');
   assert.match(await first.locator('.theme-color-error').textContent(), /invalide/);
   await first.locator('.theme-hex').fill('#fff');

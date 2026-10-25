@@ -993,7 +993,34 @@ Un nom saisi en collision avec une entrée `on_` générée bloque la copie
 au lieu de produire un enregistrement invalide. Les associations se recalculent
 à chaque changement de nom, rôle, valeur, transparence ou suppression.
 Traitement local, sans stockage, avec champs masqués pour Clarity.
-Validation : `node --test test/theme-builder.test.mjs`, puis après compilation
+Le container 4 propose aussi « Ecran de visualisation du theme », un YAML
+généré localement à partir de la palette, avec un bouton de copie indépendant.
+L'écran reprend la structure `Screens` et les contrôles modernes de l'exemple :
+galerie à cinq colonnes (template 210px, espacement 10px), cartes en AutoLayout
+horizontal avec retour à la ligne, aperçu fond/texte et HEX, boutons pour copier les
+références `_FX` et les valeurs HEX, logo et lien Easy Power Platform.
+Les contrôles enfants du conteneur déclarent explicitement `LayoutMinHeight`
+et `LayoutMinWidth` à 16, comme les contrôles insérés manuellement dans Studio.
+Le pied de page `htm_Infos` affiche un bandeau HTML promotionnel cliquable
+vers le blog, avec crédit au Constructeur de thème et à David Zoonekyndt.
+Sa hauteur est fixée à 75px, ses marges internes à zéro et sa largeur est
+flexible ; le bandeau utilise des styles en ligne et ne charge aucune image.
+Il référence les mêmes formules `f…` ou variables `gbl…` que le code Power Fx :
+définir d'abord le thème et exécuter App.OnStart si ce mode est choisi.
+La syntaxe des formules dans le YAML est toujours EN (invariante), même si
+le code à coller dans les propriétés de l'application est en FR.
+Sans association opaque, la couleur reste visible et les boutons de texte
+sont désactivés. Les noms libres sont échappés pour Power Fx et YAML.
+Le logo est téléchargé depuis le site lors de l'utilisation de l'écran dans
+Power Apps ; aucun appel supplémentaire n'est effectué par le générateur.
+L'import effectif dépend de la version de Studio et des contrôles disponibles ;
+les tests locaux valident le YAML, ses références et l'interface, pas un import
+dans une application Power Apps connectée.
+L'import a été confirmé manuellement dans Studio après redémarrage de l'éditeur :
+des enfants présents dans le code mais absents de l'arborescence ont été observés
+avant ce redémarrage, sans erreur de formule.
+
+Validation : `node --test test/theme-builder.test.mjs test/theme-screen.test.mjs`, puis après compilation
 Jekyll `npm run check:theme` (interactions, copie, quatre sorties, responsive
 et accessibilité) et `npm run check:tools` (catalogue).
 

@@ -78,6 +78,14 @@ try {
     const $ = await documentAt(tool.url);
     const nav = $('nav.tool-taxonomies');
     assert.equal(nav.length, 1);
+    const feedback = $('.tool-feedback a');
+    assert.equal(feedback.length, 1, `Bouton de retour : ${tool.name}`);
+    const issueUrl = new URL(feedback.attr('href'));
+    assert.equal(issueUrl.origin + issueUrl.pathname, 'https://github.com/DavidZoon/easy-power-platform/issues/new');
+    assert.equal(issueUrl.searchParams.get('title'), tool.name);
+    assert.equal(feedback.attr('target'), '_blank');
+    assert.equal(feedback.attr('rel'), 'noopener noreferrer');
+    assert(feedback.text().includes('Signaler un bug ou suggérer une amélioration'));
     for (const type of ['categories', 'tags']) {
       for (const name of tool[type]) {
         const term = terms[type].find(term => term.name === name);

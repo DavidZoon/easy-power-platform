@@ -76,7 +76,7 @@ Pour **construire le blog uniquement** :
 
 Pour **relancer la migration** ou les vérifications JavaScript :
 
-- Node.js **24 LTS** (`22+` possible selon les dépendances verrouillées).
+- Node.js **24 LTS** (minimum **22.19**, requis par Lighthouse).
 - Python **3.12+** pour l’extraction sûre de l’ancien format TAR WordPress.
 - Les exports XML/TAR originaux conservés en local.
 
@@ -595,6 +595,9 @@ des infobulles et des libellés pour lecteurs d'écran. Les icônes suivent le t
 Le tri par popularité utilise leur somme, mais les
 articles conservent leur ordre chronologique. Les pages d'outils et leurs cartes
 dans le catalogue et les archives proposent les liens de catégories et tags.
+Chaque page d'outil propose en bas de page un bouton « Signaler un bug ou suggérer
+une amélioration ». Il ouvre la création d'une issue GitHub dans une nouvelle
+fenêtre, avec le nom de l'outil prérempli dans le titre, sans transmettre les saisies.
 Les outils ne deviennent pas des articles : ni doublons dans le flux Atom,
 ni ajout à la pagination éditoriale ou à l'index de recherche des articles.
 Les slugs et URL de taxonomies existants sont conservés.

@@ -10,4 +10,10 @@ layout: default
   </nav>
   {% endif %}
   <div class="prose{% if page.tools %} tools-page{% endif %}">{{ content }}</div>
+  {% assign current_tool = site.data.tools | where: 'url', page.url | first %}
+  {% if current_tool %}
+  <footer class="tool-feedback">
+    <a class="button secondary" href="https://github.com/DavidZoon/easy-power-platform/issues/new?title={{ current_tool.name | url_encode }}" target="_blank" rel="noopener noreferrer">Signaler un bug ou suggérer une amélioration<span class="sr-only"> (nouvelle fenêtre)</span></a>
+  </footer>
+  {% endif %}
 </article>

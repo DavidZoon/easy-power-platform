@@ -5,7 +5,13 @@ layout: default
 <section class="hero">
   <h1>La Power Platform.<br><span>Tout simplement.</span></h1>
   <p class="hero-description">Des tutoriels, du code et des retours d’expérience pour passer de l’idée à la solution. Par David Zoonekyndt.</p>
-  <div class="button-row"><a class="button" href="#latest">Parcourir les articles <span aria-hidden="true">↓</span></a><a class="button secondary" href="{{ '/feed.xml' | relative_url }}">Suivre le flux RSS</a><a class="button secondary" href="#newsletter">S’abonner par e-mail</a>{% include share.html url="/" title=site.title label="Partager ce blog" %}</div>
+  <div class="button-row">
+    <a class="button" href="#latest">{% include article-icon.html %} Parcourir les articles <span aria-hidden="true">↓</span></a>
+    <a class="button secondary" href="{{ '/outils/' | relative_url }}">{% include tool-icon.html %} Voir les outils</a>
+    <a class="button secondary" href="{{ '/feed.xml' | relative_url }}">Suivre le flux RSS</a>
+    <a class="button secondary" href="#newsletter">S’abonner par e-mail</a>
+    {% include share.html url="/" title=site.title label="Partager ce blog" %}
+  </div>
 </section>
 {% else %}<h1>Articles — page {{ paginator.page }}</h1>
 {% include share.html url="/" title=site.title label="Partager ce blog" %}{% endif %}

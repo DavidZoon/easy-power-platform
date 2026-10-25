@@ -6,15 +6,33 @@ module EasyPowerPlatform
     priority :low
 
     def generate(site)
+      tools = Array(site.data["tools"])
+      tools.each do |tool|
+        page = site.pages.find { |candidate| candidate.url == tool["url"] }
+        raise Jekyll::Errors::FatalException, "Page d'outil introuvable : #{tool['url']}" unless page
+        page.data["tool_categories"] = tool["categories"]
+        page.data["tool_tags"] = tool["tags"]
+      end
       registry = {}
       %w[categories tags].each do |type|
         parents = type == "categories" ? hierarchy(site) : {}
         direct = site.public_send(type)
-        names = (direct.keys + direct.keys.flat_map { |name| ancestors(name, parents) }).uniq
+        existing = (direct.keys + direct.keys.flat_map { |name| ancestors(name, parents) }).uniq
+        tools.each do |tool|
+          values = tool[type]
+          unless values.is_a?(Array) && !values.empty? && values.all? { |value| existing.include?(value) }
+            raise Jekyll::Errors::FatalException, "Taxonomie #{type} invalide pour l'outil #{tool['name']} : utilisez les termes existants."
+          end
+        end
+        names = existing
         children = names.group_by { |name| parents[name] }
         terms = names.to_h do |name|
-          posts = ([name] + descendants(name, children)).flat_map { |term| direct[term] || [] }.uniq
-          [name, { "name" => name, "slug" => slug(name), "count" => posts.length, "posts" => posts.sort_by(&:date).reverse }]
+          included_terms = [name] + descendants(name, children)
+          posts = included_terms.flat_map { |term| direct[term] || [] }.uniq
+          term_tools = tools.select { |tool| (tool[type] & included_terms).any? }.uniq { |tool| tool["url"] }
+          [name, { "name" => name, "slug" => slug(name), "count" => posts.length + term_tools.length,
+            "post_count" => posts.length, "tool_count" => term_tools.length,
+            "posts" => posts.sort_by(&:date).reverse, "tools" => term_tools }]
         end
         terms.each_value do |term|
           term["parent"] = parents[term["name"]] if names.include?(parents[term["name"]])
@@ -22,7 +40,7 @@ module EasyPowerPlatform
           term["ancestors"] = ancestors(term["name"], parents).reverse.map { |name| summary(terms[name]) }
           term["children"] = sorted(Array(children[term["name"]]).map { |name| terms[name] }).map { |child| summary(child) }
         end
-        registry[type] = sorted(terms.values).map { |term| term.reject { |key, _| key == "posts" } }
+        registry[type] = sorted(terms.values).map { |term| term.reject { |key, _| %w[posts tools].include?(key) } }
         site.pages.reject! { |page| page.data["taxonomy"] == type && !names.include?(page.data["term"]) }
         terms.each_value do |term|
           page = site.pages.find { |candidate| candidate.data["taxonomy"] == type && candidate.data["term"] == term["name"] }
@@ -33,7 +51,9 @@ module EasyPowerPlatform
           page.data.merge!(
             "layout" => "taxonomy", "title" => term["name"], "term" => term["name"],
             "taxonomy" => type, "permalink" => "/#{type}/#{term['slug']}/",
-            "term_posts" => term["posts"], "ancestors" => term["ancestors"], "children" => term["children"]
+            "term_posts" => term["posts"], "term_tools" => term["tools"],
+            "post_count" => term["post_count"], "tool_count" => term["tool_count"],
+            "ancestors" => term["ancestors"], "children" => term["children"]
           )
         end
       end
@@ -75,7 +95,7 @@ module EasyPowerPlatform
     end
 
     def summary(term)
-      { "name" => term["name"], "slug" => term["slug"], "count" => term["count"] }
+      term.slice("name", "slug", "count", "post_count", "tool_count")
     end
   end
 end

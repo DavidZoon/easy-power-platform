@@ -2,15 +2,29 @@
   url: /outils/convertisseur-power-fx/
   image: /assets/images/tools/convertisseur-power-fx.svg
   description: Convertissez facilement votre code Power Fx entre les formats EN et FR, avec détection automatique de la syntaxe et copie du résultat.
+  categories: [Canvas Apps]
+  tags: [Power Fx, code]
 - name: Constructeur de filtre OData SharePoint pour Power Automate
   url: /outils/filtre-odata-sharepoint/
   image: /assets/images/tools/filtre-odata-sharepoint.svg
   description: Collez le JSON de l’action « Obtenir les éléments », combinez vos conditions avec des ET et des OU, puis copiez la requête de filtre OData prête à l’emploi.
+  categories: [Cloud Flows, Listes]
+  tags: [Odata, Requêtes, Colonnes]
 - name: Nettoyeur de texte
   url: /outils/nettoyeur-de-texte/
   image: /assets/images/tools/nettoyeur-de-texte.svg
   description: Nettoyez les espaces, retours à la ligne et caractères indésirables de vos textes, puis copiez le résultat en un clic.
+  categories: [Canvas Apps, Cloud Flows]
+  tags: [texte, code]
 - name: Harmoniseur de couleurs
   url: /outils/harmoniseur-de-couleurs/
   image: /assets/images/tools/harmoniseur-de-couleurs.svg
   description: Choisissez une couleur de base et une harmonie pour créer une palette de cinq couleurs, avec codes HEX et formules Power Fx RGBA().
+  categories: [Canvas Apps]
+  tags: [Design, UX /UI, Accessibilité, Power Fx]
+- name: Constructeur de thème
+  url: /outils/constructeur-de-theme/
+  image: /assets/images/tools/constructeur-de-theme.svg
+  description: Extrayez les couleurs d’un texte, personnalisez votre palette et générez un thème Power Fx FR ou EN pour App.Formulas ou App.OnStart.
+  categories: [Canvas Apps]
+  tags: [Design, UX /UI, Accessibilité, Power Fx]

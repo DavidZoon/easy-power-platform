@@ -4,6 +4,6 @@ permalink: /tags/
 ---
 <div class="chips tag-cloud">
 {% for term in site.data.taxonomies.tags %}
-<a class="chip tag" href="{{ '/tags/' | append: term.slug | append: '/' | relative_url }}">{{ term.name | escape }} <span class="count">{{ term.count }}</span></a>
+<a class="chip tag" href="{{ '/tags/' | append: term.slug | append: '/' | relative_url }}">{{ term.name | escape }} <span class="count" data-count="{{ term.count }}">{% include taxonomy-count.html term=term %}</span></a>
 {% endfor %}
 </div>

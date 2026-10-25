@@ -57,8 +57,11 @@ try {
   await page.locator('#harmony-arc').fill('60');
   await page.locator('#harmony-mode').selectOption('geometric');
   await page.setViewportSize({ width: 1920, height: 1080 });
+  const largeWheel = await page.locator('#harmony-wheel').boundingBox();
+  assert.equal(largeWheel.width, 320);
+  assert.equal(largeWheel.height, 320);
   await page.locator('[data-color-harmonizer]').evaluate(element => element.scrollIntoView({ block: 'start', behavior: 'instant' }));
-  for (const selector of ['#harmony-base-heading', '#harmony-type-heading', '#harmony-palette']) {
+  for (const selector of ['.harmony-settings > section:first-child', '.harmony-settings > section:nth-child(2)', '#harmony-palette']) {
     assert(await page.locator(selector).evaluate(element => {
       const box = element.getBoundingClientRect();
       return box.top >= 0 && box.bottom <= innerHeight;
@@ -118,7 +121,7 @@ try {
   assert.equal(await page.locator('#harmony-color-0-rgba').inputValue(), 'RGBA(0, 255, 0, 1)');
   await page.getByRole('button', { name: 'Copier RGBA() — couleur 1', exact: true }).click();
   assert.equal(await page.evaluate(() => window.copiedColors), 'RGBA(0, 255, 0, 1)');
-  await page.getByRole('button', { name: 'Copier HEX — couleur 1', exact: true }).click();
+  await page.getByRole('button', { name: 'Copier HEX — couleur 1', exact: true }).locator('svg rect').click();
   assert.equal(await page.evaluate(() => window.copiedColors), '#00FF00');
   await page.getByRole('button', { name: 'Copier texte — couleur 1', exact: true }).click();
   assert.equal(await page.evaluate(() => window.copiedColors), '#000000');
@@ -168,6 +171,25 @@ try {
     await page.evaluate(value => { document.documentElement.dataset.theme = value; }, theme);
     for (const width of [1440, 390, 320]) {
       await page.setViewportSize({ width, height: 1000 });
+      const copyButtons = await page.locator('.harmony-copy').evaluateAll(buttons => buttons.map(button => {
+        const box = button.getBoundingClientRect();
+        return {
+          width: box.width, height: box.height, radius: getComputedStyle(button).borderRadius,
+          title: button.title, label: button.getAttribute('aria-label'),
+          icon: Boolean(button.querySelector('svg[aria-hidden="true"]')),
+          text: button.textContent.trim(), after: getComputedStyle(button, '::after').content
+        };
+      }));
+      assert.equal(copyButtons.length, 15);
+      for (const button of copyButtons) {
+        assert.equal(button.width, 44);
+        assert.equal(button.height, 44);
+        assert.equal(button.radius, '50%');
+        assert.equal(button.title, button.label);
+        assert(button.icon);
+        assert.equal(button.text, '');
+        assert(['none', 'normal'].includes(button.after));
+      }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Débordement ${theme}, ${width}`);
       const controls = await Promise.all(['#harmony-picker', '#harmony-hex', '#harmony-eyedropper'].map(selector => page.locator(selector).boundingBox()));
       assert(controls.every(box => Math.abs(box.y + box.height / 2 - controls[0].y - controls[0].height / 2) < 2), `Contrôles sur la même ligne ${theme}, ${width}`);

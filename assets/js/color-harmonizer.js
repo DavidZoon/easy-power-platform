@@ -69,12 +69,22 @@ export function contrastLevel(ratio) {
   return ratio >= 7 ? 'AAA' : ratio >= 4.5 ? 'AA' : ratio >= 3 ? 'A' : 'Insuffisant';
 }
 
-export function bestTextColor(hex) {
+function relativeLuminance(hex) {
   const [r, g, b] = hexToRgb(hex).map(channel => {
     const value = channel / 255;
     return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
   });
-  const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+export function contrastRatio(background, foreground) {
+  const a = relativeLuminance(background);
+  const b = relativeLuminance(foreground);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
+
+export function bestTextColor(hex) {
+  const luminance = relativeLuminance(hex);
   const blackRatio = (luminance + 0.05) / 0.05;
   const whiteRatio = 1.05 / (luminance + 0.05);
   const ratio = Math.max(blackRatio, whiteRatio);

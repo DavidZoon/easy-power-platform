@@ -522,7 +522,7 @@ Vérifier l’orthographe exacte sur les pages **Catégories** et **Tags** avant
 d’en créer une nouvelle : `Power Apps` et `PowerApps` produiraient deux archives.
 
 Pour **renommer** un tag existant (par exemple `snipet` → `Snippet`), remplacer
-le nom dans les articles, retirer l’entrée de `_data/taxonomies.yml`, puis
+le nom dans les articles et les outils de `_data/tools.yml`, retirer l’entrée de `_data/taxonomies.yml`, puis
 transformer l’ancienne archive (`tags/<ancien-slug>.html`) en page de redirection,
 pour ne pas casser les liens déjà partagés :
 
@@ -575,6 +575,32 @@ snippet_anchors: [mon-nouveau-snippet]
 Un snippet indépendant n’a besoin que du tag `Snippet`.
 
 ### Hiérarchie des catégories
+
+Les outils sont eux aussi associés aux catégories et tags existants via
+`categories` et `tags` dans [_data/tools.yml](_data/tools.yml), source unique du
+catalogue et de leur classement. Utiliser les libellés exacts ; une référence
+inconnue ou une page d'outil absente bloque la compilation pour signaler l'erreur.
+Le classement actuel privilégie les sous-catégories Canvas Apps, Cloud Flows et
+Listes ; les catégories parentes héritent des outils, sans doublon.
+
+Chaque archive de catégorie/tag affiche un bloc « Outils associés »
+avant les articles, avec le même format de cartes que les articles, sans date ni
+durée de lecture ni lien « Utiliser l'outil ». Un ruban dans le coin supérieur
+droit de l'image porte l'icône outil ; le titre reste le lien principal. Les index,
+archives, sous-catégories et la barre latérale affichent des compteurs distincts
+« N articles · M outils ». Les
+volets de catégories (index, sous-catégories et barre latérale) présentent ces
+deux nombres dans des capsules côte à côte avec les icônes article et outil,
+des infobulles et des libellés pour lecteurs d'écran. Les icônes suivent le thème.
+Le tri par popularité utilise leur somme, mais les
+articles conservent leur ordre chronologique. Les pages d'outils et leurs cartes
+dans le catalogue et les archives proposent les liens de catégories et tags.
+Les outils ne deviennent pas des articles : ni doublons dans le flux Atom,
+ni ajout à la pagination éditoriale ou à l'index de recherche des articles.
+Les slugs et URL de taxonomies existants sont conservés.
+
+Validation : `bundle exec ruby test/taxonomies_test.rb`, puis après compilation
+`npm run check:taxonomies`, `npm run check:tools` et `npm run check:site`.
 
 La hiérarchie WordPress (`wp:category_parent`) est conservée dans
 [_data/category_hierarchy.yml](_data/category_hierarchy.yml), au format
@@ -822,6 +848,10 @@ L'arc analogique total est réglable de 30° à 120° (60° par défaut), via un
 curseur affiché seulement pour cette harmonie, avec offsets 0, -arc/2, -arc/4,
 +arc/4, +arc/2 dans les deux modes. Le réglage est conservé en changeant d'harmonie.
 Les conseils sont repliables et les réglages et cartes sont compactés sur écran large.
+À partir de 1200 px, la roue mesure 320 × 320 px (contre 160 × 160 px
+sur les écrans intermédiaires) et le premier bloc reçoit davantage de largeur.
+La visibilité simultanée des réglages et de la palette dans la zone de l'outil
+est vérifiée dans une fenêtre de 1920 × 1080 px, avec les aides repliées.
 Les cinq couleurs sont repérées sur la roue par leur numéro, à leur teinte et
 saturation HSL ; les nuances de même teinte/saturation peuvent se superposer,
 car la roue utilise la luminosité de base, tandis que les repères portent leur
@@ -839,8 +869,16 @@ contrastes entre toutes les couleurs ni la lisibilité d'un graphique.
 La première couleur reste exactement la base. Les gris, le blanc et le noir
 peuvent produire des couleurs identiques : aucune saturation n'est inventée.
 
+Le bouton « Ouvrir la palette dans le constructeur de thème » transmet la
+palette courante avec ses textes recommandés et sa langue Power Fx.
+Le constructeur crée les rôles Fond/Texte, déduplique les valeurs par rôle et
+génère immédiatement les associations et le code, sans modale d'importation.
+Le transfert utilise le fragment d'URL (non transmis au serveur), sans stockage ;
+le lien conserve les couleurs en cas de rechargement.
 Chaque couleur affiche son HEX et sa formule `RGBA()` opaque (alpha 1),
 avec choix FR (`;`) ou EN (`,`), copie individuelle ou de la palette entière.
+Les copies individuelles utilisent des boutons ronds de 44 px avec une icône SVG,
+un libellé accessible et une infobulle, sur ordinateur comme sur mobile.
 Chaque fond propose aussi un texte noir ou blanc copiable, choisi pour maximiser
 le contraste WCAG 2.1 à partir de la luminance relative sRGB. Un exemple sur le
 fond, le ratio et le niveau pour texte courant sont affichés : AA dès 4,5:1,
@@ -854,6 +892,107 @@ Traitement local, champs masqués pour Clarity, aucun stockage.
 Moteur : [assets/js/color-harmonizer.js](assets/js/color-harmonizer.js).
 Validation : `node --test test/color-harmonizer.test.mjs`, puis, après compilation
 Jekyll, `npm run check:colors` et `npm run check:tools`.
+
+Le **nettoyeur de texte** ([page de l'outil](outils/nettoyeur-de-texte/index.html))
+affiche le texte source et le résultat côte à côte sur ordinateur, puis les options
+de nettoyage en trois colonnes en dessous. Les champs mesurent initialement 180 px
+de haut sur ordinateur et restent redimensionnables. Les précisions sur les lignes
+et les caractères sont repliables. Les textes et toutes les options sont visibles
+ensemble dans une fenêtre Full HD (1920 × 1080), une fois la zone de l'outil
+à l'écran et les précisions repliées.
+« Tout sélectionner » coche toutes les cases sans modifier les listes déroulantes ;
+« Réinitialiser les options » décoche les cases et rétablit les listes sur
+« Ne pas modifier ». Ces actions mettent immédiatement le résultat à jour,
+sans modifier la saisie d'origine. `npm run check:cleaner` vérifie ces interactions,
+la copie des retours CR/CRLF, la disposition Full HD et l'accessibilité responsive
+à partir du site compilé.
+
+Le **constructeur de thème** ([page de l'outil](outils/constructeur-de-theme/index.html))
+propose quatre étapes : importation de couleurs depuis du texte ou du code,
+palette nommée et éditable, galerie de contrastes, puis génération du code Power Fx. Le bouton
+« Ajouter les couleurs détectées » fusionne les couleurs avec la palette sans
+écraser les noms ou retouches. La notification d'importation liste les couleurs
+déjà présentes qui n'ont pas été ajoutées, avec leur nom et leur HEX, une seule
+fois par couleur même si plusieurs formats la désignent. Cette liste est
+actualisée à chaque importation et annoncée aux lecteurs d'écran.
+Les cases de formats sont indépendantes : Power Fx
+FR/EN (`RGBA`, `ColorValue`, `Color.Nom`), HEX, RGB, HSL, CMJN, noms HTML/CSS, RAL Classic.
+Seuls les littéraux sont reconnus : les expressions calculées ne sont jamais exécutées.
+Les HEX utilisent `#` (3, 4, 6 ou 8 chiffres) ou `0x` ; les valeurs nues sans préfixe
+ne sont pas recherchées dans le texte pour limiter les faux positifs.
+
+L'alpha Power Fx est affiché avec le moins de décimales possible tout en conservant
+le même octet HEX : `80` est présenté comme `0,5` en FR ou `0.5` en EN,
+plutôt que `0,501961`. La précision reste celle du HEX sur 8 bits.
+Les couleurs sont normalisées en sRGB HEX, avec alpha sur 8 bits : les valeurs
+opaques et leurs variantes alpha `FF` sont identiques ; toutes les couleurs
+totalement transparentes deviennent `#00000000`. Les doublons multiformats sont
+supprimés en conservant l'ordre de première apparition. Les noms HTML/CSS sont
+anglais ; leur détection peut aussi reconnaître ces mots dans le texte courant.
+RGB et HSL acceptent les virgules, les espaces, les pourcentages et l'alpha CSS ;
+un littéral `RGBA(255, 0, 0, 1)` est reconnu si Power Fx ou RGB est coché,
+car cette notation numérique est commune à Power Fx EN et à CSS.
+HSL accepte deg/rad/grad/turn. CMJN/CMYK accepte quatre fractions 0–1 ou
+pourcentages et utilise la conversion naïve `(1 - composante) × (1 - noir)` :
+pas de profil ICC ni de fidélité d'impression garantie.
+Les 215 correspondances RAL Classic sont des approximations sRGB issues de
+[ieskudero/ral-colors](https://github.com/ieskudero/ral-colors)
+(commit `55e9cfc3d0b333af74c56acad6bd1aeee840d83a`, licence MIT et attribution
+incluses dans [le référentiel](assets/js/theme-color-references.js)).
+Elles ne sont pas une référence officielle pour la fabrication ; RAL Design et
+Effect ne sont pas inclus. Les littéraux invalides et codes RAL inconnus sont signalés.
+
+Chaque couleur tient sur une ligne : nom éditable (`couleur_01`, etc. par défaut),
+liste Fond/Texte, rectangle d'aperçu sur damier de transparence et bouton corbeille à icône accessible.
+Un clic sur l'aperçu déplie le sélecteur : couleur native (qui conserve son alpha),
+HEX, RGBA Power Fx et curseur de transparence (0 % opaque, 100 % transparent).
+Les valeurs et l'aperçu sont synchronisés. Le bouton de fermeture ou Échap
+referme le sélecteur et redonne le focus à l'aperçu.
+Chaque couleur importée ou ajoutée manuellement reçoit le rôle Fond. Une même valeur
+peut exister une fois par rôle : noir de fond et noir de texte peuvent donc coexister.
+Une valeur invalide, un doublon de couleur dans le même rôle ou de nom bloque le code et la copie ;
+le texte source reste intact. Les noms libres sont échappés comme identifiants
+Power Fx, y compris les espaces et apostrophes.
+Les bascules FR/EN et App.Formulas/App.OnStart génèrent les enregistrements
+`f…_HEX` / `f…_FX` ou `gbl…_HEX` / `gbl…_FX`, avec références `ColorValue`
+au premier enregistrement. Les HEX sont des chaînes entre guillemets et les
+séparateurs suivent la langue choisie. App.OnStart affiche un avertissement
+sur l'initialisation des variables et un lien vers la documentation Microsoft ;
+App.Formulas est la destination recommandée et sélectionnée par défaut.
+Après importation, si aucun rôle Texte n'existe, une modale Oui/Non propose les textes
+`couleur_Texte_fondClair` (noir) et `couleur_Texte_fondSombre` (blanc), sans changer
+les fonds existants. Non et Échap n'ajoutent rien. Les noms automatiques reçoivent
+un suffixe en cas de collision.
+
+Pour chaque fond opaque, le texte opaque de la palette au meilleur contraste sRGB
+WCAG 2.1 est associé (en cas d'égalité, premier texte dans la palette).
+Les valeurs semi-transparentes, même dans le rôle Texte, restent exportées mais
+sont exclues des associations et du classement, avec avertissement : leur contraste
+dépend du fond réel. Sans texte opaque, aucune entrée `on_` n'est inventée.
+La galerie compacte regroupe les associations par AAA, AA, A et Insuffisant,
+triées par ratio décroissant dans chaque groupe,
+avec les niveaux en marge sur ordinateur et les aperçus « Aa », noms et capsules
+réunis dans de petites cartes côte à côte. L'explication des seuils est repliable ;
+sur mobile, les niveaux passent au-dessus des cartes.
+Ses capsules partagent les styles
+de l'harmoniseur. AAA commence à 7:1, AA à 4,5:1 ; A est le repère interne pour
+le seuil 3:1 du grand texte, pas un niveau officiel WCAG. Les seuils sont évalués
+avant arrondi, même quand le meilleur texte disponible reste insuffisant.
+Les deux enregistrements exportent les entrées `on_nom_du_fond`, avec le nom
+du texte retenu, le niveau et le ratio en commentaire dans les enregistrements HEX et FX.
+Une ligne de commentaire précède chaque définition : HEX pour les contrôles
+htmlText et images SVG, FX pour les paramètres des contrôles et formules Power Fx,
+avec les préfixes `f` et `gbl` selon la destination.
+Les commentaires de niveau A ajoutent « ⚠️ à n'utiliser qu'avec une grande taille
+de police » ; ceux de niveau Insuffisant ajoutent « ⛔ contraste inaccessible,
+NE PAS UTILISER », dans toutes les variantes de sortie.
+Un nom saisi en collision avec une entrée `on_` générée bloque la copie
+au lieu de produire un enregistrement invalide. Les associations se recalculent
+à chaque changement de nom, rôle, valeur, transparence ou suppression.
+Traitement local, sans stockage, avec champs masqués pour Clarity.
+Validation : `node --test test/theme-builder.test.mjs`, puis après compilation
+Jekyll `npm run check:theme` (interactions, copie, quatre sorties, responsive
+et accessibilité) et `npm run check:tools` (catalogue).
 
 ## 9. Microsoft Clarity
 

@@ -8,13 +8,29 @@ text_cleaner: true
 ---
 <p><a href="{{ '/outils/' | relative_url }}">← Tous les outils</a></p>
 <div class="tool-content">
-  <p>Collez votre texte, choisissez les nettoyages à appliquer et copiez le résultat. Le texte d’origine reste intact : vous pouvez ajuster les options sans perdre votre saisie.</p>
   <noscript><p>Activez JavaScript pour utiliser le nettoyeur de texte.</p></noscript>
   <fieldset class="powerfx-converter text-cleaner" data-text-cleaner data-clarity-mask="true" disabled aria-describedby="cleaner-help">
     <legend class="sr-only">Nettoyage du texte</legend>
+    <div class="converter-grid">
+      <div class="converter-field">
+        <div class="converter-heading"><label for="cleaner-input">Texte à nettoyer</label></div>
+        <textarea id="cleaner-input" rows="7" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Collez votre texte ici…" aria-describedby="cleaner-status"></textarea>
+      </div>
+      <div class="converter-field">
+        <div class="converter-heading">
+          <label for="cleaner-output">Texte nettoyé</label>
+          <button type="button" class="button secondary" id="cleaner-copy" disabled>Copier</button>
+        </div>
+        <textarea id="cleaner-output" rows="7" spellcheck="false" readonly aria-describedby="cleaner-status"></textarea>
+      </div>
+    </div>
+    <p class="converter-status muted" id="cleaner-status" role="status" aria-live="polite" aria-atomic="true"></p>
     <div class="converter-heading">
       <h2>Options de nettoyage</h2>
-      <button type="button" class="button secondary" id="cleaner-reset">Réinitialiser les options</button>
+      <div class="cleaner-actions">
+        <button type="button" class="button secondary" id="cleaner-reset">Réinitialiser les options</button>
+        <button type="button" class="button secondary" id="cleaner-select-all">Tout sélectionner</button>
+      </div>
     </div>
     <p class="muted" id="cleaner-help">Aucune modification par défaut. Le résultat se met à jour automatiquement. Les options s’appliquent dans cet ordre : caractères, espaces, lignes, retours, puis casse.</p>
     <div class="cleaner-options">
@@ -50,8 +66,11 @@ text_cleaner: true
           <option value="space">Remplacer chaque retour par un espace</option>
           <option value="remove">Supprimer tous les retours</option>
         </select>
-        <p class="muted">Les doublons sont comparés après le nettoyage des espaces, en respectant la casse. La première occurrence est conservée.</p>
-        <p class="muted">Les CR du texte collé sont conservés pour le bouton Copier. Une modification manuelle du texte source normalise ses retours en LF.</p>
+        <details class="cleaner-help">
+          <summary>À propos des lignes et retours</summary>
+          <p class="muted">Les doublons sont comparés après le nettoyage des espaces, en respectant la casse. La première occurrence est conservée.</p>
+          <p class="muted">Les CR du texte collé sont conservés pour le bouton Copier. Une modification manuelle du texte source normalise ses retours en LF.</p>
+        </details>
       </fieldset>
       <fieldset>
         <legend>Caractères et mise en forme</legend>
@@ -66,23 +85,12 @@ text_cleaner: true
           <option value="lower">Tout en minuscules</option>
           <option value="upper">Tout en majuscules</option>
         </select>
-        <p class="muted">Les caractères invisibles peuvent être utiles aux emojis et à certaines langues. Vérifiez le résultat avant de le réutiliser.</p>
+        <details class="cleaner-help">
+          <summary>Précautions sur les caractères</summary>
+          <p class="muted">Les caractères invisibles peuvent être utiles aux emojis et à certaines langues. Vérifiez le résultat avant de le réutiliser.</p>
+        </details>
       </fieldset>
     </div>
-    <div class="converter-grid">
-      <div class="converter-field">
-        <div class="converter-heading"><label for="cleaner-input">Texte à nettoyer</label></div>
-        <textarea id="cleaner-input" rows="12" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Collez votre texte ici…" aria-describedby="cleaner-status"></textarea>
-      </div>
-      <div class="converter-field">
-        <div class="converter-heading">
-          <label for="cleaner-output">Texte nettoyé</label>
-          <button type="button" class="button secondary" id="cleaner-copy" disabled>Copier</button>
-        </div>
-        <textarea id="cleaner-output" rows="12" spellcheck="false" readonly aria-describedby="cleaner-status"></textarea>
-      </div>
-    </div>
-    <p class="converter-status muted" id="cleaner-status" role="status" aria-live="polite" aria-atomic="true"></p>
   </fieldset>
   <p class="muted">Le nettoyage s’effectue dans votre navigateur, sans envoi du texte à un service externe ni stockage de votre saisie. Les balises HTML et les expressions sont traitées comme du texte, jamais exécutées.</p>
 </div>

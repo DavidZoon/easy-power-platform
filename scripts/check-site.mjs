@@ -107,7 +107,7 @@ for (const entry of atom.entry) {
   assert(!summary('script, pre, iframe').length, 'Contenu complet ou actif dans le resume');
 }
 const tagPage = load(await fs.readFile(path.join(root, 'tags', 'index.html'), 'utf8'));
-const tagCounts = tagPage('.tag-cloud .count').map((i, el) => Number(tagPage(el).text())).get();
+const tagCounts = tagPage('.tag-cloud .count').map((i, el) => Number(tagPage(el).attr('data-count'))).get();
 assert(tagCounts.length > 0 && tagCounts.every((count, i) => i === 0 || tagCounts[i - 1] >= count), 'Tags non tries par popularite');
 const { parse: parseYaml } = await import('yaml');
 const hierarchy = parseYaml(await fs.readFile('_data/category_hierarchy.yml', 'utf8')) || {};

@@ -47,6 +47,12 @@ if (tool) {
     update();
   });
   for (const control of controls) control.addEventListener('change', update);
+  tool.querySelector('#cleaner-select-all').addEventListener('click', () => {
+    for (const control of controls) {
+      if (control.type === 'checkbox') control.checked = true;
+    }
+    update();
+  });
   tool.querySelector('#cleaner-reset').addEventListener('click', () => {
     for (const control of controls) {
       if (control.type === 'checkbox') control.checked = false;

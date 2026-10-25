@@ -1,0 +1,14 @@
+{% if include.capsules %}
+<span class="taxonomy-count-capsules">
+  <span class="taxonomy-count-capsule" title="{{ include.term.post_count }} article{% if include.term.post_count != 1 %}s{% endif %}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M16 2a2 2 0 1 1 4 0v1h-4z"/><path fill-rule="evenodd" d="M8.379 1a1.5 1.5 0 0 1 1.06.44l4.122 4.12A1.5 1.5 0 0 1 14 6.622V17.5a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 1 17.5v-15A1.5 1.5 0 0 1 2.5 1zM4 5h4v2H4zm7 4v2H4V9zm-7 6v-2h5v2z" clip-rule="evenodd"/><path d="M16 5h4v11l-2 4-2-4z"/></svg>
+    <span>{{ include.term.post_count }}</span><span class="sr-only"> article{% if include.term.post_count != 1 %}s{% endif %}</span>
+  </span>
+  <span class="taxonomy-count-capsule" title="{{ include.term.tool_count }} outil{% if include.term.tool_count != 1 %}s{% endif %}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 479.79 479.79" fill="currentColor" aria-hidden="true" focusable="false"><path d="M478.409 116.617a11.021 11.021 0 0 0-18.77-6.847l-62.015 62.011-68.749-21.768-21.768-68.748 62.016-62.016a11.02 11.02 0 0 0 2.563-11.565 11.03 11.03 0 0 0-9.417-7.207c-37.663-3.245-74.566 10.202-101.247 36.887-36.542 36.545-46.219 89.911-29.083 135.399a94 94 0 0 0-5.544 5.053L19.386 373.152c-.073.071-.145.149-.224.219-24.345 24.346-24.345 63.959 0 88.309 24.349 24.344 63.672 24.048 88.013-.298a4 4 0 0 0 .297-.305l193.632-208.621a73 73 0 0 0 4.949-5.532c45.5 17.167 98.9 7.513 135.474-29.056 26.675-26.687 40.131-63.593 36.882-101.251M75.98 435.38c-8.971 8.969-23.5 8.963-32.47 0-8.967-8.961-8.967-23.502 0-32.466 8.97-8.963 23.499-8.963 32.47 0 8.967 8.964 8.967 23.505 0 32.466"/></svg>
+    <span>{{ include.term.tool_count }}</span><span class="sr-only"> outil{% if include.term.tool_count != 1 %}s{% endif %}</span>
+  </span>
+</span>
+{% else %}
+{{ include.term.post_count }} article{% if include.term.post_count != 1 %}s{% endif %} · {{ include.term.tool_count }} outil{% if include.term.tool_count != 1 %}s{% endif %}
+{% endif %}

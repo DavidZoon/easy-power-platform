@@ -74,7 +74,10 @@ color_harmonizer: true
   <section aria-labelledby="harmony-palette-heading">
     <div class="converter-heading">
       <h2 id="harmony-palette-heading">3. Votre palette</h2>
-      <button type="button" class="button secondary" id="harmony-copy-all" disabled>Copier la palette</button>
+      <div class="harmony-palette-actions">
+        <button type="button" class="button secondary" id="harmony-copy-all" disabled>Copier la palette</button>
+        <button type="button" class="button secondary" id="harmony-open-theme" data-url="{{ '/outils/constructeur-de-theme/' | relative_url }}">Ouvrir la palette dans le constructeur de thème</button>
+      </div>
     </div>
     <ol class="harmony-palette" id="harmony-palette" aria-label="Palette de cinq couleurs"></ol>
     <details class="harmony-help"><summary>Comprendre les scores de contraste</summary>

@@ -19,18 +19,30 @@ layout: default
   <div class="subcategories">
     <h2 id="subcategories-title">Sous-catégories</h2>
     <ul class="chips" aria-labelledby="subcategories-title">
-      {% for child in page.children %}<li><a class="chip tag" href="{{ '/categories/' | append: child.slug | append: '/' | relative_url }}">{{ child.name | escape }} <span class="count">{{ child.count }}</span></a></li>{% endfor %}
+      {% for child in page.children %}<li><a class="chip tag" href="{{ '/categories/' | append: child.slug | append: '/' | relative_url }}">{{ child.name | escape }} <span class="count">{% include taxonomy-count.html term=child capsules=true %}</span></a></li>{% endfor %}
     </ul>
   </div>
   {% endif %}
 </header>
 <div class="content-grid">
   {% include sidebar.html %}
-  <section class="post-list" aria-label="Articles de {{ page.term | escape }}">
+  <div class="post-list">
     {% assign posts = page.term_posts | default: site[page.taxonomy][page.term] %}
-    <p class="muted">{{ posts.size }} article{% if posts.size > 1 %}s{% endif %}{% if page.children.size > 0 %}, sous-catégories incluses{% endif %}</p>
-    <div class="post-gallery">
-      {% for post in posts %}{% include post-card.html post=post %}{% endfor %}
-    </div>
-  </section>
+    <p class="muted taxonomy-summary">{% include taxonomy-count.html term=page %}{% if page.children.size > 0 %}, sous-catégories incluses{% endif %}</p>
+    {% if page.term_tools.size > 0 %}
+    <section class="taxonomy-tools" aria-labelledby="associated-tools-heading">
+      <h2 id="associated-tools-heading">Outils associés</h2>
+      <ul class="post-gallery" role="list">
+        {% for tool in page.term_tools %}<li>{% include tool-card.html tool=tool taxonomy=true %}</li>{% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+    <section aria-labelledby="taxonomy-posts-heading">
+      <h2 id="taxonomy-posts-heading">Articles</h2>
+      <div class="post-gallery">
+        {% for post in posts %}{% include post-card.html post=post %}{% endfor %}
+      </div>
+      {% if posts.size == 0 %}<p class="muted">Aucun article associé pour le moment.</p>{% endif %}
+    </section>
+  </div>
 </div>

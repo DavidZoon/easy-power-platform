@@ -8,14 +8,7 @@ tools: true
 <ul class="tool-gallery" role="list">
   {% for tool in site.data.tools %}
   <li>
-    <a class="tool-card" href="{{ tool.url | relative_url }}">
-      <img src="{{ tool.image | relative_url }}" alt="" width="640" height="360" loading="lazy" decoding="async">
-      <div class="tool-card-body">
-        <h2>{{ tool.name | escape }}</h2>
-        <p>{{ tool.description | escape }}</p>
-        <span class="tool-card-action" aria-hidden="true">Utiliser l’outil →</span>
-      </div>
-    </a>
+    {% include tool-card.html tool=tool %}
   </li>
   {% endfor %}
 </ul>

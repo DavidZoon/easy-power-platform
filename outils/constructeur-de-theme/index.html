@@ -1,0 +1,117 @@
+---
+layout: page
+title: Constructeur de thème
+description: Extrayez les couleurs d’un texte, personnalisez votre palette et générez un thème Power Fx pour votre application Power Apps.
+permalink: /outils/constructeur-de-theme/
+tools: true
+theme_builder: true
+---
+<p><a href="{{ '/outils/' | relative_url }}">← Tous les outils</a></p>
+<div class="tool-content">
+  <noscript><p>Activez JavaScript pour utiliser le constructeur de thème.</p></noscript>
+  <fieldset class="powerfx-converter theme-builder" data-theme-builder data-clarity-mask="true" disabled>
+    <legend class="sr-only">Construction du thème Power Fx</legend>
+    <div class="theme-builder-top">
+      <section aria-labelledby="theme-source-heading">
+        <h2 id="theme-source-heading">1. Importez vos couleurs</h2>
+        <label for="theme-source">Texte, charte graphique ou code source</label>
+        <textarea id="theme-source" rows="7" spellcheck="false" placeholder='#6750A4, RGBA(255; 127; 0; 1), rgb(0, 120, 212), hsl(180 100% 50%), CMJN(0%; 100%; 100%; 0%), RoyalBlue, RAL 5015' aria-describedby="theme-detection-help"></textarea>
+        <fieldset class="theme-formats">
+          <legend>Formats à détecter</legend>
+          <label><input type="checkbox" value="powerfx" checked> Power Fx (FR et EN)</label>
+          <label><input type="checkbox" value="hex" checked> HEX</label>
+          <label><input type="checkbox" value="rgb" checked> RGB / RGBA</label>
+          <label><input type="checkbox" value="hsl" checked> HSL / HSLA</label>
+          <label><input type="checkbox" value="cmyk" checked> CMJN / CMYK</label>
+          <label><input type="checkbox" value="html" checked> Noms HTML / CSS</label>
+          <label><input type="checkbox" value="ral" checked> RAL Classic</label>
+        </fieldset>
+        <button type="button" class="button" id="theme-detect">Ajouter les couleurs détectées</button>
+        <p class="muted" id="theme-detection-help">Ajoute uniquement les nouvelles couleurs, sans écraser vos retouches. Aucune détection si tous les formats sont décochés.</p>
+        <details class="theme-help">
+          <summary>Formats et limites de conversion</summary>
+          <ul>
+            <li>HEX : #RGB, #RGBA, #RRGGBB et #RRGGBBAA ; 0xRRGGBB et 0xRRGGBBAA. L’alpha est conservé sur 8 bits.</li>
+            <li>Power Fx : RGBA() avec valeurs numériques FR ou EN, ColorValue("…") et Color.Nom. Les variables et expressions calculées ne sont pas évaluées.</li>
+            <li>RGB et HSL : virgules ou syntaxe CSS avec espaces et « / » ; pourcentages et angles deg, rad, grad ou turn.</li>
+            <li>CMJN / CMYK : fonctions cmjn(), cmyk() ou device-cmyk(), avec quatre pourcentages ou fractions de 0 à 1. Conversion sRGB approximative sans profil d’impression ICC.</li>
+            <li>Les noms HTML / CSS sont les noms anglais standards. Dans un texte libre, un mot comme « red » sera aussi reconnu comme une couleur.</li>
+            <li>RAL Classic : codes comme RAL 5015, RAL-5015 ou RAL5015 ; 215 correspondances issues du <a href="https://github.com/ieskudero/ral-colors">nuancier libre ral-colors</a>. Il s’agit d’approximations à l’écran, pas de valeurs RAL officielles pour fabrication. RAL Design et Effect ne sont pas pris en charge.</li>
+          </ul>
+        </details>
+        <p class="converter-status muted" id="theme-detection-status" role="status" aria-live="polite" aria-atomic="true"></p>
+        <ul id="theme-detection-issues" class="theme-issues" aria-label="Valeurs non reconnues" hidden></ul>
+      </section>
+      <section aria-labelledby="theme-palette-heading">
+        <div class="converter-heading">
+          <h2 id="theme-palette-heading">2. Personnalisez le thème</h2>
+          <button type="button" class="button secondary" id="theme-add">Ajouter une couleur</button>
+        </div>
+        <label for="theme-name">Nom du thème</label>
+        <input type="text" id="theme-name" value="Mon_theme" required autocomplete="off" spellcheck="false">
+        <p class="muted theme-palette-help">Cliquez sur le rectangle d’une couleur pour modifier son HEX, sa valeur RGBA ou sa transparence. Les couleurs identiques sont regroupées, quel que soit leur format.</p>
+        <p id="theme-empty" class="muted">Importez vos couleurs ou ajoutez-en une manuellement pour commencer.</p>
+        <ol id="theme-palette" class="theme-palette" aria-label="Couleurs du thème"></ol>
+      </section>
+    </div>
+    <section aria-labelledby="theme-combinations-heading">
+      <h2 id="theme-combinations-heading">3. Vérifiez les combinaisons</h2>
+      <details class="theme-help theme-contrast-help">
+        <summary>Comprendre les scores de contraste</summary>
+        <p class="muted">Pour chaque fond opaque, le texte opaque au meilleur contraste est retenu. Seuils pour le texte courant : AAA ≥ 7:1, AA ≥ 4,5:1. La capsule A (≥ 3:1) est un repère pour le grand texte, pas un niveau WCAG officiel.</p>
+      </details>
+      <p id="theme-combinations-status" class="muted" role="status" aria-live="polite"></p>
+      <div id="theme-combinations"></div>
+    </section>
+    <section aria-labelledby="theme-code-heading">
+      <div class="converter-heading">
+        <h2 id="theme-code-heading">4. Récupérez le code Power Fx</h2>
+        <button type="button" class="button secondary" id="theme-copy" disabled>Copier le code</button>
+      </div>
+      <div class="theme-output-options">
+        <fieldset class="theme-toggle">
+          <legend>Syntaxe Power Fx</legend>
+          <label><input type="radio" name="theme-locale" value="fr" checked> Power Fx FR</label>
+          <label><input type="radio" name="theme-locale" value="en"> Power Fx EN</label>
+        </fieldset>
+        <fieldset class="theme-toggle">
+          <legend>Propriété de destination</legend>
+          <label><input type="radio" name="theme-target" value="formulas" checked> App.Formulas</label>
+          <label><input type="radio" name="theme-target" value="onstart"> App.OnStart</label>
+        </fieldset>
+      </div>
+      <label class="sr-only" for="theme-code">Code Power Fx généré</label>
+      <textarea id="theme-code" rows="10" spellcheck="false" readonly aria-describedby="theme-code-status"></textarea>
+      <p class="converter-status muted" id="theme-code-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
+    <p class="theme-warning" id="theme-onstart-warning" hidden>Privilégiez <strong>App.Formulas</strong> pour définir votre thème. Avec des variables globales dans App.OnStart, les couleurs peuvent apparaître noires au démarrage tant que les variables ne sont pas initialisées. <a href="https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/working-with-formulas">Bien démarrer avec les formules d’applications canevas — Microsoft Learn</a>.</p>
+    <dialog id="theme-text-dialog" aria-labelledby="theme-text-dialog-title" aria-describedby="theme-text-dialog-help">
+      <h2 id="theme-text-dialog-title">Ajouter des couleurs de texte ?</h2>
+      <p id="theme-text-dialog-help">La palette ne contient aucune couleur de texte. Voulez-vous ajouter du noir pour les fonds clairs et du blanc pour les fonds sombres ? Vos couleurs de fond seront conservées.</p>
+      <div class="button-row">
+        <button type="button" class="button" id="theme-text-yes">Oui, ajouter</button>
+        <button type="button" class="button secondary" id="theme-text-no" autofocus>Non</button>
+      </div>
+    </dialog>
+  </fieldset>
+  <template id="theme-color-template">
+    <li class="theme-color">
+      <label class="theme-name-label"><span class="sr-only">Nom de la couleur</span><input type="text" class="theme-color-name" required autocomplete="off" spellcheck="false"></label>
+      <label><span class="sr-only">Rôle de la couleur</span><select class="theme-color-role"><option value="background">Fond</option><option value="text">Texte</option></select></label>
+      <button type="button" class="theme-color-open" aria-expanded="false"><span class="theme-swatch"></span></button>
+      <button type="button" class="button secondary theme-remove">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
+      </button>
+      <div class="theme-color-editor" hidden>
+        <label class="theme-picker-label">Couleur <input type="color" class="theme-picker"></label>
+        <label>Valeur HEX <input type="text" class="theme-hex" required autocomplete="off" spellcheck="false"></label>
+        <label>Valeur Power Fx RGBA <input type="text" class="theme-fx" required autocomplete="off" spellcheck="false"></label>
+        <label>Transparence <output class="theme-alpha-value"></output><input type="range" class="theme-alpha" min="0" max="100" step="0.1"></label>
+        <p class="muted">0 % : opaque · 100 % : transparent</p>
+        <button type="button" class="button secondary theme-color-close">Fermer le sélecteur</button>
+      </div>
+      <p class="theme-color-error" hidden></p>
+    </li>
+  </template>
+  <p class="muted">Le traitement s’effectue dans votre navigateur, sans envoi du texte ni stockage de votre saisie. Le code collé est lu comme du texte, jamais exécuté.</p>
+</div>

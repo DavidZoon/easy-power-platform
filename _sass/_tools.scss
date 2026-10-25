@@ -2,9 +2,9 @@
 
 .prose.tools-page { max-width: none; }
 .prose .tool-gallery { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 1.5rem;
-  > li { min-width: 0; margin: 0; }
+  > li { min-width: 0; margin: 0; display: flex; flex-direction: column; gap: .5rem; }
 }
-.tool-card { display: flex; flex-direction: column; height: 100%; border: $border solid var(--line); border-radius: $radius; background: linear-gradient(115deg, var(--card-start), var(--card-end)); text-decoration: none; color: var(--text);
+.tool-card { display: flex; flex-direction: column; flex: 1; border: $border solid var(--line); border-radius: $radius; background: linear-gradient(115deg, var(--card-start), var(--card-end)); text-decoration: none; color: var(--text);
   &:hover { border-color: var(--accent); .tool-card-action { text-decoration: underline; } }
   img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: calc(#{$radius} - #{$border}) calc(#{$radius} - #{$border}) 0 0; }
 }
@@ -13,6 +13,22 @@
   p { color: var(--muted); margin: 0 0 1.25rem; }
 }
 .tool-card-action { margin-top: auto; color: var(--accent); font-weight: 650; }
+.tool-taxonomies { margin: .5rem 0 1rem; }
+.tool-gallery .tool-taxonomies { margin: 0; gap: .35rem;
+  .chip { font-size: .75rem; padding: .15rem .5rem; }
+}
+.taxonomy-tools { margin-bottom: 1.5rem;
+  .post-gallery { list-style: none; padding: 0;
+    > li { min-width: 0; display: flex; }
+  }
+}
+.taxonomy-tool-card { width: 100%;
+  .card-image { position: relative; overflow: hidden; border-radius: calc(#{$radius} - #{$border}); }
+  .tool-taxonomies { margin: 0; }
+}
+.tool-card-ribbon { position: absolute; top: 0; right: 0; width: 64px; height: 64px; background: var(--text); color: var(--bg); clip-path: polygon(0 0, 100% 0, 100% 100%); pointer-events: none;
+  svg { position: absolute; top: 9px; right: 9px; width: 22px; height: 22px; }
+}
 .powerfx-converter { min-width: 0; margin: 1.5rem 0; padding: 0; border: 0;
   select, textarea { font: inherit; border: $border solid var(--line); border-radius: $radius-small; background: var(--bg); color: var(--text); }
   select { max-width: 100%; min-height: 44px; padding: .5rem; }

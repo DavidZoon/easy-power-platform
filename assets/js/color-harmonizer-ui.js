@@ -108,9 +108,21 @@ if (tool) {
       input.setAttribute('aria-label', `${label} — couleur ${index + 1}`);
       const button = document.createElement('button');
       button.type = 'button';
-      button.className = 'button secondary';
-      button.textContent = `Copier ${copyLabel}`;
+      button.className = 'button secondary harmony-copy';
       button.setAttribute('aria-label', `Copier ${copyLabel} — couleur ${index + 1}`);
+      button.title = `Copier ${copyLabel} — couleur ${index + 1}`;
+      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      for (const [name, value] of Object.entries({
+        width: '20', height: '20', viewBox: '0 0 24 24', fill: 'none',
+        stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round',
+        'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false'
+      })) icon.setAttribute(name, value);
+      const outline = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      outline.setAttribute('d', 'M8 8V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-3');
+      const sheet = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      for (const [name, value] of Object.entries({ x: '3', y: '8', width: '13', height: '13', rx: '2' })) sheet.setAttribute(name, value);
+      icon.append(outline, sheet);
+      button.append(icon);
       button.disabled = !canCopy;
       button.dataset.copy = id;
       card.append(caption, input, button);
@@ -143,6 +155,15 @@ if (tool) {
   });
   copyAll.disabled = !canCopy;
   copyAll.addEventListener('click', () => copy(colors.map(color => `${color}\t${powerFxRgba(color, locale.value)}`).join('\n'), palette.querySelector('input')));
+  const openTheme = tool.querySelector('#harmony-open-theme');
+  openTheme.addEventListener('click', () => {
+    const transfer = new URLSearchParams({
+      palette: colors.join(','),
+      texts: [...new Set(colors.map(color => bestTextColor(color).hex))].join(','),
+      locale: locale.value
+    });
+    window.location.assign(openTheme.dataset.url + '#' + transfer.toString());
+  });
   hex.addEventListener('input', () => {
     const color = normalizeHex(hex.value);
     if (!color) {

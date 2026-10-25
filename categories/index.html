@@ -7,7 +7,7 @@ permalink: /categories/
 {% for term in roots %}
 <section class="taxonomy-card" aria-labelledby="category-{{ term.slug }}">
   <h2 id="category-{{ term.slug }}"><a href="{{ '/categories/' | append: term.slug | append: '/' | relative_url }}">{{ term.name | escape }}</a></h2>
-  <p class="count">{{ term.count }} article{% if term.count > 1 %}s{% endif %}</p>
+  <p class="count">{% include taxonomy-count.html term=term capsules=true %}</p>
   {% if term.children.size > 0 %}{% include category-tree.html terms=term.children class="subcategory-list" label=term.name %}{% endif %}
 </section>
 {% endfor %}

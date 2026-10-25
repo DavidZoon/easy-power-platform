@@ -1,0 +1,30 @@
+{% if include.taxonomy %}
+<article class="post-card taxonomy-tool-card">
+  <a class="card-image" href="{{ include.tool.url | relative_url }}" tabindex="-1" aria-hidden="true">
+    <img src="{{ include.tool.image | relative_url }}" alt="" width="180" height="120" loading="lazy" decoding="async">
+    <span class="tool-card-ribbon">{% include tool-icon.html %}</span>
+  </a>
+  <div class="card-body">
+    <span class="sr-only">Outil</span>
+    <h2><a href="{{ include.tool.url | relative_url }}">{{ include.tool.name | escape }}</a></h2>
+    <div class="chips tool-taxonomies" aria-label="Catégories et tags de {{ include.tool.name | escape }}">
+      {% include taxonomy-links.html values=include.tool.categories %}
+      {% include taxonomy-links.html values=include.tool.tags type="tags" %}
+    </div>
+  </div>
+</article>
+{% else %}
+<a class="tool-card" href="{{ include.tool.url | relative_url }}">
+  <img src="{{ include.tool.image | relative_url }}" alt="" width="640" height="360" loading="lazy" decoding="async">
+  <div class="tool-card-body">
+    <span class="eyebrow">Outil</span>
+    <h2>{{ include.tool.name | escape }}</h2>
+    <p>{{ include.tool.description | escape }}</p>
+    <span class="tool-card-action" aria-hidden="true">Utiliser l’outil →</span>
+  </div>
+</a>
+<div class="chips tool-taxonomies" aria-label="Catégories et tags de {{ include.tool.name | escape }}">
+  {% include taxonomy-links.html values=include.tool.categories %}
+  {% include taxonomy-links.html values=include.tool.tags type="tags" %}
+</div>
+{% endif %}

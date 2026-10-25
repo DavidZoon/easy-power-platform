@@ -2,6 +2,7 @@
 
 .text-cleaner {
   h2 { margin: 0; font-size: 1.25rem; }
+  .cleaner-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
   > .cleaner-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }
   .cleaner-options fieldset { min-width: 0; margin: 0; padding: 1rem; border: $border solid var(--line); border-radius: $radius-small; background: var(--surface); }
   .cleaner-options legend { padding: 0 .25rem; font-weight: 650; }
@@ -10,6 +11,24 @@
   .cleaner-options select { width: 100%; }
   .cleaner-options p { font-size: .85rem; }
   input:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+}
+.prose .text-cleaner .cleaner-help {
+  margin: .5rem 0 0; padding: 0; border: 0; background: none;
+  summary { min-height: 44px; padding: .5rem 0; }
+}
+@media (min-width: 56.01rem) {
+  .text-cleaner {
+    margin: .75rem 0;
+    .converter-heading { min-height: 3rem; padding-bottom: .25rem; }
+    .converter-grid .converter-heading { min-height: 3.5rem; }
+    textarea { height: 180px; min-height: 120px; padding: .75rem; flex: none; }
+    > .cleaner-options { gap: .75rem; margin: .5rem 0; }
+    .cleaner-options fieldset { padding: .5rem .75rem; font-size: .9rem; }
+    .cleaner-options label { padding: .25rem 0; align-items: center; }
+    .cleaner-options input { margin-top: 0; }
+    #cleaner-help { margin: .25rem 0 .5rem; font-size: .85rem; }
+    .converter-status { margin: .25rem 0; }
+  }
 }
 @media (max-width: $breakpoint) {
   .text-cleaner > .cleaner-options { grid-template-columns: 1fr; }

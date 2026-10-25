@@ -30,6 +30,9 @@
 {% if page.color_harmonizer %}
 <script src="{{ '/assets/js/color-harmonizer-ui.js' | relative_url }}?v={{ site.time | date: '%s' }}" type="module"></script>
 {% endif %}
+{% if page.theme_builder %}
+<script src="{{ '/assets/js/theme-builder-ui.js' | relative_url }}?v={{ site.time | date: '%s' }}" type="module"></script>
+{% endif %}
 {% if site.clarity_id != '' or site.giscus.enabled or site.newsletter.url %}
 <script src="{{ '/assets/js/integrations.js' | relative_url }}" defer></script>
 {% endif %}

@@ -22,7 +22,13 @@
 <script src="{{ '/assets/js/tools.js' | relative_url }}" type="module"></script>
 {% endif %}
 {% if page.odata_builder %}
-<script src="{{ '/assets/js/odata-builder.js' | relative_url }}" type="module"></script>
+<script src="{{ '/assets/js/odata-builder.js' | relative_url }}?v={{ site.time | date: '%s' }}" type="module"></script>
+{% endif %}
+{% if page.text_cleaner %}
+<script src="{{ '/assets/js/text-cleaner-ui.js' | relative_url }}?v={{ site.time | date: '%s' }}" type="module"></script>
+{% endif %}
+{% if page.color_harmonizer %}
+<script src="{{ '/assets/js/color-harmonizer-ui.js' | relative_url }}?v={{ site.time | date: '%s' }}" type="module"></script>
 {% endif %}
 {% if site.clarity_id != '' or site.giscus.enabled or site.newsletter.url %}
 <script src="{{ '/assets/js/integrations.js' | relative_url }}" defer></script>

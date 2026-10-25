@@ -14,6 +14,7 @@
     "check:powerfx": "node scripts/check-powerfx.mjs",
     "check:tools": "node scripts/check-tools.mjs",
     "check:odata": "node scripts/check-odata.mjs",
+    "check:colors": "node scripts/check-colors.mjs",
     "preview": "node scripts/preview.mjs",
     "audit": "node scripts/audit.mjs"
   },

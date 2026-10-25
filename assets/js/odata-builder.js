@@ -3,6 +3,7 @@ import { analyzeSharePointJson, buildFilter, filterWarnings, formatValue, needsV
 const tool = document.querySelector('[data-odata-builder]');
 if (tool) {
   const json = tool.querySelector('#odata-json');
+  const dynamicValuesInput = tool.querySelector('#odata-dynamic-values');
   const sample = tool.querySelector('#odata-sample');
   const jsonStatus = tool.querySelector('#odata-json-status');
   const columnsPanel = tool.querySelector('#odata-columns');
@@ -19,6 +20,7 @@ if (tool) {
   const placeholders = { text: 'Valeur', number: '100', date: '2024-01-31' };
   const formats = { number: 'Nombre attendu, par exemple 100 ou 12.5.', date: 'Date attendue au format AAAA-MM-JJ ou AAAA-MM-JJTHH:MM:SSZ.' };
   let targets = [];
+  let dynamicValues = [];
   let nextId = 1;
   let root;
 
@@ -93,7 +95,8 @@ if (tool) {
     if (target?.type === 'boolean') {
       return [caption, el('select', { id, 'data-role': 'value', 'data-node': node.id, 'data-focus': `${node.id}:value` },
         el('option', { value: '1', selected: node.value === '1', text: 'Oui' }),
-        el('option', { value: '0', selected: node.value === '0', text: 'Non' }))];
+        el('option', { value: '0', selected: node.value === '0', text: 'Non' }),
+        ...dynamicValues.map(value => el('option', { value, selected: node.value === value, text: value })))];
     }
     const invalid = valueIsInvalid(node, target);
     const errorId = `${id}-error`;
@@ -106,8 +109,14 @@ if (tool) {
       'aria-invalid': invalid ? 'true' : null, 'aria-describedby': errorId
     });
     input.value = node.value;
+    const dynamicSelect = dynamicValues.length ? el('select', {
+      id: `odata-dynamic-value-${node.id}`, 'data-role': 'dynamic-value', 'data-node': node.id, disabled: !target,
+      'aria-label': `Insérer une valeur dynamique — ${label}`
+    },
+    el('option', { value: '', text: 'Insérer une valeur dynamique' }),
+    ...dynamicValues.map(value => el('option', { value, text: value }))) : null;
     const error = el('span', { id: errorId, class: 'odata-error', hidden: !invalid, text: formats[target?.type] ?? '' });
-    return [caption, el('span', { class: 'odata-value' }, input, error)];
+    return [caption, el('span', { class: 'odata-value' }, input, dynamicSelect, error)];
   }
 
   function renderCondition(node, counter) {
@@ -153,6 +162,7 @@ if (tool) {
 
   let currentColumns = [];
   function render(focusKey = document.activeElement?.dataset.focus) {
+    dynamicValues = [...new Set(dynamicValuesInput.value.split(/\r?\n/).map(value => value.trim()).filter(Boolean))];
     builder.replaceChildren();
     if (!targets.length) {
       builder.append(el('p', { class: 'muted', text: 'Les champs apparaîtront ici après l’analyse du JSON.' }));
@@ -259,6 +269,10 @@ if (tool) {
         node.operator = control.value;
         if (needsValue(node.operator) && !node.value.trim()) node.value = defaultValue(targetFor(node));
         return render();
+      case 'dynamic-value':
+        if (!control.value) return;
+        node.value = control.value;
+        return render(`${node.id}:value`);
       case 'value': return changeValue(control);
       case 'logic': node.logic = control.value; return update();
       case 'enabled':
@@ -315,6 +329,10 @@ if (tool) {
   json.addEventListener('input', () => {
     clearTimeout(timer);
     timer = setTimeout(analyze, 250);
+  });
+  dynamicValuesInput.addEventListener('input', () => render());
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) render();
   });
   sample.addEventListener('click', () => {
     json.value = JSON.stringify(sampleGetItems, null, 2);

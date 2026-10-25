@@ -6,3 +6,11 @@
   url: /outils/filtre-odata-sharepoint/
   image: /assets/images/tools/filtre-odata-sharepoint.svg
   description: Collez le JSON de l’action « Obtenir les éléments », combinez vos conditions avec des ET et des OU, puis copiez la requête de filtre OData prête à l’emploi.
+- name: Nettoyeur de texte
+  url: /outils/nettoyeur-de-texte/
+  image: /assets/images/tools/nettoyeur-de-texte.svg
+  description: Nettoyez les espaces, retours à la ligne et caractères indésirables de vos textes, puis copiez le résultat en un clic.
+- name: Harmoniseur de couleurs
+  url: /outils/harmoniseur-de-couleurs/
+  image: /assets/images/tools/harmoniseur-de-couleurs.svg
+  description: Choisissez une couleur de base et une harmonie pour créer une palette de cinq couleurs, avec codes HEX et formules Power Fx RGBA().

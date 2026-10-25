@@ -20,6 +20,9 @@ odata_builder: true
     </div>
     <textarea id="odata-json" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="odata-json-help odata-json-status" placeholder='{ "body": { "value": [ { "ID": 1, "Title": "…" } ] } }' disabled></textarea>
     <p class="converter-status muted" id="odata-json-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <label for="odata-dynamic-values">Valeurs dynamiques (facultatif)</label>
+    <p class="muted" id="odata-dynamic-values-help">Collez les expressions Power Automate à proposer dans les champs de valeur, une par ligne (par exemple <code>@{triggerBody()?['Title']}</code>).</p>
+    <textarea id="odata-dynamic-values" rows="3" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="odata-dynamic-values-help" placeholder="@{triggerBody()?['Title']}"></textarea>
     <details class="odata-columns" id="odata-columns" hidden>
       <summary>Colonnes détectées (<span id="odata-columns-count">0</span>)</summary>
       <div class="odata-table">

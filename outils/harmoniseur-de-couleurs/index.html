@@ -1,0 +1,87 @@
+---
+layout: page
+title: Harmoniseur de couleurs
+description: Créez une palette harmonieuse de cinq couleurs à partir d’une couleur de base, avec codes HEX et formules Power Fx RGBA().
+permalink: /outils/harmoniseur-de-couleurs/
+tools: true
+color_harmonizer: true
+---
+<p><a href="{{ '/outils/' | relative_url }}">← Tous les outils</a></p>
+<noscript><p>Activez JavaScript pour utiliser l’harmoniseur de couleurs.</p></noscript>
+<fieldset class="color-harmonizer" data-color-harmonizer data-clarity-mask="true" disabled>
+  <legend class="sr-only">Créer une harmonie de couleurs</legend>
+  <div class="harmony-settings">
+    <section aria-labelledby="harmony-base-heading">
+      <h2 id="harmony-base-heading">1. Couleur de base</h2>
+      <button type="button" class="harmony-wheel" id="harmony-wheel" aria-label="Roue des couleurs : cliquez ou utilisez les flèches pour ajuster la teinte" aria-describedby="harmony-wheel-help">
+        <span class="harmony-marker" aria-hidden="true"></span>
+      </button>
+      <details class="harmony-help"><summary>Utiliser la roue</summary><p class="muted" id="harmony-wheel-help">Angle : teinte ; distance au centre : saturation. Les repères 1 à 5 correspondent à la palette ; ils peuvent se superposer si seules les luminosités diffèrent. Chaque repère affiche sa couleur réelle ; le fond de la roue utilise la luminosité de base. Au clavier, utilisez les flèches gauche/droite pour la teinte, haut/bas pour la saturation. Le curseur ci-dessous ajuste la luminosité.</p></details>
+      <div class="harmony-base-controls">
+        <label for="harmony-picker">Sélecteur de couleur</label>
+        <input type="color" id="harmony-picker" value="#6750A4">
+        <label for="harmony-hex">Code HEX</label>
+        <input type="text" id="harmony-hex" value="#6750A4" maxlength="7" spellcheck="false" autocomplete="off" aria-describedby="harmony-hex-error">
+        <button type="button" class="button secondary" id="harmony-eyedropper" aria-label="Prélever une couleur à l’écran" title="Prélever une couleur à l’écran" disabled>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="m14 5 5 5M4 16l-1 5 5-1L20 8a3 3 0 0 0-4-4L4 16Z"/>
+          </svg>
+        </button>
+      </div>
+      <p id="harmony-hex-error" class="harmony-error" hidden>Saisissez 3 ou 6 chiffres hexadécimaux, par exemple #6750A4.</p>
+      <p class="muted" id="harmony-eyedropper-help"></p>
+      <label for="harmony-lightness">Luminosité <output id="harmony-lightness-label" for="harmony-lightness">0 %</output></label>
+      <input type="range" id="harmony-lightness" min="0" max="100" value="0">
+    </section>
+    <section aria-labelledby="harmony-type-heading">
+      <h2 id="harmony-type-heading">2. Harmonie souhaitée</h2>
+      <label for="harmony-type">Type d’harmonie</label>
+      <select id="harmony-type">
+        <option value="monochromatic">Monochromatique</option>
+        <option value="analogous">Analogique</option>
+        <option value="complementary" selected>Complémentaire</option>
+        <option value="split">Split-complémentaire</option>
+        <option value="triadic">Triadique</option>
+        <option value="tetradic">Tétradique (rectangulaire)</option>
+        <option value="square">Carrée</option>
+      </select>
+      <div id="harmony-arc-control" hidden>
+        <label for="harmony-arc">Arc total <output id="harmony-arc-label" for="harmony-arc">60° (±30°)</output></label>
+        <input type="range" id="harmony-arc" min="30" max="120" step="1" value="60">
+      </div>
+      <label for="harmony-mode">Rendu de la palette</label>
+      <select id="harmony-mode">
+        <option value="geometric">Géométrique — rendu original</option>
+        <option value="ui">Palette pour interface — nuances atténuées</option>
+      </select>
+      <label for="harmony-locale">Syntaxe Power Fx</label>
+      <select id="harmony-locale">
+        <option value="fr">FR — RGBA(rouge; vert; bleu; 1)</option>
+        <option value="en">EN — RGBA(red, green, blue, 1)</option>
+      </select>
+      <details class="harmony-help">
+      <summary>Conseils et principes de cette harmonie</summary>
+      <p id="harmony-description" class="muted"></p>
+      <p id="harmony-mode-help" class="muted">Le rendu géométrique conserve les nuances originales de l’outil.</p>
+      <p id="harmony-advice" class="muted"></p>
+      <p class="muted">La première couleur est toujours votre couleur de base. Les harmonies à une, deux, trois ou quatre teintes sont complétées par des nuances pour obtenir cinq couleurs. Le mode interface ajuste saturation et luminosité sans changer les angles de teinte.</p>
+      <p class="muted">La roue représente le modèle numérique HSL (rouge, vert, bleu), et non une roue de peinture RYB. Avec du noir, du blanc ou du gris, certaines couleurs peuvent être identiques.</p>
+      <p class="muted">Conseil : utilisez une couleur dominante (60 %), une secondaire (30 %) et une couleur d’accent (10 %). Vérifiez les contrastes avant d’utiliser la palette dans une interface.</p>
+      <p class="muted">Ces proportions sont des repères de surface, pas une répartition obligatoire des cinq couleurs. Une harmonie ne garantit ni le contraste entre ses couleurs, ni leur distinction dans un graphique. Les états succès, avertissement et erreur doivent rester compréhensibles, avec un libellé ou une icône en plus de la couleur.</p>
+      </details>
+    </section>
+  </div>
+  <section aria-labelledby="harmony-palette-heading">
+    <div class="converter-heading">
+      <h2 id="harmony-palette-heading">3. Votre palette</h2>
+      <button type="button" class="button secondary" id="harmony-copy-all" disabled>Copier la palette</button>
+    </div>
+    <ol class="harmony-palette" id="harmony-palette" aria-label="Palette de cinq couleurs"></ol>
+    <details class="harmony-help"><summary>Comprendre les scores de contraste</summary>
+    <p class="muted">Texte conseillé : noir ou blanc, selon le meilleur ratio de contraste WCAG 2.1 sur chaque fond opaque. Pour du texte courant : AA à partir de 4,5:1, AAA à partir de 7:1. Le niveau est calculé sur le ratio exact, avant arrondi.</p>
+    <p class="muted">Capsules : AAA vert, AA bleu, A orange (3:1 à moins de 4,5:1), insuffisant rouge (moins de 3:1). « A » est un repère interne, pas un niveau de contraste WCAG : il correspond uniquement au seuil AA pour le grand texte (18 pt, ou 14 pt en gras). Le noir ou blanc conseillé garantit au moins AA pour le texte courant : ses capsules sont donc bleues ou vertes.</p>
+    </details>
+    <p class="converter-status muted" id="harmony-status" role="status" aria-live="polite" aria-atomic="true"></p>
+  </section>
+</fieldset>
+<p class="muted">Les couleurs sont calculées dans votre navigateur, sans envoi à un service externe. Sources : <a href="https://huebox.fr/articles/harmonies-couleurs">les harmonies de couleurs selon HueBox</a> et <a href="https://colorpalettefinder.com/fr/blog/understanding-color-harmony">l’harmonie des couleurs en UI selon ColorPaletteFinder</a>. La roue HSL, les angles choisis pour les harmonies analogique, split et tétradique, ainsi que les cinq nuances et leurs réglages, sont des choix propres à cet outil ; les exemples HEX des articles ne sont pas reproduits comme des rotations exactes.</p>

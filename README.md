@@ -800,6 +800,61 @@ porte `data-clarity-mask="true"`. Validation dédiée : `npm run check:odata`
 (analyse, groupes ET/OU, clavier et focus, validation, échappement, sécurité
 HTML, copie, absence de requêtes, responsive et axe en clair/sombre).
 
+Le **harmoniseur de couleurs** ([page de l'outil](outils/harmoniseur-de-couleurs/index.html))
+génère cinq couleurs depuis une base HEX, un sélecteur natif, une roue HSL
+(teinte/saturation, luminosité séparée) ou la pipette EyeDropper si disponible
+en contexte sécurisé. La roue est utilisable au clavier pour la teinte et la
+saturation ; seul le curseur de luminosité est affiché. Le bouton pipette à
+icône est aligné avec le sélecteur et le champ HEX, avec un nom accessible
+et une infobulle. Sans pipette, un message indique les alternatives.
+
+Les sept harmonies suivent les relations de teinte décrites dans
+[l'article HueBox](https://huebox.fr/articles/harmonies-couleurs), appliquées
+sur une roue numérique HSL plutôt que RYB. Offsets : monochromatique 0° ;
+analogique -30°/-15°/0°/15°/30° ; complémentaire 0°/180° ;
+split 0°/150°/210° ; triadique 0°/120°/240° ;
+tétradique 0°/60°/180°/240° ; carrée 0°/90°/180°/270°.
+Des nuances de luminosité complètent les harmonies à moins de cinq teintes.
+La consolidation avec [ColorPaletteFinder](https://colorpalettefinder.com/fr/blog/understanding-color-harmony)
+conserve les angles communs aux deux sources, mais distingue harmonie et usage UI.
+Les exemples HEX éditoriaux ne sont pas des références de rotations HSL exactes.
+L'arc analogique total est réglable de 30° à 120° (60° par défaut), via un
+curseur affiché seulement pour cette harmonie, avec offsets 0, -arc/2, -arc/4,
++arc/4, +arc/2 dans les deux modes. Le réglage est conservé en changeant d'harmonie.
+Les conseils sont repliables et les réglages et cartes sont compactés sur écran large.
+Les cinq couleurs sont repérées sur la roue par leur numéro, à leur teinte et
+saturation HSL ; les nuances de même teinte/saturation peuvent se superposer,
+car la roue utilise la luminosité de base, tandis que les repères portent leur
+couleur réelle. Les aperçus mesurent 80 px sur écran large et 220 px sur mobile.
+Le rendu géométrique reste inchangé par défaut. Le mode facultatif « Palette pour
+interface » conserve la base et les offsets, mais applique aux quatre variantes
+des facteurs de saturation 0,65/0,85/0,45/0,2 et des luminosités HSL
+42/55/24/96 %. En monochromatique : 18/38/75/95 % pour étaler la gamme tonale.
+Ces paramètres sont des choix de l'outil, pas des valeurs prescrites par les sources.
+Les conseils par harmonie rappellent la retenue des accents, le rôle des neutres,
+les limites des palettes à quatre teintes et la distinction entre couleur et sémantique.
+Le ratio 60/30/10 est indicatif et ne répartit pas obligatoirement les cinq couleurs.
+Les capsules évaluent uniquement le texte noir/blanc sur chaque fond, pas les
+contrastes entre toutes les couleurs ni la lisibilité d'un graphique.
+La première couleur reste exactement la base. Les gris, le blanc et le noir
+peuvent produire des couleurs identiques : aucune saturation n'est inventée.
+
+Chaque couleur affiche son HEX et sa formule `RGBA()` opaque (alpha 1),
+avec choix FR (`;`) ou EN (`,`), copie individuelle ou de la palette entière.
+Chaque fond propose aussi un texte noir ou blanc copiable, choisi pour maximiser
+le contraste WCAG 2.1 à partir de la luminance relative sRGB. Un exemple sur le
+fond, le ratio et le niveau pour texte courant sont affichés : AA dès 4,5:1,
+AAA dès 7:1, évalués avant arrondi. Ces indications concernent des couleurs opaques.
+Les ratios apparaissent dans des capsules : AAA vert, AA bleu, A orange
+(repère interne de 3:1 à moins de 4,5:1, uniquement AA pour grand texte),
+insuffisant rouge (moins de 3:1). WCAG ne définit pas de seuil de contraste A.
+Le texte noir ou blanc optimal atteint toujours au moins AA pour le texte courant.
+Les entrées HEX invalides sont signalées sans remplacer la dernière palette.
+Traitement local, champs masqués pour Clarity, aucun stockage.
+Moteur : [assets/js/color-harmonizer.js](assets/js/color-harmonizer.js).
+Validation : `node --test test/color-harmonizer.test.mjs`, puis, après compilation
+Jekyll, `npm run check:colors` et `npm run check:tools`.
+
 ## 9. Microsoft Clarity
 
 Laisser `clarity_id: ""` pour désactiver entièrement le service.

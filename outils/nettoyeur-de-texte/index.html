@@ -1,0 +1,88 @@
+---
+layout: page
+title: Nettoyeur de texte
+description: Nettoyez les espaces, retours à la ligne et caractères indésirables de vos textes, directement dans votre navigateur.
+permalink: /outils/nettoyeur-de-texte/
+tools: true
+text_cleaner: true
+---
+<p><a href="{{ '/outils/' | relative_url }}">← Tous les outils</a></p>
+<div class="tool-content">
+  <p>Collez votre texte, choisissez les nettoyages à appliquer et copiez le résultat. Le texte d’origine reste intact : vous pouvez ajuster les options sans perdre votre saisie.</p>
+  <noscript><p>Activez JavaScript pour utiliser le nettoyeur de texte.</p></noscript>
+  <fieldset class="powerfx-converter text-cleaner" data-text-cleaner data-clarity-mask="true" disabled aria-describedby="cleaner-help">
+    <legend class="sr-only">Nettoyage du texte</legend>
+    <div class="converter-heading">
+      <h2>Options de nettoyage</h2>
+      <button type="button" class="button secondary" id="cleaner-reset">Réinitialiser les options</button>
+    </div>
+    <p class="muted" id="cleaner-help">Aucune modification par défaut. Le résultat se met à jour automatiquement. Les options s’appliquent dans cet ordre : caractères, espaces, lignes, retours, puis casse.</p>
+    <div class="cleaner-options">
+      <fieldset>
+        <legend>Espaces</legend>
+        <label><input type="checkbox" data-option="multipleSpaces"> Réduire les espaces multiples à un seul</label>
+        <label><input type="checkbox" data-option="trimStart"> Enlever les espaces et tabulations en début de ligne</label>
+        <label><input type="checkbox" data-option="trimEnd"> Enlever les espaces et tabulations en fin de ligne</label>
+        <label><input type="checkbox" data-option="nonBreakingSpaces"> Remplacer les espaces insécables par des espaces</label>
+        <label for="cleaner-tabs">Remplacer les tabulations</label>
+        <select id="cleaner-tabs" data-option="tabs">
+          <option value="keep">Ne pas modifier</option>
+          <option value="1">Par 1 espace</option>
+          <option value="2">Par 2 espaces</option>
+          <option value="4">Par 4 espaces</option>
+          <option value="remove">Les supprimer</option>
+        </select>
+      </fieldset>
+      <fieldset>
+        <legend>Lignes et retours</legend>
+        <label><input type="checkbox" data-option="emptyLines"> Supprimer les lignes vides (même avec des espaces)</label>
+        <label><input type="checkbox" data-option="collapseEmptyLines"> Réduire les lignes vides consécutives à une seule</label>
+        <label><input type="checkbox" data-option="duplicateLines"> Supprimer les lignes en double</label>
+        <label for="cleaner-cr">Retours chariot (CR)</label>
+        <select id="cleaner-cr" data-option="carriageReturns">
+          <option value="keep">Ne pas modifier</option>
+          <option value="normalize">Normaliser CRLF et CR en LF</option>
+          <option value="remove">Supprimer les caractères CR</option>
+        </select>
+        <label for="cleaner-breaks">Retours à la ligne (CRLF, CR, LF)</label>
+        <select id="cleaner-breaks" data-option="lineBreaks">
+          <option value="keep">Ne pas modifier</option>
+          <option value="space">Remplacer chaque retour par un espace</option>
+          <option value="remove">Supprimer tous les retours</option>
+        </select>
+        <p class="muted">Les doublons sont comparés après le nettoyage des espaces, en respectant la casse. La première occurrence est conservée.</p>
+        <p class="muted">Les CR du texte collé sont conservés pour le bouton Copier. Une modification manuelle du texte source normalise ses retours en LF.</p>
+      </fieldset>
+      <fieldset>
+        <legend>Caractères et mise en forme</legend>
+        <label><input type="checkbox" data-option="invisibleCharacters"> Supprimer les caractères invisibles (largeur nulle et BOM)</label>
+        <label><input type="checkbox" data-option="normalizeUnicode"> Normaliser Unicode (NFC)</label>
+        <label><input type="checkbox" data-option="accents"> Enlever les accents</label>
+        <label><input type="checkbox" data-option="quotes"> Remplacer les guillemets typographiques par des guillemets droits</label>
+        <label><input type="checkbox" data-option="punctuation"> Supprimer la ponctuation</label>
+        <label for="cleaner-case">Casse du texte</label>
+        <select id="cleaner-case" data-option="letterCase">
+          <option value="keep">Ne pas modifier</option>
+          <option value="lower">Tout en minuscules</option>
+          <option value="upper">Tout en majuscules</option>
+        </select>
+        <p class="muted">Les caractères invisibles peuvent être utiles aux emojis et à certaines langues. Vérifiez le résultat avant de le réutiliser.</p>
+      </fieldset>
+    </div>
+    <div class="converter-grid">
+      <div class="converter-field">
+        <div class="converter-heading"><label for="cleaner-input">Texte à nettoyer</label></div>
+        <textarea id="cleaner-input" rows="12" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Collez votre texte ici…" aria-describedby="cleaner-status"></textarea>
+      </div>
+      <div class="converter-field">
+        <div class="converter-heading">
+          <label for="cleaner-output">Texte nettoyé</label>
+          <button type="button" class="button secondary" id="cleaner-copy" disabled>Copier</button>
+        </div>
+        <textarea id="cleaner-output" rows="12" spellcheck="false" readonly aria-describedby="cleaner-status"></textarea>
+      </div>
+    </div>
+    <p class="converter-status muted" id="cleaner-status" role="status" aria-live="polite" aria-atomic="true"></p>
+  </fieldset>
+  <p class="muted">Le nettoyage s’effectue dans votre navigateur, sans envoi du texte à un service externe ni stockage de votre saisie. Les balises HTML et les expressions sont traitées comme du texte, jamais exécutées.</p>
+</div>

@@ -1,0 +1,16 @@
+@use "variables" as *;
+
+.text-cleaner {
+  h2 { margin: 0; font-size: 1.25rem; }
+  > .cleaner-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .cleaner-options fieldset { min-width: 0; margin: 0; padding: 1rem; border: $border solid var(--line); border-radius: $radius-small; background: var(--surface); }
+  .cleaner-options legend { padding: 0 .25rem; font-weight: 650; }
+  .cleaner-options label { display: flex; align-items: start; gap: .5rem; padding: .5rem 0; min-height: 44px; }
+  .cleaner-options input { flex-shrink: 0; width: 1.15rem; height: 1.15rem; margin: .25rem 0 0; accent-color: var(--accent); }
+  .cleaner-options select { width: 100%; }
+  .cleaner-options p { font-size: .85rem; }
+  input:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+}
+@media (max-width: $breakpoint) {
+  .text-cleaner > .cleaner-options { grid-template-columns: 1fr; }
+}

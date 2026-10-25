@@ -27,6 +27,7 @@ try {
   await page.goto(toolUrl);
   assert.equal(await page.locator('h1').textContent(), 'Constructeur de filtre OData SharePoint pour Power Automate');
   assert.equal(await page.locator('script[src$="/tools.js"]').count(), 0, 'Le convertisseur Power Fx ne doit pas être chargé');
+  assert.match(await page.locator('script[src*="/odata-builder.js"]').getAttribute('src'), /\?v=\d+$/, 'Le script doit être versionné pour éviter une ancienne version en cache');
   await page.waitForFunction(() => !document.querySelector('#odata-json').disabled);
   const requests = [];
   page.on('request', request => requests.push(request.url()));
@@ -51,14 +52,29 @@ try {
   assert.equal(await page.locator('#odata-field-1 option').count(), 1 + 16);
   assert.equal(await page.locator('#odata-field-1 option', { hasText: 'Commentaire' }).count(), 0);
 
+  const dynamicValues = page.locator('#odata-dynamic-values');
+  await dynamicValues.fill("  @{triggerBody()?['Title']}  \n\n@{variables('Status')}\n@{triggerBody()?['Title']} ");
   await page.locator('#odata-field-1').focus();
   await page.selectOption('#odata-field-1', 'Statut');
   assert.equal(await focused(), 'odata-field-1', 'Le focus doit rester sur le champ après le rendu');
   assert.deepEqual(await page.locator('#odata-operator-1 option').allTextContents(), ['Est égal à', 'N’est pas égal à', 'Commence par', 'Contient', 'Ne contient pas de données', 'Contient des données']);
   assert.equal(await page.locator('#odata-value-1').getAttribute('list'), 'odata-values-7');
   assert.deepEqual(await page.locator('#odata-values-7 option').evaluateAll(options => options.map(option => option.value)), ['En cours', 'Terminé']);
+  assert.deepEqual(await page.locator('#odata-dynamic-value-1 option').evaluateAll(options => options.map(option => option.value)), ['', "@{triggerBody()?['Title']}", "@{variables('Status')}"]);
   assert.equal(await page.locator('#odata-value-1').inputValue(), 'En cours');
   assert.equal(await output.inputValue(), "Statut eq 'En cours'", 'La valeur par défaut doit être incluse dès la sélection du champ');
+  await page.selectOption('#odata-dynamic-value-1', "@{triggerBody()?['Title']}");
+  assert.equal(await page.locator('#odata-value-1').inputValue(), "@{triggerBody()?['Title']}");
+  assert.equal(await output.inputValue(), "Statut eq '@{triggerBody()?['Title']}'");
+  await dynamicValues.evaluate(element => {
+    element.value = "@{variables('Restored')}";
+    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+  });
+  assert.deepEqual(await page.locator('#odata-dynamic-value-1 option').evaluateAll(options => options.map(option => option.value)), ['', "@{variables('Restored')}"], 'Les valeurs restaurées doivent être proposées sans nouvelle saisie');
+  await page.selectOption('#odata-dynamic-value-1', "@{variables('Restored')}");
+  assert.equal(await output.inputValue(), "Statut eq '@{variables('Restored')}'");
+  await dynamicValues.fill("  @{triggerBody()?['Title']}  \n\n@{variables('Status')}\n@{triggerBody()?['Title']} ");
+  await page.fill('#odata-value-1', 'En cours');
   await page.selectOption('#odata-operator-1', 'ne');
   assert.equal(await output.inputValue(), "Statut ne 'En cours'", 'Changer uniquement l’opérateur doit recalculer le filtre');
   await page.selectOption('#odata-operator-1', 'eq');
@@ -102,6 +118,10 @@ try {
   const second = (await focused()).replace('odata-field-', '');
   await page.selectOption(`#odata-field-${second}`, 'Urgent');
   assert.equal(await page.locator(`#odata-value-${second}`).evaluate(element => element.tagName), 'SELECT');
+  assert.deepEqual(await page.locator(`#odata-value-${second} option`).evaluateAll(options => options.map(option => option.value)), ['1', '0', "@{triggerBody()?['Title']}", "@{variables('Status')}"]);
+  await page.selectOption(`#odata-value-${second}`, "@{triggerBody()?['Title']}");
+  assert.match(await output.inputValue(), /Urgent eq @\{triggerBody\(\)\?\['Title'\]\}\)$/);
+  await page.selectOption(`#odata-value-${second}`, '1');
   assert.equal(await output.inputValue(), 'Statut eq \'Fournisseur d\'\'Alex\' and (Montant gt 1000.5 or Urgent eq 1)');
   await page.selectOption(`#odata-logic-${groupId}`, 'and');
   assert.equal(await output.inputValue(), 'Statut eq \'Fournisseur d\'\'Alex\' and (Montant gt 1000.5 and Urgent eq 1)');
@@ -207,10 +227,18 @@ try {
   const noClipboard = await browser.newContext();
   await noClipboard.addInitScript(() => Object.defineProperty(navigator, 'clipboard', { value: undefined }));
   const manualPage = await noClipboard.newPage();
+  await manualPage.route(toolUrl, async route => {
+    const response = await route.fetch();
+    const body = (await response.text()).replace(/(<textarea id="odata-dynamic-values"[^>]*>)[\s\S]*?(<\/textarea>)/, "$1@{variables('Initial')}$2");
+    await route.fulfill({ response, body });
+  });
   await manualPage.goto(toolUrl);
   await manualPage.waitForFunction(() => !document.querySelector('#odata-sample').disabled);
   await manualPage.click('#odata-sample');
   await manualPage.selectOption('#odata-field-1', 'ID');
+  assert.deepEqual(await manualPage.locator('#odata-dynamic-value-1 option').evaluateAll(options => options.map(option => option.value)), ['', "@{variables('Initial')}"], 'Une valeur présente au chargement doit être proposée');
+  await manualPage.selectOption('#odata-dynamic-value-1', "@{variables('Initial')}");
+  assert.equal(await manualPage.locator('#odata-output').inputValue(), "ID eq @{variables('Initial')}");
   await manualPage.fill('#odata-value-1', '3');
   assert.equal(await manualPage.locator('#odata-output').inputValue(), 'ID eq 3');
   assert(await manualPage.locator('#odata-copy').isDisabled());

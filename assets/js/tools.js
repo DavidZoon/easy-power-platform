@@ -1,4 +1,5 @@
-import { analyzePowerFx, convertPowerFx, powerFxHighlightTokens } from './powerfx.js';
+import { analyzePowerFx, convertPowerFx } from './powerfx.js';
+import { createCodeEditor, highlighters } from './code-editor.js';
 
 const converter = document.querySelector('[data-powerfx-converter]');
 if (converter) {
@@ -13,56 +14,28 @@ if (converter) {
   const canCopy = Boolean(navigator.clipboard && window.isSecureContext);
   converter.disabled = false;
 
-  const editors = [source, output].map(textarea => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'powerfx-editor';
-    const preview = document.createElement('pre');
-    preview.className = 'highlight';
-    preview.setAttribute('aria-hidden', 'true');
-    const code = document.createElement('code');
-    preview.append(code);
-    textarea.before(wrapper);
-    wrapper.append(preview, textarea);
-    textarea.wrap = 'off';
-    return { textarea, code, scrollTop: 0 };
-  });
-
-  function alignPreview(editor) {
-    const { textarea, code } = editor;
-    editor.scrollTop = textarea.scrollTop;
-    code.style.transform = `translate(${-textarea.scrollLeft}px, ${-textarea.scrollTop}px)`;
-  }
+  const editors = [source, output].map(textarea => createCodeEditor(textarea, highlighters.powerfx));
+  const synced = [0, 0];
 
   function highlight() {
-    for (const editor of editors) {
-      const { textarea, code } = editor;
-      const text = textarea.value;
-      const fragment = document.createDocumentFragment();
-      let offset = 0;
-      for (const token of powerFxHighlightTokens(text)) {
-        fragment.append(document.createTextNode(text.slice(offset, token.start)));
-        const span = document.createElement('span');
-        span.className = token.style;
-        span.textContent = text.slice(token.start, token.end);
-        fragment.append(span);
-        offset = token.end;
-      }
-      fragment.append(document.createTextNode(text.slice(offset) + '\n'));
-      code.replaceChildren(fragment);
-      alignPreview(editor);
-    }
+    for (const editor of editors) editor.refresh();
     output.scrollTop = source.scrollTop;
-    alignPreview(editors[1]);
+    synced[0] = source.scrollTop;
+    synced[1] = output.scrollTop;
+    editors[1].align();
   }
 
   editors.forEach((editor, index) => {
     editor.textarea.addEventListener('scroll', () => {
       const other = editors[1 - index];
-      if (editor.textarea.scrollTop !== editor.scrollTop) {
+      // Ignore scroll events caused by the partner (e.g. clamped at the end of a shorter text).
+      if (editor.textarea.scrollTop !== synced[index]) {
         other.textarea.scrollTop = editor.textarea.scrollTop;
       }
-      alignPreview(editor);
-      alignPreview(other);
+      synced[index] = editor.textarea.scrollTop;
+      synced[1 - index] = other.textarea.scrollTop;
+      editor.align();
+      other.align();
     });
   });
 

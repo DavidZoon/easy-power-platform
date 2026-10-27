@@ -732,6 +732,12 @@ Le domaine est déduit automatiquement. Les liens s’ouvrent
 dans un nouvel onglet (`rel="noopener noreferrer"`, annoncé aux lecteurs
 d’écran), et toute la carte est cliquable et accessible au clavier.
 
+Les pages Liens utiles, Tags et À propos utilisent `wide: true` avec le layout
+`page` pour occuper le même conteneur de 1240 px maximum que l'accueil, les
+articles et les outils. Les cartes des liens passent de trois colonnes sur
+grand écran à deux puis une selon la place disponible. La biographie conserve
+une largeur de lecture limitée ; les images passent au-dessus du texte sur mobile.
+
 Le logo de chaque carte est le favicon du site lié. Après avoir ajouté ou
 modifié un lien, lancer `npm run images:links` : le script lit les icônes
 déclarées par la page (SVG, `apple-touch-icon`, puis la plus grande), sinon
@@ -796,7 +802,8 @@ Le **convertisseur Power Fx EN ↔ FR** partage le moteur
   Corriger le code ou préciser son format source EN/FR avec le sélecteur ;
 - un code neutre est conservé à l’identique. L’outil ne valide pas les formules ;
 - les deux champs colorent les fonctions, mots-clés, nombres, chaînes et
-  commentaires Power Fx avec le même analyseur que la conversion. La saisie
+  commentaires Power Fx avec le même analyseur que la conversion (module partagé
+  `assets/js/code-editor.js`). La saisie
   reste un champ texte natif ; la coloration décorative est masquée aux lecteurs
   d’écran et désactivée en mode de couleurs forcées ;
 - le défilement vertical est synchronisé dans les deux sens. Les lignes ne
@@ -1026,6 +1033,11 @@ Un nom saisi en collision avec une entrée `on_` générée bloque la copie
 au lieu de produire un enregistrement invalide. Les associations se recalculent
 à chaque changement de nom, rôle, valeur, transparence ou suppression.
 Traitement local, sans stockage, avec champs masqués pour Clarity.
+Les deux sorties (code Power Fx et YAML de l'écran) sont colorées avec l'éditeur
+partagé du convertisseur : clés, nombres, chaînes et commentaires YAML, et
+formules Power Fx après `=`, sur une ligne ou dans les blocs `|-`. Le texte reste
+dans un champ natif en lecture seule ; la coloration est masquée aux lecteurs
+d'écran et désactivée en mode de couleurs forcées.
 Le container 4 propose aussi « Ecran de visualisation du theme », un YAML
 généré localement à partir de la palette, avec un bouton de copie indépendant.
 L'écran reprend la structure `Screens` et les contrôles modernes de l'exemple :

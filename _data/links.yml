@@ -8,3 +8,30 @@
     - Power Apps
     - Composants
     - YAML
+- name: PPFC – Power Platform French Community
+  url: https://ppfc.fr/
+  description: "La communauté francophone sur Microsoft Power Platform : événements, ressources et partage d'expériences entre makers et experts."
+  tags:
+    - Communauté
+    - Power Platform
+- name: Power Platform French Summit
+  url: https://www.powerplatformfrenchsummit.com/
+  description: La conférence francophone dédiée à Microsoft Power Platform, avec des sessions animées par des experts et des MVP.
+  tags:
+    - Communauté
+    - Événement
+    - Power Platform
+- name: Microsoft Power Platform by R3dKap
+  url: https://www.linkedin.com/pulse/microsoft-power-platform-r3dkap-emmanuel-gallis-mvp--zp91f/
+  description: Newsletter LinkedIn d'Emmanuel Gallis (MVP) sur Microsoft Power Platform.
+  tags:
+    - Newsletter
+    - Power Platform
+- name: The Low-Code Bearded Bear
+  url: https://lowcodebeardedbear.wordpress.com/
+  description: "« Low-code. High-beard. Maximum impact. » Articles, posts et tutos sur Copilot Studio, Power Platform, M365 et l'IA Microsoft : agents, automatisation des process et low-code, avec des playlists qui référencent ses interventions dans d'autres chaînes et en conférences physiques."
+  tags:
+    - Copilot Studio
+    - IA
+    - Power Platform
+    - Blog

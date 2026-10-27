@@ -112,13 +112,32 @@ try {
   const page = await context.newPage();
   const category = terms.categories.find(term => term.name === 'Power Apps');
   const tag = terms.tags.find(term => term.name === 'Design');
-  for (const pathname of [`categories/${category.slug}/`, `tags/${tag.slug}/`, 'categories/', 'tags/']) {
+  for (const pathname of [`categories/${category.slug}/`, `tags/${tag.slug}/`, 'categories/', 'tags/', 'liens-utiles/', 'about/']) {
     await page.goto(url + pathname);
     for (const theme of ['light', 'dark']) {
       await page.locator('html').evaluate((element, value) => { element.dataset.theme = value; }, theme);
       for (const width of [1920, 900, 390, 320]) {
         await page.setViewportSize({ width, height: 1080 });
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Débordement : ${pathname}, ${width}`);
+        const contentSelector = { 'tags/': '.tag-cloud', 'liens-utiles/': '.link-grid', 'about/': '.about-profile' }[pathname];
+        if (contentSelector) {
+          const main = await page.locator('main').boundingBox();
+          const content = await page.locator(contentSelector).boundingBox();
+          assert(main && content && Math.abs(content.width - main.width) < 1 && Math.abs(content.x - main.x) < 1,
+            `Contenu pleine largeur : ${pathname}, ${width}`);
+        }
+        if (pathname === 'liens-utiles/') {
+          const columns = await page.locator('.link-grid').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length);
+          assert.equal(columns, width === 1920 ? 3 : width === 900 ? 2 : 1, `Colonnes liens utiles : ${width}`);
+        }
+        if (pathname === 'about/') {
+          const media = await page.locator('.about-media').boundingBox();
+          const text = await page.locator('.about-text').boundingBox();
+          assert(media && text && (width > 640 ? text.x >= media.x + media.width : text.y >= media.y + media.height),
+            `Disposition images et biographie : ${width}`);
+          assert(await page.locator('.about-text p').first().evaluate(element => getComputedStyle(element).maxWidth !== 'none'),
+            'Biographie avec largeur de lecture limitee');
+        }
         for (const card of await page.locator('.taxonomy-tool-card').all()) {
           const image = await card.locator('.card-image').boundingBox();
           const ribbon = await card.locator('.tool-card-ribbon').boundingBox();

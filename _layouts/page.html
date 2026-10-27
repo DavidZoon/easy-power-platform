@@ -9,7 +9,7 @@ layout: default
     {% include taxonomy-links.html values=page.tool_tags type="tags" %}
   </nav>
   {% endif %}
-  <div class="prose{% if page.tools %} tools-page{% endif %}">{{ content }}</div>
+  <div class="prose{% if page.tools %} tools-page{% endif %}{% if page.wide %} wide-page{% endif %}">{{ content }}</div>
   {% assign current_tool = site.data.tools | where: 'url', page.url | first %}
   {% if current_tool %}
   <footer class="tool-feedback">

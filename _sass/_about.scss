@@ -5,6 +5,7 @@
   .about-photo { aspect-ratio: 1; object-fit: cover; }
 }
 .prose .about-text {
+  p { max-width: $reading-width; }
   h2 { margin-top: 0; }
   h3 { margin-top: $space * 3; }
 }
@@ -14,5 +15,5 @@
 }
 @media (max-width: 640px) {
   .about-profile { grid-template-columns: 1fr; }
-  .about-media { grid-template-columns: 120px 160px; align-items: center; }
+  .about-media { grid-template-columns: minmax(0, 120px) minmax(0, 160px); align-items: center; }
 }

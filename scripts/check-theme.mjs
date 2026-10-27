@@ -140,8 +140,17 @@ try {
       if (target === 'onstart') assert.equal(await page.locator('#theme-onstart-warning a').getAttribute('href'), 'https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/working-with-formulas');
       await copy.click();
       assert.equal(await page.evaluate(() => window.copiedTheme), await output.inputValue());
+      for (const [field, kinds] of [[output, ['nf', 's', 'c']], [screenOutput, ['nt', 'nf', 's', 'm']]]) {
+        const layer = field.locator('xpath=..').locator('pre');
+        assert.equal(await layer.getAttribute('aria-hidden'), 'true');
+        assert.equal(await layer.textContent(), await field.inputValue() + '\n', 'Coloration sans perte de texte');
+        for (const kind of kinds) assert(await layer.locator(`.${kind}`).count() > 0, `Coloration ${kind} absente`);
+        assert(await field.evaluate(element => getComputedStyle(element).fontSize === getComputedStyle(element.parentElement.querySelector('pre')).fontSize), 'Taille de police desalignee');
+      }
     }
   }
+  await screenOutput.evaluate(element => { element.scrollTop = 400; element.scrollLeft = 60; });
+  await page.waitForFunction(() => document.querySelector('#theme-screen-code').parentElement.querySelector('code').style.transform === 'translate(-60px, -400px)');
   await page.evaluate(() => { window.rejectCopy = true; });
   await screenCopy.click();
   assert.match(await screenStatus.textContent(), /échoué/);
@@ -158,8 +167,8 @@ try {
   assert(await copy.isDisabled());
   assert(await screenCopy.isDisabled());
   assert.equal(await screenOutput.inputValue(), '');
+  assert.equal(await screenOutput.locator('xpath=..').locator('pre').textContent(), '\n', 'Coloration non videe');
   assert.equal(await output.inputValue(), '');
-  assert.match(await first.locator('.theme-color-error').textContent(), /invalide/);
   await first.locator('.theme-hex').fill('#fff');
   await first.locator('.theme-hex').press('Tab');
   assert.equal(await first.locator('.theme-hex').inputValue(), '#FFFFFF');

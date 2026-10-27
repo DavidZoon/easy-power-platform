@@ -1,5 +1,6 @@
 import { detectColors, generateThemeCode, parseThemeColor, readHarmonyPalette, themeAlpha, themeRgba, themeCombinations } from './theme-builder.js';
 import { generateThemeScreen } from './theme-screen.js';
+import { createCodeEditor, highlighters } from './code-editor.js';
 
 const tool = document.querySelector('[data-theme-builder]');
 if (tool) {
@@ -15,6 +16,8 @@ if (tool) {
   const screenOutput = tool.querySelector('#theme-screen-code');
   const screenCopy = tool.querySelector('#theme-screen-copy');
   const screenStatus = tool.querySelector('#theme-screen-status');
+  const codeEditor = createCodeEditor(output, highlighters.powerfx);
+  const screenEditor = createCodeEditor(screenOutput, highlighters.yaml);
   const add = tool.querySelector('#theme-add');
   const textDialog = tool.querySelector('#theme-text-dialog');
   const combinationsGallery = tool.querySelector('#theme-combinations');
@@ -83,6 +86,12 @@ if (tool) {
   }
 
   function updateCode() {
+    generateCode();
+    codeEditor.refresh();
+    screenEditor.refresh();
+  }
+
+  function generateCode() {
     for (const row of rows) if (row.pending) resolveColor(row);
     const target = tool.querySelector('[name="theme-target"]:checked').value;
     tool.querySelector('#theme-onstart-warning').hidden = target !== 'onstart';

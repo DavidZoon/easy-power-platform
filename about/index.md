@@ -1,5 +1,6 @@
 ---
 layout: page
+wide: true
 title: Qui suis-je ?
 permalink: /about/
 author: David Zoonekyndt

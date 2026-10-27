@@ -32,7 +32,8 @@
   }
   .theme-alpha { width: 100%; margin: 0; accent-color: var(--accent); }
   .theme-palette-help, #theme-detection-help { font-size: .85rem; }
-  #theme-code, #theme-screen-code { font-size: .85rem; min-height: 220px; }
+  .code-editor { --code-editor-size: .85rem; }
+  #theme-code, #theme-screen-code { min-height: 220px; }
 }
 .prose .theme-palette {
   list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .5rem;

@@ -2,14 +2,14 @@
 .post-heading { max-width: 960px; margin: 0 auto 3rem; h1 { font-size: clamp(2rem, 4vw, 3.2rem); } .chips { margin-top: 1.5rem; } }
 .post-meta { color: var(--muted); font-size: .9rem; }
 .article-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: $space * 5; align-items: start; }
-.article-main { grid-column: -2 / -1; min-width: 0; max-width: $reading-width; }
+.article-main { grid-column: -2 / -1; min-width: 0; max-width: 100%; }
 .toc { position: sticky; top: 1rem; max-height: 85vh; overflow-y: auto; font-size: .85rem;
   summary { font-size: 1rem; font-weight: 650; cursor: pointer; }
   ol { list-style: none; border-left: $border solid var(--line); padding-left: 1rem; margin: .5rem 0; }
   li { margin-bottom: .6rem; &.toc-sub { padding-left: .7rem; } }
   a { display: inline-block; padding-block: .2rem; text-decoration: none; &:hover { text-decoration: underline; } }
 }
-.prose { overflow-wrap: anywhere; max-width: $reading-width;
+.prose { overflow-wrap: anywhere; max-width: 100%;
   &.wide-page { max-width: none; }
   h2, h3, h4, h5 { margin: 2em 0 .75em; scroll-margin-top: 1rem; }
   h2 { color: var(--accent); }

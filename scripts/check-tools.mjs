@@ -82,6 +82,12 @@ try {
     assert.equal(await input.inputValue(), source, 'Le code source ne doit pas être réécrit');
     assert.equal(await page.locator('#powerfx-detected').textContent(), `Format détecté : ${detected}`);
     assert.equal(await page.locator('#powerfx-output-label').textContent(), `Conversion au format ${label}`);
+    for (const [index, text] of [source, target].entries()) {
+      const preview = page.locator('.powerfx-editor pre').nth(index);
+      assert.equal(await preview.getAttribute('aria-hidden'), 'true');
+      assert.equal(await preview.textContent(), text + '\n', 'Coloration sans perte de texte');
+      assert(await preview.locator('.nf').count() > 0, 'Fonctions non colorees');
+    }
   }
   assert.equal(await page.locator('.tool-content img').count(), 0, 'Code interprété comme HTML');
   await copy.click();
@@ -112,9 +118,53 @@ try {
   assert.equal(await output.inputValue(), '');
   assert(await copy.isDisabled());
   assert.equal(await status.textContent(), '');
+  const longCode = Array.from({ length: 100 }, (_, index) =>
+    `Set(value${index}, "${'long text '.repeat(20)}"); // ${index}`).join('\n');
+  await input.fill(longCode);
+  for (const [origin, top] of [[input, 160], [output, 320], [input, 0]]) {
+    await origin.evaluate((element, value) => { element.scrollTop = value; }, top);
+    await page.waitForFunction(value => {
+      const input = document.querySelector('#powerfx-input');
+      const output = document.querySelector('#powerfx-output');
+      return input.scrollTop === value && output.scrollTop === value;
+    }, top);
+    for (const field of [input, output]) {
+      assert(await field.evaluate(element => {
+        const code = element.parentElement.querySelector('code');
+        return code.style.transform === `translate(${-element.scrollLeft}px, ${-element.scrollTop}px)`;
+      }), 'Coloration desynchronisee du defilement');
+    }
+  }
+  await input.evaluate(element => { element.scrollLeft = 120; });
+  await page.waitForFunction(() => document.querySelector('.powerfx-editor code').style.transform.startsWith('translate(-120px,'));
+  await output.evaluate(element => { element.style.height = '450px'; });
+  const bottom = await input.evaluate(element => {
+    element.scrollTop = element.scrollHeight;
+    return element.scrollTop;
+  });
+  await page.waitForFunction(() => {
+    const output = document.querySelector('#powerfx-output');
+    return output.scrollTop === output.scrollHeight - output.clientHeight;
+  });
+  await page.waitForTimeout(100);
+  assert.equal(await input.evaluate(element => element.scrollTop), bottom, 'Le champ partenaire ne doit pas annuler le defilement en fin de texte');
+  await output.evaluate(element => { element.style.height = ''; });
+  await input.evaluate(element => { element.style.height = '520px'; });
+  const sizes = await page.locator('.powerfx-editor').evaluateAll(editors => editors.map(editor => {
+    const box = editor.getBoundingClientRect();
+    const field = editor.querySelector('textarea').getBoundingClientRect();
+    return Math.round(box.height - field.height);
+  }));
+  assert.deepEqual(sizes, [0, 0], 'Les champs doivent remplir leur bloc apres redimensionnement');
+  assert(Math.abs((await input.boundingBox()).height - (await output.boundingBox()).height) < 2, 'Hauteurs des deux champs differentes');
+  await input.evaluate(element => { element.style.height = ''; });
+  await input.fill('Set(x, "unfinished');
+  assert.equal(await page.locator('.powerfx-editor pre').first().textContent(), 'Set(x, "unfinished\n');
+  await input.fill('');
   assert.deepEqual(requests, [], 'La conversion ne doit émettre aucune requête');
   assert.deepEqual(errors, []);
 
+  await input.fill(english);
   for (const theme of ['dark', 'light']) {
     await page.evaluate(value => { document.documentElement.dataset.theme = value; }, theme);
     for (const width of [1440, 390, 320]) {
@@ -125,6 +175,10 @@ try {
       const boxes = await Promise.all([input, output].map(locator => locator.boundingBox()));
       assert(width === 1440 ? Math.abs(boxes[0].y - boxes[1].y) < 2 : boxes[1].y > boxes[0].y + boxes[0].height, 'Disposition des champs');
     }
+    await page.emulateMedia({ forcedColors: 'active' });
+    assert.equal(await input.evaluate(element => getComputedStyle(element).color === 'rgba(0, 0, 0, 0)'), false);
+    assert.equal(await page.locator('.powerfx-editor pre').first().evaluate(element => getComputedStyle(element).visibility), 'hidden');
+    await page.emulateMedia({ forcedColors: 'none' });
   }
   await context.close();
 

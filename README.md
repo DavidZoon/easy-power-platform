@@ -707,7 +707,7 @@ largeur ; sans JavaScript, tous les tags restent affichés.
 | Cartes | `_includes/post-card.html`, `_sass/_cards.scss` |
 | Articles et sommaire | `_layouts/post.html`, `_sass/_post.scss` |
 | Barre latérale | `_includes/sidebar.html`, `_sass/_sidebar.scss` |
-| Page Liens utiles | `_data/links.yml`, `liens-utiles/index.html`, `_sass/_links.scss` |
+| Page Liens utiles | `_data/links.yml`, `_data/link_icons.yml`, `scripts/link-icons.mjs`, `liens-utiles/index.html`, `_sass/_links.scss` |
 | Catalogue Outils | `_data/tools.yml`, `outils/index.html`, `_sass/_tools.scss` |
 | Convertisseur Power Fx | `outils/convertisseur-power-fx/index.html`, `assets/js/tools.js` |
 | Filtre OData SharePoint | `outils/filtre-odata-sharepoint/index.html`, `assets/js/odata.js`, `assets/js/odata-builder.js`, `_sass/_odata.scss` |
@@ -728,9 +728,20 @@ navigation, affiche une grille de cartes générée à partir de
     - Power Apps
 ```
 
-Le domaine et l’initiale sont déduits automatiquement. Les liens s’ouvrent
+Le domaine est déduit automatiquement. Les liens s’ouvrent
 dans un nouvel onglet (`rel="noopener noreferrer"`, annoncé aux lecteurs
 d’écran), et toute la carte est cliquable et accessible au clavier.
+
+Le logo de chaque carte est le favicon du site lié. Après avoir ajouté ou
+modifié un lien, lancer `npm run images:links` : le script lit les icônes
+déclarées par la page (SVG, `apple-touch-icon`, puis la plus grande), sinon
+`/favicon.ico`, décode aussi les ICO, et enregistre un PNG carré de 96 px dans
+`assets/images/links/` ainsi que la correspondance dans
+`_data/link_icons.yml` (à commiter). Les icônes sont donc servies par le blog :
+les visiteurs ne contactent ni le site lié ni un service tiers. Pour imposer
+une image, ajouter `icon: /assets/images/links/mon-logo.png` à l’entrée. Si
+aucune icône n’est disponible, l’initiale du nom est affichée ; en cas d’échec
+réseau, l’icône précédente est conservée.
 
 Les modules Sass utilisent `@use`. Les couleurs sont des variables CSS :
 la personnalisation d’un thème n’impose pas de dupliquer les composants.
@@ -784,6 +795,13 @@ Le **convertisseur Power Fx EN ↔ FR** partage le moteur
 - si le format est ambigu, mixte ou incomplet, aucun résultat n’est proposé.
   Corriger le code ou préciser son format source EN/FR avec le sélecteur ;
 - un code neutre est conservé à l’identique. L’outil ne valide pas les formules ;
+- les deux champs colorent les fonctions, mots-clés, nombres, chaînes et
+  commentaires Power Fx avec le même analyseur que la conversion. La saisie
+  reste un champ texte natif ; la coloration décorative est masquée aux lecteurs
+  d’écran et désactivée en mode de couleurs forcées ;
+- le défilement vertical est synchronisé dans les deux sens. Les lignes ne
+  sont pas repliées pour garder les mêmes lignes alignées entre EN et FR ;
+  chaque champ conserve son défilement horizontal indépendant ;
 - le bouton **Copier** copie exactement le résultat. En cas d’échec ou
   d’indisponibilité du presse-papier, un message indique comment copier manuellement.
 

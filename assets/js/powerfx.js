@@ -73,6 +73,20 @@ function tokenize(source) {
   return { tokens, valid };
 }
 
+export function powerFxHighlightTokens(source) {
+  const { tokens } = tokenize(source);
+  return tokens.map((token, index) => {
+    let style = '';
+    if (token.kind === 'literal') style = /^\/[/*]/.test(token.text) ? 'c' : token.text.startsWith("'") ? 'nc' : 's';
+    else if (token.kind === 'number') style = 'm';
+    else if (token.kind === 'name') {
+      if (/^(true|false|and|or|not|as|in|exactin|self|parent|thisitem|thisrecord)$/i.test(token.text)) style = 'k';
+      else if (tokens[index + 1]?.text === '(') style = 'nf';
+    }
+    return { start: token.start, end: token.end, style };
+  });
+}
+
 function decimal(tokens, index, source) {
   const token = tokens[index];
   const previous = tokens[index - 1];

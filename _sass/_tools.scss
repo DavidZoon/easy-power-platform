@@ -48,6 +48,24 @@
   label { font-weight: 650; }
 }
 .converter-status { min-height: 1.65em; margin: .75rem 0 0; }
+.powerfx-editor { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bg); border-radius: $radius-small;
+  // The textarea (and its scrollbars) must fill the editor when the row grows.
+  textarea { flex: 1 1 auto; }
+  &:has(textarea[readonly]) { background: var(--code-bg); }
+}
+.prose .powerfx-editor {
+  pre, textarea { font: .9rem/1.65 $font-mono; tab-size: 4; letter-spacing: normal; white-space: pre; overflow-wrap: normal; word-break: normal; padding: 1rem; }
+  pre { position: absolute; inset: 0; margin: 0; max-height: none; overflow: hidden; pointer-events: none; border: $border solid transparent; border-radius: $radius-small; background: transparent; }
+  code { display: block; padding: 0; border: 0; background: transparent; color: var(--text); font: inherit; }
+  code span { font-weight: normal; font-style: normal; }
+  textarea { position: relative; background: transparent; color: transparent; caret-color: var(--text); }
+  textarea[readonly] { background: transparent; }
+  textarea::selection { background: var(--accent); color: var(--bg); }
+}
+@media (forced-colors: active) {
+  .prose .powerfx-editor textarea { color: CanvasText; }
+  .powerfx-editor pre { visibility: hidden; }
+}
 @media (max-width: $breakpoint) {
   .converter-grid { grid-template-columns: 1fr; }
 }

@@ -2,7 +2,7 @@
 layout: default
 ---
 <article class="page-content">
-  <header class="page-heading"><p class="eyebrow">Easy Power Platform</p><h1>{{ page.title | escape }}</h1>{% if page.description %}<p>{{ page.description | escape }}</p>{% endif %}</header>
+  <header class="page-heading"><p class="eyebrow">Easy Power Platform</p><h1>{{ page.title | escape }}</h1>{% if page.description and page.hide_description != true %}<p>{{ page.description | escape }}</p>{% endif %}</header>
   {% if page.tool_categories %}
   <nav class="chips tool-taxonomies" aria-label="Catégories et tags de cet outil">
     {% include taxonomy-links.html values=page.tool_categories %}

@@ -11,23 +11,20 @@
 .card-meta { color: var(--muted); font-size: .78rem; }
 .card-excerpt { font-size: .9rem; color: var(--muted); margin: .75rem 0 0; }
 .chips { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .6rem; }
-.chip { color: var(--pink); font-size: .8rem; display: inline-flex; align-items: center; min-height: 28px; text-decoration: none; &:hover { text-decoration: underline; } &.tag { color: var(--accent); border: $border solid var(--line); border-radius: 999px; padding: .25rem .75rem; } }
+.chip { color: var(--pink); font-size: .8rem; display: inline-flex; align-items: center; min-height: 28px; text-decoration: none; &:hover { text-decoration: underline; } &.tag { color: var(--accent); background: var(--surface); border-radius: 999px; padding: .25rem .75rem; } }
 .chip.tag[style] {
   color: hsl(var(--tag-hue), 85%, 82%);
   background: hsl(var(--tag-hue), 32%, 23%);
-  border-color: hsl(var(--tag-hue), 45%, 60%);
   .count { color: inherit; }
 }
 :root[data-theme="light"] .chip.tag[style] {
   color: hsl(var(--tag-hue), 75%, 23%);
   background: hsl(var(--tag-hue), 70%, 94%);
-  border-color: hsl(var(--tag-hue), 40%, 43%);
 }
 .tag-cloud { gap: .75rem; .chip { font-size: .95rem; min-height: 44px; } .count { margin-left: .6rem; } }
 // Cards: lighter tags so the title stays the focal point.
 .post-card .chips { gap: .3rem .5rem; }
 .post-card .chip.tag { font-size: .72rem; min-height: 24px; padding: .1rem .55rem; }
-.post-card .chip.tag, :root[data-theme] .post-card .chip.tag[style] { border-color: transparent; }
 .chip-more { background: var(--surface); color: var(--muted); cursor: default; &:hover { text-decoration: none; } }
 .taxonomy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 1rem; }
 .taxonomy-grid .taxonomy-card { padding: 1.5rem; background: var(--surface); border: $border solid var(--line); border-radius: $radius;

@@ -8,7 +8,9 @@ description: Une sélection de sites, portfolios et ressources recommandés auto
   {% for link in site.data.links %}
   {% assign host = link.url | split: "//" | last | split: "/" | first | remove_first: "www." %}
   <li class="link-card">
-    <span class="link-monogram" aria-hidden="true">{{ link.name | slice: 0 | upcase }}</span>
+    {% assign icon = link.icon | default: site.data.link_icons[link.url] %}
+    {% if icon %}<span class="link-monogram link-icon" aria-hidden="true"><img src="{{ icon | relative_url }}" alt="" width="32" height="32" loading="lazy" decoding="async"></span>
+    {% else %}<span class="link-monogram" aria-hidden="true">{{ link.name | slice: 0 | upcase }}</span>{% endif %}
     <div class="link-body">
       <h2><a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.name | escape }}<span class="sr-only"> (nouvel onglet)</span></a></h2>
       <p class="link-host">{{ host | escape }} <span aria-hidden="true">↗</span></p>

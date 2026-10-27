@@ -1,6 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { analyzePowerFx, browserSeparator, convertPowerFx } from '../assets/js/powerfx.js';
+import { analyzePowerFx, browserSeparator, convertPowerFx, powerFxHighlightTokens } from '../assets/js/powerfx.js';
+
+test('Power Fx highlighting shares the lexer and preserves incomplete and interpolated code', () => {
+  for (const source of [
+    'If(true, Set(x, 1.5), "text"); // comment\n/* block */ \'My table\'',
+    'If(true; Set(x; 1,5); "text")',
+    'Set(x, $"Total {Sum(1, 2)}")',
+    'Set(x, "unfinished',
+    '<img src=x onerror=alert(1)>'
+  ]) {
+    let offset = 0;
+    let restored = '';
+    const tokens = powerFxHighlightTokens(source);
+    for (const token of tokens) {
+      assert(token.start >= offset && token.end <= source.length);
+      restored += source.slice(offset, token.start) + source.slice(token.start, token.end);
+      offset = token.end;
+    }
+    assert.equal(restored + source.slice(offset), source);
+  }
+  const source = 'If(true, 12, "hello") // comment';
+  const styled = powerFxHighlightTokens(source).filter(token => token.style)
+    .map(token => [source.slice(token.start, token.end), token.style]);
+  assert.deepEqual(styled, [['If', 'nf'], ['true', 'k'], ['12', 'm'], ['"hello"', 's'], ['// comment', 'c']]);
+});
 
 test('Power Fx browser defaults follow the decimal separator, not just the language', () => {
   for (const locale of ['fr-FR', 'de-DE', 'es-ES', 'pt-BR']) assert.equal(browserSeparator(locale), 'semicolon');

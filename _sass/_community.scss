@@ -1,6 +1,5 @@
 @use "variables" as *;
 .share-links { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-block: 1.25rem; }
-.button-row .share-links { margin: 0; }
 .share-title { color: var(--muted); font-weight: 650; }
 .share-buttons { display: flex; flex-wrap: wrap; gap: .5rem; }
 .share-button { display: inline-flex; align-items: center; min-width: 46px; min-height: 46px; padding: 0 .85rem; border: $border solid var(--line); border-radius: 999px; color: var(--text); font-weight: 650; text-decoration: none; transition: border-color .2s, color .2s;

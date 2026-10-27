@@ -5,18 +5,20 @@ layout: default
 <section class="hero">
   <h1>La Power Platform.<br><span>Tout simplement.</span></h1>
   <p class="hero-description">Des tutoriels, du code et des retours d’expérience pour passer de l’idée à la solution. Par David Zoonekyndt.</p>
+  <div class="hero-search">{% include search-form.html id="hero-search" %}</div>
   <div class="button-row">
     <a class="button" href="#latest">{% include article-icon.html %} Parcourir les articles <span aria-hidden="true">↓</span></a>
     <a class="button secondary" href="{{ '/outils/' | relative_url }}">{% include tool-icon.html %} Voir les outils</a>
-    <a class="button secondary" href="{{ '/feed.xml' | relative_url }}">Suivre le flux RSS</a>
-    <a class="button secondary" href="#newsletter">S’abonner par e-mail</a>
+  </div>
+  <div class="hero-secondary">
+    <p class="hero-follow">Suivre le blog : <a href="#newsletter">par e-mail</a> <span aria-hidden="true">·</span> <a href="{{ '/feed.xml' | relative_url }}">flux RSS</a></p>
     {% include share.html url="/" title=site.title label="Partager ce blog" %}
   </div>
 </section>
 {% else %}<h1>Articles — page {{ paginator.page }}</h1>
 {% include share.html url="/" title=site.title label="Partager ce blog" %}{% endif %}
 <div class="content-grid">
-  {% include sidebar.html %}
+  {% if paginator.page == 1 %}{% include sidebar.html hide_search=true %}{% else %}{% include sidebar.html %}{% endif %}
   <section id="latest" class="post-list" aria-labelledby="latest-title">
     <div class="section-heading"><h2 id="latest-title">Derniers articles</h2><a href="{{ '/articles/' | relative_url }}">Tout voir →</a></div>
     <div class="post-gallery">

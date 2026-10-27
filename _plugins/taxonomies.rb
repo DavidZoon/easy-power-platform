@@ -7,6 +7,7 @@ module EasyPowerPlatform
 
     def generate(site)
       tools = Array(site.data["tools"])
+      normalize_tags(site, tools)
       tools.each do |tool|
         page = site.pages.find { |candidate| candidate.url == tool["url"] }
         raise Jekyll::Errors::FatalException, "Page d'outil introuvable : #{tool['url']}" unless page
@@ -30,9 +31,14 @@ module EasyPowerPlatform
           included_terms = [name] + descendants(name, children)
           posts = included_terms.flat_map { |term| direct[term] || [] }.uniq
           term_tools = tools.select { |tool| (tool[type] & included_terms).any? }.uniq { |tool| tool["url"] }
-          [name, { "name" => name, "slug" => slug(name), "count" => posts.length + term_tools.length,
+          [name, { "name" => name, "slug" => slug(name),
+            "count" => posts.length + term_tools.length,
             "post_count" => posts.length, "tool_count" => term_tools.length,
             "posts" => posts.sort_by(&:date).reverse, "tools" => term_tools }]
+        end
+        if type == "tags"
+          palette = terms.values.sort_by { |term| [Digest::SHA256.hexdigest(term["name"]), term["name"]] }
+          palette.each_with_index { |term, index| term["hue"] = (index * 360.0 / palette.length).round }
         end
         terms.each_value do |term|
           term["parent"] = parents[term["name"]] if names.include?(parents[term["name"]])
@@ -61,6 +67,51 @@ module EasyPowerPlatform
     end
 
     private
+
+    def tag_key(name)
+      name.unicode_normalize(:nfc).strip.gsub(/[[:space:]]+/, " ").downcase
+    end
+
+    def normalize_tags(site, tools)
+      direct = site.tags
+      names = Array(site.data.dig("taxonomies", "tags")).map { |term| term["name"] } + direct.keys
+      canonical = {}
+      names.each { |name| canonical[tag_key(name)] ||= name.unicode_normalize(:nfc).strip.gsub(/[[:space:]]+/, " ") }
+      (site.data["tag_aliases"] || {}).each do |name, aliases|
+        ([name] + Array(aliases)).each { |value| canonical[tag_key(value)] = name }
+        names.concat([name] + Array(aliases))
+      end
+      normalize = ->(values) { Array(values).map { |name| canonical.fetch(tag_key(name), name) }.uniq }
+      site.posts.docs.each { |post| post.data["tags"] = normalize.call(post.data["tags"]) }
+      site.pages.each do |page|
+        page.data["tags"] = normalize.call(page.data["tags"]) if page.data.key?("tags")
+      end
+      tools.each { |tool| tool["tags"] = normalize.call(tool["tags"]) if tool["tags"].is_a?(Array) }
+      direct.clear
+      site.posts.docs.each do |post|
+        post.data["tags"].each { |name| (direct[name] ||= []) << post }
+      end
+      direct.each_value { |posts| posts.sort!.reverse! }
+      names.concat(site.pages.select { |page| page.data["taxonomy"] == "tags" }.map { |page| page.data["term"] })
+      names.uniq.each do |name|
+        target = canonical.fetch(tag_key(name), name)
+        next if name == target || !direct.key?(target)
+
+        permalink = "/tags/#{slug(name)}/"
+        page = site.pages.find { |candidate| candidate.url == permalink }
+        unless page
+          page = Jekyll::PageWithoutAFile.new(site, site.source, "tags", "#{slug(name)}.html")
+          site.pages << page
+        end
+        page.data.replace(
+          "layout" => "page", "title" => "Tag : #{name}",
+          "description" => "Retrouvez les contenus de ce tag sous le nom #{target}.",
+          "permalink" => permalink, "redirect_to" => "/tags/#{slug(target)}/",
+          "noindex" => true, "sitemap" => false
+        )
+        page.content = '<p>Ce tag a été regroupé. <a href="{{ page.redirect_to | relative_url }}">Voir tous les contenus du tag.</a></p>'
+      end
+    end
 
     def hierarchy(site)
       (site.data["category_hierarchy"] || {}).to_h { |child, parent| [child.to_s, parent.to_s] }

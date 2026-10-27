@@ -9,8 +9,24 @@ const manifest = JSON.parse(await fs.readFile('_data/migration.json', 'utf8'));
 const home = load(await fs.readFile(path.join(root, 'index.html'), 'utf8'));
 const canonical = new URL(home('link[rel="canonical"]').attr('href'));
 const base = canonical.pathname.replace(/\/$/, '');
+const index = JSON.parse(await fs.readFile(path.join(root, 'search.json'), 'utf8'));
+const postsByUrl = new Map(index.map(post => [new URL(post.url, canonical).href, post]));
 const failures = [];
 const files = [];
+function checkPostTaxonomies($, container, post, label) {
+  if (!post) {
+    failures.push(`${label}: article absent de l'index de recherche`);
+    return;
+  }
+  const chips = container.children('.chips');
+  if (chips.length !== 1) failures.push(`${label}: categories et tags doivent partager une ligne`);
+  for (const [type, selector] of [['categories', 'a.chip:not(.tag)'], ['tags', 'a.chip.tag']]) {
+    const names = chips.children(selector).map((_, element) => $(element).text().trim()).get();
+    if (names.length !== post[type].length || names.some((name, i) => name !== post[type][i])) {
+      failures.push(`${label}: ${type} manquants, dupliques ou incorrects`);
+    }
+  }
+}
 async function walk(dir) {
   for (const item of await fs.readdir(dir, { withFileTypes: true })) {
     const file = path.join(dir, item.name);
@@ -42,6 +58,9 @@ for (const file of files.filter(file => file.endsWith('.html'))) {
   const relative = path.relative(root, file);
   if ($('article.post').length) {
     const postUrl = $('link[rel="canonical"]').attr('href');
+    const heading = $('article.post > .post-heading');
+    checkPostTaxonomies($, heading, postsByUrl.get(new URL(postUrl).href), relative);
+    if (!heading.children('.chips').next().is('h1')) failures.push(`${relative}: categories et tags doivent preceder le titre`);
     const shareLinks = $('.share-links a').toArray();
     if (shareLinks.length !== 5) failures.push(`${relative}: boutons de partage manquants`);
     for (const element of shareLinks) {
@@ -51,6 +70,12 @@ for (const file of files.filter(file => file.endsWith('.html'))) {
     }
     if (!$('.newsletter a[target="_blank"]').length) failures.push(`${relative}: lien d'abonnement manquant`);
     if ($('.newsletter-frame[src]').length) failures.push(`${relative}: formulaire charge avant action`);
+  }
+  for (const element of $('.post-card:not(.taxonomy-tool-card)').toArray()) {
+    const card = $(element);
+    const href = card.find('.card-body h2 a').attr('href');
+    const post = href ? postsByUrl.get(new URL(href, canonical).href) : undefined;
+    checkPostTaxonomies($, card.children('.card-body'), post, `${relative}: carte ${href}`);
   }
   if ($('h1').length !== 1) failures.push(`${relative}: attendu exactement un h1, obtenu ${$('h1').length}`);
   if (!$('title').text() || !$('meta[name="description"]').attr('content')) failures.push(`${relative}: metadonnees incompletes`);
@@ -75,7 +100,6 @@ for (const file of files.filter(file => file.endsWith('.html'))) {
     if (!image.attribs.width || !image.attribs.height) failures.push(`${relative}: dimensions image manquantes`);
   }
 }
-const index = JSON.parse(await fs.readFile(path.join(root, 'search.json'), 'utf8'));
 assert.equal(index.length, postCount, 'Tous les articles doivent etre recherchables');
 assert.equal(new Set(index.map(post => post.url)).size, index.length, 'URL de recherche dupliquee');
 for (const post of manifest.posts) {
@@ -132,4 +156,4 @@ console.log(`${files.length} fichiers controles, ${manifest.posts.length} articl
 if (failures.length) {
   console.error([...new Set(failures)].join('\n'));
   process.exitCode = 1;
-} else console.log('Liens internes, permaliens, images, SEO et exclusions : OK.');
+} else console.log('Liens internes, permaliens, images, SEO, categories et tags des articles et cartes, exclusions : OK.');

@@ -1,5 +1,5 @@
 <aside class="sidebar" aria-label="Explorer le blog">
-  {% include search-form.html id="sidebar-search" %}
+  {% unless include.hide_search %}{% include search-form.html id="sidebar-search" %}{% endunless %}
   <section>
     <h2>Catégories</h2>
     {% assign category_roots = site.data.taxonomies.categories | where: "depth", 0 %}

@@ -7,7 +7,7 @@
   <div class="card-body">
     <div class="card-meta">{% include date.html date=include.post.date %} <span aria-hidden="true">·</span> {% assign words = include.post.content | strip_html | number_of_words %}{{ words | plus: 219 | divided_by: 220 | at_least: 1 }} min de lecture</div>
     <h2><a href="{{ include.post.url | relative_url }}">{{ include.post.title | escape }}</a></h2>
-    <div class="chips">{% include taxonomy-links.html values=include.post.categories %}</div>
+    <div class="chips">{% include taxonomy-links.html values=include.post.categories %}{% include taxonomy-links.html values=include.post.tags type="tags" %}</div>
     {% if include.excerpt %}<p class="card-excerpt">{{ include.post.description | default: include.post.excerpt | strip_html | truncate: 160 | escape }}</p>{% endif %}
   </div>
 </article>

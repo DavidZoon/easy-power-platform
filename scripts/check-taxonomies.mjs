@@ -13,6 +13,19 @@ const parents = parse(await fs.readFile('_data/category_hierarchy.yml', 'utf8'))
 const { server, url } = await preview(0);
 const base = new URL(url).pathname.replace(/\/$/, '');
 const documentAt = async pathname => load(await fs.readFile(path.join('_site', pathname, 'index.html'), 'utf8'));
+const tagIndex = await documentAt('tags');
+const tagLinks = tagIndex('.tag-cloud .chip.tag');
+const tagNames = tagLinks.map((_, element) => tagIndex(element).clone().children().remove().end().text().trim()).get();
+const tagHues = tagLinks.map((_, element) => Number.parseInt(tagIndex(element).attr('style')?.match(/--tag-hue:\s*(\d+)/)?.[1], 10)).get();
+assert(tagHues.every(hue => Number.isInteger(hue) && hue >= 0 && hue < 360), 'Chaque tag possède une teinte valide');
+assert.equal(new Set(tagHues).size, tagHues.length, 'Chaque tag possède une teinte distincte');
+const tagAliases = parse(await fs.readFile('_data/tag_aliases.yml', 'utf8'));
+for (const [canonical, aliases] of Object.entries(tagAliases)) {
+  assert.equal(tagNames.filter(name => name === canonical).length, 1, `Tag canonique : ${canonical}`);
+  for (const alias of aliases) {
+    assert(!tagNames.includes(alias), `Alias absent du nuage : ${alias}`);
+  }
+}
 const ancestors = name => {
   const result = [name];
   while (parents[name] && !result.includes(parents[name])) {

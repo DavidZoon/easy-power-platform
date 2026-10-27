@@ -3,6 +3,14 @@
   h1 { margin: 1rem 0 1.25rem; max-width: 20ch; span { color: var(--accent); } }
 }
 .hero-description { max-width: 62ch; color: var(--muted); font-size: 1.1rem; margin-bottom: 1.75rem; }
+.hero-search { max-width: 38rem; margin-bottom: 1.5rem;
+  .search-form { margin: 0; }
+  input { padding: .8rem 1.25rem; font-size: 1rem; }
+}
+.hero-secondary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 2rem; margin-top: 2rem; padding-top: 1.25rem; border-top: $border solid var(--line); font-size: .9rem;
+  .share-links { margin: 0; }
+}
+.hero-follow { margin: 0; color: var(--muted); a { display: inline-block; padding-block: .6rem; } }
 .hero-topics { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; margin-top: 2rem; a { font-size: .88rem; text-decoration: none; padding-block: .35rem; span { color: var(--muted); padding-left: .4rem; } } }
 .content-grid { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: $space * 5; align-items: start; }
 .post-list { min-width: 0; scroll-margin-top: 1rem; }

@@ -521,27 +521,29 @@ le générateur les actualise en mémoire, sans réécrire vos sources.
 Vérifier l’orthographe exacte sur les pages **Catégories** et **Tags** avant
 d’en créer une nouvelle : `Power Apps` et `PowerApps` produiraient deux archives.
 
-Pour **renommer** un tag existant (par exemple `snipet` → `Snippet`), remplacer
-le nom dans les articles et les outils de `_data/tools.yml`, retirer l’entrée de `_data/taxonomies.yml`, puis
-transformer l’ancienne archive (`tags/<ancien-slug>.html`) en page de redirection,
-pour ne pas casser les liens déjà partagés :
+Les tags sont regroupés à la construction sans tenir compte de la casse ni des
+espaces superflus. Les variantes orthographiques connues sont déclarées dans
+[_data/tag_aliases.yml](_data/tag_aliases.yml), avec le nom à afficher comme clé :
 
 ```yaml
----
-layout: page
-title: Tag « snipet » renommé
-description: Le tag snipet a été renommé Snippet.
-permalink: /tags/snipet-a2459cc6/
-redirect_to: /tags/snippet-48f55cb8/
-noindex: true
-sitemap: false
----
+Snippet:
+  - snippet
+  - snipet
 ```
 
-`redirect_to` produit une redirection immédiate (`meta refresh`) ; `noindex`
-et `sitemap: false` retirent l’ancienne adresse des moteurs de recherche.
-Ajouter aussi le renommage à `renamedTags` dans
-[scripts/check-migration.mjs](scripts/check-migration.mjs).
+Un article ou un outil ne compte qu’une fois même s’il porte plusieurs variantes.
+Les liens, les archives, la recherche et les articles associés utilisent le nom
+commun. Les anciennes archives redirigent vers l’archive regroupée (`meta refresh`,
+`noindex`, `sitemap: false`) pour conserver les liens déjà partagés. Les sources
+éditoriales et la photographie de migration ne sont pas réécrites.
+
+Chaque tag possède une teinte distincte, répartie de manière déterministe entre
+les tags présents, identique dans le nuage, les articles et les outils, avec des
+contrastes adaptés aux thèmes clair et sombre.
+Les couleurs sont une aide visuelle ; les libellés restent toujours affichés.
+Les tags suivent les catégories dans le même groupe de liens sur toutes les
+cartes d'articles et dans l'en-tête des articles, au-dessus du titre. Le groupe
+passe à la ligne si nécessaire sur les petits écrans.
 
 ### Snippets
 
@@ -679,7 +681,20 @@ original est affiché et le sélecteur est masqué.
 Le sommaire est généré depuis les titres H2/H3 avec JavaScript. Les titres et
 leurs ancres restent accessibles sans JavaScript ; désactiver le sommaire avec
 `toc: false`. Les articles associés privilégient les publications les plus récentes
-partageant une catégorie ou un tag.
+partageant une catégorie ou un tag. Ils s’affichent juste après le contenu, avant
+la newsletter et les commentaires.
+
+Sur l’accueil, le bandeau d’introduction met en avant la recherche, puis deux
+actions : « Parcourir les articles » et « Voir les outils ». L’abonnement par
+e-mail, le flux RSS et le partage sont regroupés sur une ligne secondaire. La
+recherche de la barre latérale est masquée sur la première page de l’accueil
+pour éviter le doublon ; elle reste disponible ailleurs. Dans les cartes
+d’articles, les tags sont plus petits et sans bordure pour laisser le titre au
+premier plan. Sur toutes les cartes (articles et outils), les tags sont limités
+à deux lignes par `assets/js/site.js` : les tags en trop sont masqués et
+remplacés par « … », dont l’infobulle liste les tags masqués (lus « et N autres
+tags » par les lecteurs d’écran). Le calcul est refait quand la carte change de
+largeur ; sans JavaScript, tous les tags restent affichés.
 
 ## 8. Personnalisation du thème
 
@@ -1097,8 +1112,9 @@ procédure de désabonnement et son lien dans chaque e-mail. Adapter la page
 
 Le composant `_includes/share.html` fournit les liens LinkedIn, Facebook, X,
 WhatsApp et e-mail sur l’accueil (URL du blog) et les articles (URL canonique de
-l’article). Sur l’accueil, « Partager ce blog » et les boutons sont alignés avec
-les actions du bandeau d’introduction ; sur les articles, « Partager cet article »
+l’article). Sur l’accueil, « Partager ce blog » et les boutons sont sur la ligne
+secondaire du bandeau d’introduction, avec l’abonnement par e-mail et le flux RSS ;
+sur les articles, « Partager cet article »
 et les boutons sont sur une même ligne sous les métadonnées. Chaque bouton n’affiche
 que l’icône SVG monochrome ; il s’élargit au survol ou au focus clavier pour afficher
 le nom du réseau, qui reste toujours lu par les lecteurs d’écran.

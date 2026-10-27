@@ -29,6 +29,5 @@
   details { border: $border solid var(--line); border-radius: $radius-small; padding: 1rem; margin-bottom: 1.5rem; summary { cursor: pointer; font-weight: 600; color: var(--accent); } }
   mark { color: var(--text); background: var(--surface); font-weight: 700; }
 }
-.post-footer { border-top: $border solid var(--line); margin-top: 3rem; padding-top: 1.5rem; .button { margin-top: 1.5rem; } }
 .comments { margin-top: 3rem; }
 @media (max-width: $breakpoint) { .article-grid { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; } .toc { position: static; max-height: 24rem; } .article-main { max-width: 100%; } }

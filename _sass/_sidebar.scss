@@ -2,6 +2,11 @@
 .sidebar { > :first-child { margin-top: 0; } section { margin-top: 2rem; } h2 { font-size: 1.1rem; display: flex; justify-content: space-between; gap: .5rem; } }
 .search-form { margin-bottom: 1.5rem; label { display: block; font-size: .95rem; font-weight: 600; margin-bottom: .6rem; } input { min-width: 0; width: 100%; background: var(--surface); color: var(--text); border: $border solid var(--line); border-radius: 999px; padding: .6rem 1rem; &::placeholder { color: var(--muted); opacity: 1; } } }
 .search-controls { display: flex; gap: .6rem; }
+#local-search .search-controls {
+  input, .button { min-height: 44px; padding-block: .35rem; }
+  input { flex: 1 1 auto; }
+  .button { flex: 0 0 auto; white-space: nowrap; }
+}
 .sidebar .search-controls { flex-wrap: wrap; .button { padding: .45rem 1rem; font-size: .85rem; } }
 // Sidebar explorer: one card per root category, sub-categories inside without separators.
 .category-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .75rem;

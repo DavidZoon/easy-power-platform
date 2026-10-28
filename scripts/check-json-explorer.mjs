@@ -127,7 +127,7 @@ try {
   const iconButtons = toolbar.locator('button');
   const iconBoxes = await Promise.all([0, 1, 2].map(index => iconButtons.nth(index).boundingBox()));
   assert(iconBoxes[1].y < iconBoxes[0].y && iconBoxes[1].y < iconBoxes[2].y, 'Disposition en arc');
-  assert(iconBoxes.every(box => box.width === 40 && box.height === 40 && box.y + box.height <= afterSelection.y), 'Boutons compacts au-dessus du champ');
+  assert(iconBoxes.every(box => box.width === 32 && box.height === 32 && box.y + box.height <= afterSelection.y), 'Boutons compacts au-dessus du champ');
   assert(await iconButtons.first().evaluate(element => getComputedStyle(element).backgroundColor !== 'rgba(0, 0, 0, 0)'), 'Fond opaque');
   await checkSelectionTools();
   const fullscreen = page.locator('#json-fullscreen');

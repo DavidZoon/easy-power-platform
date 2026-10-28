@@ -9,7 +9,7 @@
   img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: calc(#{$radius} - #{$border}) calc(#{$radius} - #{$border}) 0 0; }
 }
 .tool-card-body { display: flex; flex-direction: column; flex: 1; padding: 1.5rem;
-  h2 { margin: 0 0 .75rem; font-size: 1.25rem; }
+  h2 { margin: 0 0 .75rem; font-size: 1rem; }
   p { color: var(--muted); margin: 0 0 1.25rem; }
 }
 .tool-card-action { margin-top: auto; color: var(--accent); font-weight: 650; }

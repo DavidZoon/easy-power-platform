@@ -751,6 +751,11 @@ réseau, l’icône précédente est conservée.
 
 Les modules Sass utilisent `@use`. Les couleurs sont des variables CSS :
 la personnalisation d’un thème n’impose pas de dupliquer les composants.
+Les titres et la hauteur des boutons sont réduits d'environ 20 % sur tout le site,
+sans réduire le texte courant ni la taille de police des boutons textuels.
+Les boutons standards mesurent environ 41 px de haut sur une ligne, les boutons
+à icône environ 32 à 38 px ; les champs de saisie conservent leur hauteur.
+Validation responsive en thèmes clair et sombre : `npm run check:sizing`.
 Les galeries de l’accueil (y compris les pages suivantes), des articles
 similaires et des archives de tags et catégories partagent la classe
 `post-gallery` : cartes verticales avec image
@@ -765,6 +770,36 @@ pour régénérer les miniatures référencées par `card_image`. La commande ut
 les médias locaux, ne modifie pas les articles et signale les sources de moins
 de 640 px de large, à remplacer par un original plus grand si disponible.
 Sans choix enregistré, le thème suit les préférences du système.
+
+### Menu Accessibilité
+
+Le bouton **Accessibilité**, à droite du bouton de thème dans l’en-tête, ouvre
+un panneau non modal « Confort de lecture ». Il propose : taille du texte
+(A, A+, A++), interlignage, espacement des lettres, largeur de lecture réduite
+(72 caractères sur les articles et pages de contenu, pas sur les outils), police
+(Standard, Lexend, Atkinson Hyperlegible, OpenDyslexic), contraste renforcé,
+soulignement des liens, réduction des animations, fond crème et réinitialisation.
+Les libellés des cinq premiers réglages et leurs contrôles sont alignés côte à
+côte, y compris sur mobile.
+Le panneau se ferme avec Échap (le focus revient au bouton), le bouton de
+fermeture ou un clic extérieur ; les choix utilisent des boutons radio, une liste
+et des cases natives annoncés aux lecteurs d’écran.
+
+Les préférences sont enregistrées dans `localStorage` (clé `epp-a11y`) et
+appliquées dès le `<head>` par `assets/js/theme.js` sous forme d’attributs
+`data-a11y-*` sur `<html>`, sans flash visuel. Les styles sont dans
+`_sass/_accessibility.scss`. Les polices sont auto-hébergées dans
+`assets/fonts/` (sous-ensemble latin des paquets Fontsource, licence SIL OFL 1.1,
+textes de licence fournis) : aucune requête externe, et chaque fichier n’est
+téléchargé que si la police est choisie. Le code reste en police à chasse fixe.
+L’icône d’information à côté du titre affiche au survol ou au clic le crédit
+à Nelson Boruchowitch et un lien vers son portfolio. Elle est utilisable au
+clavier et son encart se ferme avec Échap.
+L’idée s’inspire de l’outil de confort de lecture de Nelson Boruchowitch ;
+l’option « Ne pas justifier le texte » n’est pas reprise car le site ne justifie
+aucun texte. Validation : `npm run check:a11y` (comportement clavier et souris,
+persistance, polices locales, axe WCAG 2.2 AA et absence de débordement de
+1920 à 320 px).
 
 ### Page Outils
 
@@ -920,7 +955,7 @@ Le transfert utilise le fragment d'URL (non transmis au serveur), sans stockage 
 le lien conserve les couleurs en cas de rechargement.
 Chaque couleur affiche son HEX et sa formule `RGBA()` opaque (alpha 1),
 avec choix FR (`;`) ou EN (`,`), copie individuelle ou de la palette entière.
-Les copies individuelles utilisent des boutons ronds de 44 px avec une icône SVG,
+Les copies individuelles utilisent des boutons ronds d'environ 35 px avec une icône SVG,
 un libellé accessible et une infobulle, sur ordinateur comme sur mobile.
 Chaque fond propose aussi un texte noir ou blanc copiable, choisi pour maximiser
 le contraste WCAG 2.1 à partir de la luminance relative sRGB. Un exemple sur le

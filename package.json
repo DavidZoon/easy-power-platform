@@ -20,6 +20,8 @@
     "check:cleaner": "node scripts/check-text-cleaner.mjs",
     "check:theme": "node scripts/check-theme.mjs",
     "check:json": "node scripts/check-json-explorer.mjs",
+    "check:sizing": "node scripts/check-sizing.mjs",
+    "check:a11y": "node scripts/check-accessibility.mjs",
     "preview": "node scripts/preview.mjs",
     "audit": "node scripts/audit.mjs"
   },

@@ -9,7 +9,8 @@
     button.textContent = dark ? 'Thème clair' : 'Thème sombre';
     button.setAttribute('aria-label', dark ? 'Activer le thème clair' : 'Activer le thème sombre');
     button.setAttribute('aria-pressed', String(!dark));
-    document.querySelector('meta[name="theme-color"]').content = dark ? '#272836' : '#f7f7fc';
+    const cream = document.documentElement.dataset.a11yTint === 'cream';
+    document.querySelector('meta[name="theme-color"]').content = cream ? '#fbf3df' : dark ? '#272836' : '#f7f7fc';
   }
   if (button) {
     button.hidden = false;
@@ -21,6 +22,110 @@
       document.dispatchEvent(new CustomEvent('epp-theme-change', { detail: currentTheme() }));
     });
     update();
+  }
+  const a11yButton = document.querySelector('.a11y-toggle');
+  const a11yPanel = document.querySelector('#a11y-panel');
+  if (a11yButton && a11yPanel) {
+    const names = ['text', 'line', 'letter', 'width', 'font', 'contrast', 'underline', 'motion', 'tint'];
+    const status = a11yPanel.querySelector('[data-a11y-status]');
+    const info = a11yPanel.querySelector('.a11y-info');
+    const infoButton = info.querySelector('.a11y-info-toggle');
+    const credit = info.querySelector('.a11y-credit');
+    let creditPinned = false;
+    function showCredit(visible) {
+      credit.hidden = !visible;
+      infoButton.setAttribute('aria-expanded', String(visible));
+      if (!visible) creditPinned = false;
+    }
+    infoButton.addEventListener('click', () => {
+      creditPinned = !creditPinned;
+      showCredit(creditPinned);
+    });
+    info.addEventListener('pointerenter', event => {
+      if (event.pointerType === 'mouse') showCredit(true);
+    });
+    info.addEventListener('pointerleave', () => {
+      if (!creditPinned && !info.contains(document.activeElement)) showCredit(false);
+    });
+    info.addEventListener('focusout', event => {
+      if (!info.contains(event.relatedTarget)) showCredit(false);
+    });
+    const state = {};
+    function apply() {
+      for (const name of names) {
+        if (state[name]) document.documentElement.setAttribute(`data-a11y-${name}`, state[name]);
+        else document.documentElement.removeAttribute(`data-a11y-${name}`);
+      }
+      if (button) update();
+      document.dispatchEvent(new CustomEvent('epp-a11y-change', { detail: { ...state } }));
+    }
+    function sync() {
+      for (const name of names) {
+        const value = document.documentElement.getAttribute(`data-a11y-${name}`) || '';
+        state[name] = value;
+        for (const input of a11yPanel.querySelectorAll(`[name="a11y-${name}"]`)) {
+          if (input.type === 'radio' || input.type === 'checkbox') input.checked = input.value === value;
+          else input.value = value;
+        }
+      }
+    }
+    function save(message) {
+      try {
+        const values = Object.fromEntries(Object.entries(state).filter(([, value]) => value));
+        if (Object.keys(values).length) localStorage.setItem('epp-a11y', JSON.stringify(values));
+        else localStorage.removeItem('epp-a11y');
+        status.textContent = message;
+      } catch (error) {
+        console.warn('Préférences d’accessibilité non enregistrées :', error);
+        status.textContent = 'Préférence appliquée, mais non enregistrée par le navigateur.';
+      }
+    }
+    function close(restoreFocus = false) {
+      showCredit(false);
+      a11yPanel.hidden = true;
+      a11yButton.setAttribute('aria-expanded', 'false');
+      if (restoreFocus) a11yButton.focus();
+    }
+    function open() {
+      a11yPanel.hidden = false;
+      a11yButton.setAttribute('aria-expanded', 'true');
+      a11yPanel.querySelector('input:checked').focus();
+    }
+    sync();
+    a11yButton.hidden = false;
+    a11yButton.addEventListener('click', () => {
+      if (a11yPanel.hidden) open();
+      else close();
+    });
+    a11yPanel.querySelector('.a11y-close').addEventListener('click', () => close(true));
+    a11yPanel.addEventListener('change', event => {
+      const name = (event.target.name || '').replace(/^a11y-/, '');
+      if (!names.includes(name)) return;
+      state[name] = event.target.type === 'checkbox' && !event.target.checked ? '' : event.target.value;
+      apply();
+      save('Préférence de lecture appliquée.');
+    });
+    a11yPanel.querySelector('.a11y-reset').addEventListener('click', () => {
+      for (const name of names) state[name] = '';
+      apply();
+      sync();
+      save('Préférences de lecture réinitialisées.');
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !credit.hidden) {
+        if (info.contains(document.activeElement)) infoButton.focus();
+        showCredit(false);
+        return;
+      }
+      if (event.key === 'Escape' && !a11yPanel.hidden) close(true);
+    });
+    document.addEventListener('click', event => {
+      if (!info.contains(event.target)) showCredit(false);
+      if (!a11yPanel.hidden && !event.target.closest('.a11y-menu')) close();
+    });
+    a11yPanel.addEventListener('focusout', event => {
+      if (event.relatedTarget && !event.relatedTarget.closest('.a11y-menu')) close();
+    });
   }
   // Cards show at most two lines of tags; extra tags are hidden behind "…".
   const MAX_TAG_LINES = 2;

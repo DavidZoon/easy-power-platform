@@ -2,5 +2,5 @@
 .site-footer { border-top: $border solid var(--line); padding-block: $space * 5; color: var(--muted); font-size: .9rem; strong { color: var(--text); font-size: 1.1rem; } p { margin-block: .5rem; } }
 .footer-inner { display: flex; justify-content: space-between; gap: 2rem; }
 .footer-links { display: flex; flex-direction: column; align-items: start; gap: .5rem; a { padding-block: .2rem; } }
-.consent-panel { position: fixed; bottom: 1rem; left: 1rem; z-index: 10; max-width: min(32rem, calc(100% - 2rem)); max-height: calc(100vh - 2rem); overflow: auto; padding: 1.5rem; background: var(--surface); border: $border solid var(--line); border-radius: $radius; box-shadow: 0 .5rem 3rem #0006; h2 { margin-top: 0; font-size: 1.15rem; } p { font-size: .9rem; } }
+.consent-panel { position: fixed; bottom: 1rem; left: 1rem; z-index: 10; max-width: min(32rem, calc(100% - 2rem)); max-height: calc(100vh - 2rem); overflow: auto; padding: 1.5rem; background: var(--surface); border: $border solid var(--line); border-radius: $radius; box-shadow: 0 .5rem 3rem #0006; h2 { margin-top: 0; font-size: .92rem; } p { font-size: .9rem; } }
 @media (max-width: 38rem) { .footer-inner { flex-direction: column; } }

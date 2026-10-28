@@ -1,5 +1,5 @@
 @use "variables" as *;
-.post-heading { max-width: 960px; margin: 0 auto 3rem; h1 { font-size: clamp(2rem, 4vw, 3.2rem); } .chips { margin-top: 1.5rem; } }
+.post-heading { max-width: 960px; margin: 0 auto 3rem; h1 { font-size: clamp(1.6rem, 3.2vw, 2.56rem); } .chips { margin-top: 1.5rem; } }
 .post-meta { color: var(--muted); font-size: .9rem; }
 .article-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: $space * 5; align-items: start; }
 .article-main { grid-column: -2 / -1; min-width: 0; max-width: 100%; }

@@ -10,11 +10,16 @@ a:hover { text-decoration-thickness: .15em; }
 button, input { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: wait; }
-button, input, summary { min-height: 44px; }
+input, summary { min-height: 44px; }
+button { min-height: 35.2px; }
 button, a, input, summary, [tabindex] { &:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } }
-h1, h2, h3, h4, h5 { line-height: 1.25; text-wrap: balance; }
-h1 { font-size: clamp(2rem, 4.3vw, 3.6rem); letter-spacing: -.035em; }
-h2 { font-size: 1.5rem; }
+h1, h2, h3, h4, h5, h6 { line-height: 1.25; text-wrap: balance; }
+h1 { font-size: clamp(1.6rem, 3.44vw, 2.88rem); letter-spacing: -.035em; }
+h2 { font-size: 1.2rem; }
+h3 { font-size: .936em; }
+h4 { font-size: .8em; }
+h5 { font-size: .664em; }
+h6 { font-size: .536em; }
 p { margin-top: 0; }
 ::selection { background: var(--button); color: var(--button-text); }
 .container { width: min(#{$content-width}, calc(100% - #{$space * 6})); margin-inline: auto; }
@@ -24,7 +29,7 @@ main { min-height: 55vh; padding-block: $space * 5 $space * 10; }
 .eyebrow { color: var(--muted); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 650; }
 .muted { color: var(--muted); }
 .button-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
-.button { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; padding: .7rem 1.4rem; min-height: 46px; border: 1px solid transparent; border-radius: 999px; background: var(--button); color: var(--button-text); font-weight: 650; text-decoration: none; &:hover { text-decoration: underline; } &.secondary { background: transparent; border-color: var(--line); color: var(--text); } }
+.button { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; padding: .55rem 1.4rem; min-height: 36.8px; border: 1px solid transparent; border-radius: 999px; background: var(--button); color: var(--button-text); font-weight: 650; line-height: 1.32; text-decoration: none; &:hover { text-decoration: underline; } &.secondary { background: transparent; border-color: var(--line); color: var(--text); } }
 .text-button { border: 0; background: none; color: var(--accent); text-align: left; padding: 0; text-decoration: underline; }
 @media (max-width: 38rem) { .container { width: calc(100% - 2rem); } main { padding-top: 1.5rem; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }

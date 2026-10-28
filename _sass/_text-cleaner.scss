@@ -1,7 +1,7 @@
 @use "variables" as *;
 
 .text-cleaner {
-  h2 { margin: 0; font-size: 1.25rem; }
+  h2 { margin: 0; font-size: 1rem; }
   .cleaner-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
   > .cleaner-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }
   .cleaner-options fieldset { min-width: 0; margin: 0; padding: 1rem; border: $border solid var(--line); border-radius: $radius-small; background: var(--surface); }

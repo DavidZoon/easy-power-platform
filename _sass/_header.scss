@@ -6,6 +6,6 @@
 }
 .brand-caption { font-size: 1.3rem; font-weight: 700; line-height: 1.3; span { display: block; font-size: .85rem; color: var(--muted); margin-top: .5rem; font-weight: 400; } }
 .primary-nav { display: flex; flex-wrap: wrap; gap: .2rem 1.5rem; padding-bottom: .75rem; a { padding-block: .6rem; text-decoration: none; font-weight: 550; color: var(--muted); &[aria-current], &:hover { color: var(--text); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; } } }
-.theme-toggle { flex-shrink: 0; background: var(--surface); color: var(--text); border: $border solid var(--line); border-radius: 999px; padding: .4rem .9rem; font-size: .85rem; }
+.theme-toggle { flex-shrink: 0; background: var(--surface); color: var(--text); border: $border solid var(--line); border-radius: 999px; padding: .24rem .9rem; font-size: .85rem; }
 @media (max-width: $breakpoint) { .brand-caption { display: none; } }
 @media (max-width: 38rem) { .header-inner { padding-block: 1.25rem; gap: .5rem; } .primary-nav { gap: 0 1.15rem; font-size: .9rem; } }

@@ -4,7 +4,75 @@
       <img src="{{ '/assets/images/brand.webp' | relative_url }}" width="320" height="82" alt="Easy Power Platform" fetchpriority="high">
       <span class="brand-caption">News, tutos et astuces <span>par David Zoonekyndt</span></span>
     </a>
-    <button class="theme-toggle" type="button" aria-label="Activer le thème clair" aria-pressed="false" hidden>Thème clair</button>
+    <div class="header-actions">
+      <button class="theme-toggle" type="button" aria-label="Activer le thème clair" aria-pressed="false" hidden>Thème clair</button>
+      <div class="a11y-menu">
+        <button class="a11y-toggle" type="button" aria-controls="a11y-panel" aria-expanded="false" aria-haspopup="dialog" hidden>Accessibilité</button>
+        <section class="a11y-panel" id="a11y-panel" role="dialog" aria-labelledby="a11y-title" hidden>
+          <div class="a11y-panel-heading">
+            <div class="a11y-panel-title">
+              <h2 id="a11y-title">Confort de lecture</h2>
+              <div class="a11y-info">
+                <button class="a11y-info-toggle" type="button" aria-label="À propos de ce menu" aria-expanded="false" aria-controls="a11y-credit"><span aria-hidden="true">i</span></button>
+                <div class="a11y-credit" id="a11y-credit" hidden>
+                  Ce menu est inspiré de celui créé par Nelson Boruchowitch.
+                  <a href="https://nelsonboruchowitch.com/index.html">Découvrir son portfolio</a>.
+                </div>
+              </div>
+            </div>
+            <button class="a11y-close" type="button" aria-label="Fermer le menu Accessibilité"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="a11y-choice" role="group" aria-labelledby="a11y-text-label">
+            <span id="a11y-text-label">Taille du texte</span>
+            <div class="a11y-segments">
+              <label><input type="radio" name="a11y-text" value=""><span>A</span></label>
+              <label><input type="radio" name="a11y-text" value="large"><span>A+</span></label>
+              <label><input type="radio" name="a11y-text" value="xlarge"><span>A++</span></label>
+            </div>
+          </div>
+          <div class="a11y-choice" role="group" aria-labelledby="a11y-line-label">
+            <span id="a11y-line-label">Interlignage</span>
+            <div class="a11y-segments">
+              <label><input type="radio" name="a11y-line" value=""><span>Standard</span></label>
+              <label><input type="radio" name="a11y-line" value="large"><span>+</span></label>
+              <label><input type="radio" name="a11y-line" value="xlarge"><span>++</span></label>
+            </div>
+          </div>
+          <div class="a11y-choice" role="group" aria-labelledby="a11y-letter-label">
+            <span id="a11y-letter-label">Espacement des lettres</span>
+            <div class="a11y-segments">
+              <label><input type="radio" name="a11y-letter" value=""><span>Standard</span></label>
+              <label><input type="radio" name="a11y-letter" value="large"><span>+</span></label>
+              <label><input type="radio" name="a11y-letter" value="xlarge"><span>++</span></label>
+            </div>
+          </div>
+          <div class="a11y-choice" role="group" aria-labelledby="a11y-width-label">
+            <span id="a11y-width-label">Largeur de lecture</span>
+            <div class="a11y-segments">
+              <label><input type="radio" name="a11y-width" value=""><span>Pleine</span></label>
+              <label><input type="radio" name="a11y-width" value="narrow"><span>Réduite</span></label>
+            </div>
+          </div>
+          <div class="a11y-field">
+            <label for="a11y-font">Police</label>
+            <select id="a11y-font" name="a11y-font">
+              <option value="">Standard</option>
+              <option value="lexend">Lexend · lecture fluide</option>
+              <option value="atkinson">Atkinson · basse vision</option>
+              <option value="opendyslexic">OpenDyslexic · préférence personnelle</option>
+            </select>
+          </div>
+          <div class="a11y-switches">
+            <label><span>Contraste renforcé</span><input type="checkbox" name="a11y-contrast" value="more"></label>
+            <label><span>Souligner les liens</span><input type="checkbox" name="a11y-underline" value="on"></label>
+            <label><span>Réduire les animations</span><input type="checkbox" name="a11y-motion" value="reduce"></label>
+            <label><span>Fond crème</span><input type="checkbox" name="a11y-tint" value="cream"></label>
+          </div>
+          <button class="button secondary a11y-reset" type="button">Réinitialiser</button>
+          <p class="sr-only" aria-live="polite" data-a11y-status></p>
+        </section>
+      </div>
+    </div>
   </div>
   <nav class="container primary-nav" aria-label="Navigation principale">
     {% for item in site.data.navigation %}

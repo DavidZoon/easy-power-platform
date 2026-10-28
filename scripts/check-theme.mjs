@@ -226,7 +226,8 @@ try {
       await page.setViewportSize({ width, height: 1080 });
       for (const card of await cards.all()) {
         const controls = await Promise.all(['.theme-color-name', '.theme-color-role', '.theme-color-open', '.theme-remove'].map(selector => card.locator(selector).boundingBox()));
-        assert(controls.every(box => Math.abs(box.y - controls[0].y) < 1), `Une seule ligne : ${width}`);
+        assert(controls.every(box => Math.abs(box.y + box.height / 2 - controls[0].y - controls[0].height / 2) < 1),
+          `Controles centres sur une seule ligne : ${width}`);
         assert.equal((await card.locator('.theme-remove').textContent()).trim(), '');
         assert.equal(await card.locator('.theme-remove svg[aria-hidden="true"]').count(), 1);
         assert.match(await card.locator('.theme-remove').getAttribute('aria-label'), /^Supprimer la couleur/);

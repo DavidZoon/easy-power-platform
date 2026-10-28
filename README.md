@@ -4,9 +4,8 @@ Blog de **David Zoonekyndt**, construit avec Jekyll et publié sur GitHub Pages.
 Le contenu est en Markdown ; aucun serveur applicatif, aucune API de recherche
 et aucune base de données ne sont nécessaires en production.
 
-L’accueil est volontairement `index.html` plutôt que `index.md` : le plugin
-officiel `jekyll-paginate` nécessite une page d’index HTML. Les articles et la
-page « À propos » restent en Markdown.
+L’accueil utilise `index.html` et le layout `home`, sans pagination.
+Les articles et la page « À propos » restent en Markdown.
 
 ## 1. Contenu livré
 
@@ -15,7 +14,7 @@ page « À propos » restent en Markdown.
 - 119 extraits de code conservés, tableaux complexes, images et liens internes.
 - 385 médias de l’archive et 24 images externes rapatriées, soit 409 médias locaux,
   convertis en WebP (environ 21 Mio au lieu d’une archive de 108 Mio).
-- Accueil paginé (8 articles), archives, catégories et tags disposant de vraies pages.
+- Accueil avec les 3 derniers articles et les 3 derniers outils, avec des liens vers les catalogues complets ; archives, catégories et tags disposant de vraies pages.
 - Recherche locale sans dépendance JavaScript externe, insensible aux accents :
   mots combinés par ET, titres et taxonomies prioritaires.
 - Sommaire automatique progressif, temps de lecture estimé à 220 mots/minute,
@@ -186,7 +185,7 @@ de GitHub Pages. Aucun plugin n’est exécuté côté visiteur.
 La configuration temporaire spécifique à GitHub Pages est écrite hors du dépôt
 dans le répertoire temporaire du runner et n’est jamais publiée. Le build prend
 en charge les plugins `jekyll-seo-tag`, `jekyll-feed`,
-`jekyll-sitemap`, `jekyll-paginate` et les plugins Ruby locaux `_plugins`.
+`jekyll-sitemap` et les plugins Ruby locaux `_plugins`.
 Le workflow ne nécessite ni token personnel ni secret de déploiement. Ses droits
 d’écriture Pages et OIDC sont limités au job de publication.
 
@@ -601,7 +600,7 @@ Chaque page d'outil propose en bas de page un bouton « Signaler un bug ou sugg�
 une amélioration ». Il ouvre la création d'une issue GitHub dans une nouvelle
 fenêtre, avec le nom de l'outil prérempli dans le titre, sans transmettre les saisies.
 Les outils ne deviennent pas des articles : ni doublons dans le flux Atom,
-ni ajout à la pagination éditoriale ou à l'index de recherche des articles.
+ni ajout à la liste éditoriale ou à l'index de recherche des articles.
 Les slugs et URL de taxonomies existants sont conservés.
 
 Validation : `bundle exec ruby test/taxonomies_test.rb`, puis après compilation
@@ -817,10 +816,16 @@ description de chaque outil. Toute la carte est un lien accessible au clavier
 vers une page dédiée, sans limiter l’espace disponible pour les outils complexes.
 
 Pour ajouter un outil, créer sa page sous `outils/<nom>/index.html`, puis ajouter
-une entrée à [_data/tools.yml](_data/tools.yml) :
+une entrée dans [_data/tools.yml](_data/tools.yml) avec sa date de création
+`created_at` au format ISO 8601 UTC (`AAAA-MM-JJTHH:MM:SSZ`). L’accueil affiche les
+trois outils les plus récents selon cette date, du plus récent à gauche au plus
+ancien à droite, indépendamment de leur position dans le fichier. Le catalogue
+conserve l’ordre du fichier. Les dates initiales proviennent des commits
+d’ajout des outils :
 
 ```yaml
 - name: Nom de l’outil
+  created_at: "2026-10-28T16:00:00Z"
   url: /outils/nom-de-l-outil/
   image: /assets/images/tools/nom-de-l-outil.svg
   description: Une courte description de son utilité.
@@ -1338,7 +1343,7 @@ npm run audit
   Pour les articles découpés en snippets, le code des nouveaux articles réunis
   doit être identique à l’original, avec les mêmes dates, catégories et tags.
   Cette commande nécessite l’export local ; elle n’est pas lancée dans GitHub Actions.
-- Tests Playwright de recherche, pagination, thème persistant, sommaire et Rouge.
+- Tests Playwright de recherche, sélections de l’accueil, thème persistant, sommaire et Rouge.
 - Tests isolés Clarity/Giscus/Forms avec requêtes interceptées : aucun contact avec
   Microsoft/Giscus pendant les vérifications ; refus, accord, retrait, chargement
   du formulaire au clic, absence de débordement mobile et URL de partage testés.

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { load } from 'cheerio';
 import assert from 'node:assert/strict';
 import { parseStringPromise } from 'xml2js';
+import { parse } from 'yaml';
 
 const root = path.resolve(process.argv[2] || '_site');
 const manifest = JSON.parse(await fs.readFile('_data/migration.json', 'utf8'));
@@ -13,6 +14,29 @@ const index = JSON.parse(await fs.readFile(path.join(root, 'search.json'), 'utf8
 const postsByUrl = new Map(index.map(post => [new URL(post.url, canonical).href, post]));
 const failures = [];
 const files = [];
+const tools = parse(await fs.readFile('_data/tools.yml', 'utf8'));
+for (const tool of tools) {
+  assert.equal(typeof tool.created_at, 'string', `Date de creation requise : ${tool.name}`);
+  assert.match(tool.created_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/, `Date de creation en UTC requise : ${tool.name}`);
+  assert(Number.isFinite(Date.parse(tool.created_at)), `Date de creation invalide : ${tool.name}`);
+}
+const latestTools = [...tools].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 3);
+const latestPosts = [...index].sort((a, b) => Date.parse(b.date) - Date.parse(a.date)).slice(0, 3);
+assert.equal(home('.hero a.button').first().attr('href'), `${base}/articles/`, 'Le bouton principal ouvre les articles');
+assert.deepEqual(
+  home('#latest .post-card h2 a').map((_, element) => home(element).attr('href')).get(),
+  latestPosts.map(post => new URL(post.url, canonical).pathname),
+  'Accueil : les trois articles les plus recents, du plus recent au plus ancien'
+);
+assert.deepEqual(
+  home('#latest-tools .post-card h2 a').map((_, element) => home(element).attr('href')).get(),
+  latestTools.map(tool => base + tool.url),
+  'Accueil : les trois outils les plus recents par date de creation'
+);
+assert.equal(home('#latest .section-heading a').attr('href'), `${base}/articles/`);
+assert.equal(home('#latest-tools .section-heading a').attr('href'), `${base}/outils/`);
+assert.equal(home('.pagination').length, 0, 'Accueil sans pagination');
+assert(!home('main').text().includes('Plus anciens'), 'Accueil sans bouton Plus anciens');
 function checkPostTaxonomies($, container, post, label) {
   if (!post) {
     failures.push(`${label}: article absent de l'index de recherche`);
@@ -34,6 +58,7 @@ async function walk(dir) {
   }
 }
 await walk(root);
+assert(!files.some(file => /^page[\\/]\d+[\\/]index\.html$/.test(path.relative(root, file))), 'Aucune archive paginee generee');
 for (const forbidden of ['node_modules', '.migration', 'vendor', 'scripts', 'test', 'reports', '.github']) {
   assert(!files.some(file => path.relative(root, file).split(path.sep).includes(forbidden)), `Dossier prive publie : ${forbidden}`);
 }

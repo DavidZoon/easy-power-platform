@@ -24,8 +24,6 @@ keywords:
   - Microsoft 365
   - low-code
 permalink: /:year/:month/:day/:title/
-paginate: 8
-paginate_path: /page/:num/
 markdown: kramdown
 highlighter: rouge
 kramdown:
@@ -40,7 +38,6 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
-  - jekyll-paginate
 feed:
   path: feed.xml
 include:

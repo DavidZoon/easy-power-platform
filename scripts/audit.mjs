@@ -28,7 +28,17 @@ try {
   const requests = [];
   page.on('request', request => { if (new URL(request.url()).origin !== new URL(url).origin) requests.push(request.url()); });
   await page.goto(url);
-  assert.equal(await page.locator('.post-card').count(), 8);
+  assert.equal(await page.locator('#latest .post-card').count(), 3);
+  assert.equal(await page.locator('#latest-tools .post-card').count(), 3);
+  await page.getByRole('link', { name: 'Parcourir les articles' }).click();
+  assert.equal(new URL(page.url()).pathname, new URL(`${url}articles/`).pathname);
+  assert((await page.locator('.post-card').count()) >= 3);
+  await page.goto(url);
+  await page.locator('#latest-tools .section-heading a').click();
+  assert.equal(new URL(page.url()).pathname, new URL(`${url}outils/`).pathname);
+  await page.goto(url);
+  assert.equal(await page.locator('.pagination').count(), 0);
+  summary.behavior.push('Accueil : trois articles, trois outils, liens vers les catalogues, sans pagination');
   await page.getByRole('button', { name: 'Activer le thème clair' }).click();
   assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
   await page.reload();
@@ -41,39 +51,38 @@ try {
   await page.locator('#local-search button').click();
   await page.waitForFunction(() => document.querySelector('#search-status').textContent.startsWith('0 résultat'));
   summary.behavior.push('Recherche accentuee, absence de resultats et affichage texte sur entree HTML');
-  await page.goto(`${url}page/2/`);
-  assert.equal(await page.locator('.post-card').count(), 8);
-  summary.behavior.push('Pagination');
   const sample = manifest.posts.find(post => post.id === '221');
   const latest = manifest.posts.at(-1);
-  for (const pathname of ['', 'page/2/', sample.permalink.slice(1), 'categories/power-automate-39b3ce78/', 'categories/desktop-flows-ad7e270f/', 'tags/power-fx-3282889d/']) {
+  for (const pathname of ['', sample.permalink.slice(1), 'categories/power-automate-39b3ce78/', 'categories/desktop-flows-ad7e270f/', 'tags/power-fx-3282889d/']) {
     await page.goto(url + pathname);
     for (const width of [390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 1000 });
-      const gallery = await page.locator('.post-gallery').evaluate(element => {
-        const columns = getComputedStyle(element).gridTemplateColumns.split(' ').filter(track => parseFloat(track) > 0).length;
-        const cards = [...element.querySelectorAll('.post-card')];
-        return {
-          columns,
-          expected: Math.min(cards.length, Math.floor((element.clientWidth + 16) / 276)),
-          images: cards.filter(card => card.querySelector('img')).every(card => {
-            const image = card.querySelector('img');
-            const bounds = image.getBoundingClientRect();
-            const body = card.querySelector('.card-body').getBoundingClientRect();
-            return Math.abs(bounds.width - (card.clientWidth)) < 1 &&
-              Math.abs(bounds.height - 160) < 1 && bounds.bottom <= body.top + 1 &&
-              getComputedStyle(image).objectFit === 'cover' &&
-              parseFloat(getComputedStyle(image).borderTopLeftRadius) > 0;
-          })
-        };
-      });
-      assert.equal(gallery.columns, gallery.expected, `Colonnes de galerie : ${pathname}, ${width}px`);
-      assert(gallery.images, `Images des cartes verticales : ${pathname}, ${width}px`);
+      for (const element of await page.locator('.post-gallery').all()) {
+        const gallery = await element.evaluate(element => {
+          const columns = getComputedStyle(element).gridTemplateColumns.split(' ').filter(track => parseFloat(track) > 0).length;
+          const cards = [...element.querySelectorAll('.post-card')];
+          return {
+            columns,
+            expected: Math.min(cards.length, Math.floor((element.clientWidth + 16) / 276)),
+            images: cards.filter(card => card.querySelector('img')).every(card => {
+              const image = card.querySelector('img');
+              const bounds = image.getBoundingClientRect();
+              const body = card.querySelector('.card-body').getBoundingClientRect();
+              return Math.abs(bounds.width - (card.clientWidth)) < 1 &&
+                Math.abs(bounds.height - 160) < 1 && bounds.bottom <= body.top + 1 &&
+                getComputedStyle(image).objectFit === 'cover' &&
+                parseFloat(getComputedStyle(image).borderTopLeftRadius) > 0;
+            })
+          };
+        });
+        assert.equal(gallery.columns, gallery.expected, `Colonnes de galerie : ${pathname}, ${width}px`);
+        assert(gallery.images, `Images des cartes verticales : ${pathname}, ${width}px`);
+      }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Debordement galerie : ${pathname}, ${width}px`);
     }
   }
-  summary.behavior.push('Galeries verticales responsives : colonnes automatiques et images recadrees sur accueil, pagination, article, categories et tags');
-  const allPages = ['', 'page/2/', 'articles/', 'categories/', 'categories/power-automate-39b3ce78/', 'categories/desktop-flows-ad7e270f/', 'tags/', 'tags/power-fx-3282889d/', 'about/', 'search/', 'privacy/', '404.html', sample.permalink.slice(1), latest.permalink.slice(1)];
+  summary.behavior.push('Galeries verticales responsives : colonnes automatiques et images recadrees sur accueil, article, categories et tags');
+  const allPages = ['', 'articles/', 'categories/', 'categories/power-automate-39b3ce78/', 'categories/desktop-flows-ad7e270f/', 'tags/', 'tags/power-fx-3282889d/', 'about/', 'search/', 'privacy/', '404.html', sample.permalink.slice(1), latest.permalink.slice(1)];
   for (const theme of ['dark', 'light']) {
     await context.addInitScript(value => localStorage.setItem('epp-theme', value), theme);
     for (const pathname of allPages) {

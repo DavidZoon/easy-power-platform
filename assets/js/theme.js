@@ -15,6 +15,10 @@
     for (const [name, values] of Object.entries(allowed)) {
       if (values.includes(saved[name])) document.documentElement.setAttribute(`data-a11y-${name}`, saved[name]);
     }
+    const control = Number(saved.control);
+    if (Number.isInteger(control) && control >= 28 && control <= 50 && control !== 32) {
+      document.documentElement.style.setProperty('--control-h', `${control}px`);
+    }
   } catch (error) {
     console.warn('Préférences d’accessibilité indisponibles :', error);
   }

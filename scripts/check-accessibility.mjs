@@ -31,7 +31,7 @@ try {
           fits: element.scrollWidth <= element.clientWidth + 1
         };
       }));
-    assert.equal(rows.length, 5);
+    assert.equal(rows.length, 6);
     assert(rows.every(row => row.aligned && row.beside && row.fits), `Libellés et contrôles sur la même ligne : ${label}`);
     assert(await panel.evaluate(element => element.scrollWidth <= element.clientWidth + 1), `Menu sans débordement interne : ${label}`);
   }
@@ -105,6 +105,26 @@ try {
   await panel.locator('[name="a11y-letter"][value="large"]').check();
   assert.equal(await attr('letter'), 'large');
   assert(await paragraph.evaluate(element => parseFloat(getComputedStyle(element).letterSpacing) > 0), 'Lettres espacées');
+  const slider = panel.getByRole('slider', { name: 'Taille des éléments' });
+  const controlHeight = () => page.locator('.theme-toggle').evaluate(element => element.getBoundingClientRect().height);
+  await panel.locator('[name="a11y-text"][value=""]').check();
+  assert.equal(await slider.inputValue(), '32', 'Taille des éléments à 32 px par défaut');
+  assert(Math.abs(await controlHeight() - 32) < .5, 'Boutons à 32 px par défaut');
+  assert.deepEqual([await slider.getAttribute('min'), await slider.getAttribute('max')], ['28', '50']);
+  await slider.focus();
+  await page.keyboard.press('Home');
+  assert(Math.abs(await controlHeight() - 28) < .5, 'Taille minimale 28 px');
+  await page.keyboard.press('End');
+  assert(Math.abs(await controlHeight() - 50) < .5, 'Taille maximale 50 px');
+  assert.equal(await slider.getAttribute('aria-valuetext'), '50 pixels');
+  assert.equal(await panel.locator('.a11y-range output').textContent(), '50 px');
+  const panelControls = await panel.locator('.a11y-close, .a11y-info-toggle, select, .a11y-reset').evaluateAll(elements =>
+    elements.map(element => element.getBoundingClientRect().height));
+  assert(panelControls.every(height => Math.abs(height - 50) < .5), 'Les contrôles du menu suivent la taille');
+  await slider.fill('40');
+  assert(Math.abs(await controlHeight() - 40) < .5, 'Taille intermédiaire appliquée');
+  assert.equal(JSON.parse(await page.evaluate(() => localStorage.getItem('epp-a11y'))).control, 40, 'Taille enregistrée');
+  await panel.locator('[name="a11y-text"][value="xlarge"]').check();
   await panel.locator('[name="a11y-width"][value="narrow"]').check();
   assert.equal(await attr('width'), 'narrow');
   assert((await prose.boundingBox()).width < baseWidth, 'Largeur de lecture réduite');
@@ -132,6 +152,7 @@ try {
   await page.reload();
   const saved = { text: 'xlarge', line: 'xlarge', letter: 'large', width: 'narrow', font: 'opendyslexic', contrast: 'more', underline: 'on', motion: 'reduce', tint: 'cream' };
   for (const [name, value] of Object.entries(saved)) assert.equal(await attr(name), value, `Préférence ${name} conservée`);
+  assert(Math.abs(await controlHeight() - 40) < .5, 'Taille des éléments conservée sans flash');
   await toggle.click();
   assert(await panel.locator('[name="a11y-tint"]').isChecked(), 'Interrupteurs synchronisés');
   assert.equal(await panel.locator('#a11y-font').inputValue(), 'opendyslexic');
@@ -148,6 +169,8 @@ try {
     await page.keyboard.press('Escape');
   }
   await panel.getByRole('button', { name: 'Réinitialiser' }).click();
+  assert.equal(await slider.inputValue(), '32', 'Curseur réinitialisé');
+  assert(Math.abs(await controlHeight() - 32) < .5, 'Taille des éléments réinitialisée');
   assert.equal(await page.evaluate(() => [...document.documentElement.attributes].filter(a => a.name.startsWith('data-a11y-')).length), 0);
   assert.equal(await page.evaluate(() => localStorage.getItem('epp-a11y')), null);
   assert.equal(await panel.locator('[name="a11y-text"][value=""]').isChecked(), true);

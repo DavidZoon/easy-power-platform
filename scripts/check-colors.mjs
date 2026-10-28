@@ -182,8 +182,8 @@ try {
       }));
       assert.equal(copyButtons.length, 15);
       for (const button of copyButtons) {
-        assert(Math.abs(button.width - 35.2) < .1);
-        assert(Math.abs(button.height - 35.2) < .1);
+        assert(Math.abs(button.width - 32) < .1);
+        assert(Math.abs(button.height - 32) < .1);
         assert.equal(button.radius, '50%');
         assert.equal(button.title, button.label);
         assert(button.icon);

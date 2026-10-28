@@ -3,6 +3,9 @@ import fs from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { preview } from './preview.mjs';
 
+const CONTROLS = 'button, .button, .share-button, select, input:not([type=checkbox], [type=radio], [type=hidden], [type=color])';
+// Tree nodes, the colour wheel and the large search fields (47.6 px) are not compact controls.
+const EXCLUDED = '.json-field, .harmony-wheel, #hero-search, #sidebar-search';
 const { server, url } = await preview(0);
 let browser;
 try {
@@ -17,6 +20,7 @@ try {
   paths.push(...await page.locator('.tool-card').evaluateAll(links => links.map(link => link.href)));
   let headings = 0;
   let buttons = 0;
+  let controls = 0;
   for (const pathname of paths) {
     for (const theme of ['light', 'dark']) {
       for (const width of [1440, 390, 320]) {
@@ -29,11 +33,28 @@ try {
           : Math.min(46.08, Math.max(25.6, width * .0344));
         const actualH1 = await page.locator('h1').evaluate(element => parseFloat(getComputedStyle(element).fontSize));
         assert(Math.abs(actualH1 - expectedH1) < .1, `Titre principal compact : ${label}`);
-        const toggle = await page.locator('button.theme-toggle').boundingBox();
-        assert(Math.abs(toggle.height - 35.2) < .1, `Bascule compacte : ${label}`);
-        for (const button of await page.locator('.share-button').all()) {
-          assert(Math.abs((await button.boundingBox()).height - 36.8) < .1, `Partage compact : ${label}`);
+        for (const size of [32, 28, 50]) {
+          await page.locator('html').evaluate((element, size) => {
+            if (size === 32) element.style.removeProperty('--control-h');
+            else element.style.setProperty('--control-h', `${size}px`);
+          }, size);
+          const wrong = await page.evaluate(({ size, selector, excluded }) => [...document.querySelectorAll(selector)]
+            .filter(element => element.getClientRects().length && !element.matches(excluded))
+            .map(element => {
+              const style = getComputedStyle(element);
+              const bounds = element.getBoundingClientRect();
+              const lineHeight = parseFloat(style.lineHeight) || 20;
+              const content = bounds.height - ['paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth']
+                .reduce((sum, property) => sum + parseFloat(style[property]), 0);
+              const wrapped = element.matches('button, .button') && content > lineHeight * 1.5;
+              return { name: element.outerHTML.slice(0, 80), height: bounds.height, wrapped };
+            })
+            .filter(control => Math.abs(control.height - size) > 1 && !(control.wrapped && control.height > size)),
+          { size, selector: CONTROLS, excluded: EXCLUDED });
+          assert.deepEqual(wrong, [], `Hauteur des éléments ${size} px : ${label}`);
+          if (size === 32) controls += await page.locator(CONTROLS).count();
         }
+        await page.locator('html').evaluate(element => element.style.removeProperty('--control-h'));
         const dimensions = await page.locator('button, .button, .share-button').evaluateAll(elements =>
           elements.filter(element => element.getClientRects().length && !element.matches('.harmony-wheel'))
             .map(element => {
@@ -58,7 +79,7 @@ try {
       }
     }
   }
-  console.log(`Dimensions compactes : ${headings} titres et ${buttons} boutons, deux themes et trois largeurs : OK.`);
+  console.log(`Dimensions compactes : ${headings} titres, ${buttons} boutons et ${controls} contrôles à 28/32/50 px, deux themes et trois largeurs : OK.`);
 } finally {
   if (browser) await browser.close();
   await new Promise(resolve => server.close(resolve));

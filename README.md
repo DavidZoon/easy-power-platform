@@ -751,11 +751,17 @@ réseau, l’icône précédente est conservée.
 
 Les modules Sass utilisent `@use`. Les couleurs sont des variables CSS :
 la personnalisation d’un thème n’impose pas de dupliquer les composants.
-Les titres et la hauteur des boutons sont réduits d'environ 20 % sur tout le site,
-sans réduire le texte courant ni la taille de police des boutons textuels.
-Les boutons standards mesurent environ 41 px de haut sur une ligne, les boutons
-à icône environ 32 à 38 px ; les champs de saisie conservent leur hauteur.
-Validation responsive en thèmes clair et sombre : `npm run check:sizing`.
+Les titres sont réduits d'environ 20 % sur tout le site, sans réduire le texte
+courant ni la taille de police des boutons textuels.
+Les contrôles compacts (boutons, boutons à icône, champs de saisie, listes
+déroulantes, bouton de copie du code) partagent une hauteur unique définie par
+la variable CSS `--control-h` : 32 px par défaut, réglable de 28 à 50 px depuis
+le menu Accessibilité. Les boutons dont le texte passe sur plusieurs lignes
+s’agrandissent. Les grands champs de recherche (accueil et colonne latérale,
+47,6 px), les nœuds de l’explorateur JSON, les lignes à case à cocher et les
+résumés `<summary>` ne sont pas concernés.
+Validation responsive en thèmes clair et sombre, à 28, 32 et 50 px :
+`npm run check:sizing`.
 Les galeries de l’accueil (y compris les pages suivantes), des articles
 similaires et des archives de tags et catégories partagent la classe
 `post-gallery` : cartes verticales avec image
@@ -776,10 +782,12 @@ Sans choix enregistré, le thème suit les préférences du système.
 Le bouton **Accessibilité**, à droite du bouton de thème dans l’en-tête, ouvre
 un panneau non modal « Confort de lecture ». Il propose : taille du texte
 (A, A+, A++), interlignage, espacement des lettres, largeur de lecture réduite
-(72 caractères sur les articles et pages de contenu, pas sur les outils), police
+(72 caractères sur les articles et pages de contenu, pas sur les outils), taille
+des éléments (curseur de 28 à 50 px, 32 px par défaut, appliqué en direct à la
+hauteur des boutons, champs et listes de tout le site), police
 (Standard, Lexend, Atkinson Hyperlegible, OpenDyslexic), contraste renforcé,
 soulignement des liens, réduction des animations, fond crème et réinitialisation.
-Les libellés des cinq premiers réglages et leurs contrôles sont alignés côte à
+Les libellés des six premiers réglages et leurs contrôles sont alignés côte à
 côte, y compris sur mobile.
 Le panneau se ferme avec Échap (le focus revient au bouton), le bouton de
 fermeture ou un clic extérieur ; les choix utilisent des boutons radio, une liste

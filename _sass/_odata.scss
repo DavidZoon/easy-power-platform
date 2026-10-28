@@ -2,7 +2,7 @@
 
 .odata-tool {
   select, textarea, input[type="text"] { font: inherit; border: $border solid var(--line); border-radius: $radius-small; background: var(--bg); color: var(--text); }
-  select, input[type="text"] { width: 100%; min-width: 0; min-height: 44px; padding: .5rem; }
+  select, input[type="text"] { width: 100%; min-width: 0; min-height: var(--control-h); padding: 0 .5rem; }
   textarea { display: block; width: 100%; padding: 1rem; resize: vertical; font: .9rem/1.65 $font-mono; }
   textarea[readonly] { background: var(--code-bg); }
   textarea::placeholder, input::placeholder { color: var(--muted); opacity: 1; }
@@ -48,7 +48,7 @@
 .odata-error { color: var(--pink); font-size: .85rem; }
 .odata-empty { margin: 0 0 .75rem; }
 .odata-menu, .prose .odata-menu { position: relative; margin: 0; padding: 0; border: 0; border-radius: 0; background: none;
-  > summary { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 35.2px; padding: 0 .75rem; border: $border solid var(--line); border-radius: $radius-small; cursor: pointer; list-style: none; font-weight: 650; background: var(--surface); color: var(--text);
+  > summary { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: var(--control-h); padding: 0 .75rem; border: $border solid var(--line); border-radius: $radius-small; cursor: pointer; list-style: none; font-weight: 650; background: var(--surface); color: var(--text);
     &::-webkit-details-marker { display: none; }
     &:hover { border-color: var(--accent); }
   }
@@ -58,7 +58,7 @@
 }
 .odata-menu-list { position: absolute; z-index: 5; top: calc(100% + .25rem); left: 0; display: grid; min-width: 12rem; padding: .25rem; border: $border solid var(--line); border-radius: $radius-small; background: var(--surface); box-shadow: 0 .5rem 1.5rem rgb(0 0 0 / .3);
   .odata-row-menu & { left: auto; right: 0; }
-  button { min-height: 35.2px; padding: .25rem .75rem; border: 0; border-radius: calc(#{$radius-small} / 2); background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer;
+  button { min-height: var(--control-h); padding: .1rem .75rem; border: 0; border-radius: calc(#{$radius-small} / 2); background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer;
     &:hover, &:focus-visible { background: var(--bg); }
     &:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
   }

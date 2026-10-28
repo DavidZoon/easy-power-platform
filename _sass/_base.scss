@@ -1,5 +1,6 @@
 @use "variables" as *;
 * { box-sizing: border-box; }
+:root { --control-h: 32px; }
 html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 1rem/1.65 $font-sans; }
 [hidden] { display: none !important; }
@@ -10,8 +11,8 @@ a:hover { text-decoration-thickness: .15em; }
 button, input { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: wait; }
-input, summary { min-height: 44px; }
-button { min-height: 35.2px; }
+summary { min-height: 44px; }
+input, select, button { min-height: var(--control-h); }
 button, a, input, summary, [tabindex] { &:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; } }
 h1, h2, h3, h4, h5, h6 { line-height: 1.25; text-wrap: balance; }
 h1 { font-size: clamp(1.6rem, 3.44vw, 2.88rem); letter-spacing: -.035em; }
@@ -29,7 +30,7 @@ main { min-height: 55vh; padding-block: $space * 5 $space * 10; }
 .eyebrow { color: var(--muted); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 650; }
 .muted { color: var(--muted); }
 .button-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
-.button { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; padding: .55rem 1.4rem; min-height: 36.8px; border: 1px solid transparent; border-radius: 999px; background: var(--button); color: var(--button-text); font-weight: 650; line-height: 1.32; text-decoration: none; &:hover { text-decoration: underline; } &.secondary { background: transparent; border-color: var(--line); color: var(--text); } }
+.button { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; padding: .1rem 1.4rem; min-height: var(--control-h); border: 1px solid transparent; border-radius: 999px; background: var(--button); color: var(--button-text); font-weight: 650; line-height: 1.32; text-decoration: none; &:hover { text-decoration: underline; } &.secondary { background: transparent; border-color: var(--line); color: var(--text); } }
 .text-button { border: 0; background: none; color: var(--accent); text-align: left; padding: 0; text-decoration: underline; }
 @media (max-width: 38rem) { .container { width: calc(100% - 2rem); } main { padding-top: 1.5rem; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }

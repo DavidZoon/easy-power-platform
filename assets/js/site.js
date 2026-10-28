@@ -51,11 +51,20 @@
       if (!info.contains(event.relatedTarget)) showCredit(false);
     });
     const state = {};
+    const controlInput = a11yPanel.querySelector('#a11y-control');
+    const controlOutput = a11yPanel.querySelector('.a11y-range output');
+    function showControl(value) {
+      controlInput.value = value;
+      controlInput.setAttribute('aria-valuetext', `${value} pixels`);
+      controlOutput.textContent = `${value} px`;
+    }
     function apply() {
       for (const name of names) {
         if (state[name]) document.documentElement.setAttribute(`data-a11y-${name}`, state[name]);
         else document.documentElement.removeAttribute(`data-a11y-${name}`);
       }
+      if (state.control) document.documentElement.style.setProperty('--control-h', `${state.control}px`);
+      else document.documentElement.style.removeProperty('--control-h');
       if (button) update();
       document.dispatchEvent(new CustomEvent('epp-a11y-change', { detail: { ...state } }));
     }
@@ -68,6 +77,9 @@
           else input.value = value;
         }
       }
+      const control = parseInt(document.documentElement.style.getPropertyValue('--control-h'), 10);
+      state.control = control >= 28 && control <= 50 && control !== 32 ? control : '';
+      showControl(state.control || 32);
     }
     function save(message) {
       try {
@@ -98,6 +110,13 @@
       else close();
     });
     a11yPanel.querySelector('.a11y-close').addEventListener('click', () => close(true));
+    controlInput.addEventListener('input', () => {
+      const value = Number(controlInput.value);
+      state.control = value === 32 ? '' : value;
+      showControl(value);
+      apply();
+    });
+    controlInput.addEventListener('change', () => save('Taille des éléments : ' + controlInput.value + ' pixels.'));
     a11yPanel.addEventListener('change', event => {
       const name = (event.target.name || '').replace(/^a11y-/, '');
       if (!names.includes(name)) return;
@@ -107,6 +126,7 @@
     });
     a11yPanel.querySelector('.a11y-reset').addEventListener('click', () => {
       for (const name of names) state[name] = '';
+      state.control = '';
       apply();
       sync();
       save('Préférences de lecture réinitialisées.');

@@ -44,11 +44,11 @@
   .json-color-swatch { display: inline-block; width: .8rem; height: .8rem; margin-right: .4rem; border: 1px solid var(--line); border-radius: 3px; vertical-align: middle; }
   .json-selected { outline: 2px solid var(--accent); outline-offset: -2px; }
   .json-selection-tools { position: absolute; z-index: 5; width: 140px; height: 76px; transform: translate(-50%, -100%); pointer-events: none; }
-  .json-copy-icon { position: absolute; bottom: 4px; width: 40px; height: 40px; min-height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border: $border solid var(--button); border-radius: 50%; background: var(--button); color: var(--button-text); box-shadow: 0 2px 6px #0003; font: 650 .85rem $font-mono; pointer-events: auto;
+  .json-copy-icon { position: absolute; bottom: 4px; width: 40px; height: 40px; min-height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border: $border solid var(--pink); border-radius: 50%; background: var(--pink); color: var(--button-text); box-shadow: 0 2px 6px #0003; font: 650 .85rem $font-mono; white-space: nowrap; pointer-events: auto;
     &:nth-child(1) { left: 0; }
     &:nth-child(2) { left: 50px; bottom: 28px; }
     &:nth-child(3) { right: 0; }
-    &:hover, &:focus-visible { background: var(--button); outline: 2px solid var(--text); outline-offset: 3px; }
+    &:hover, &:focus-visible { z-index: 1; background: var(--pink); outline: 2px solid var(--text); outline-offset: 3px; }
     &:hover .json-copy-tooltip, &:focus-visible .json-copy-tooltip { display: block; }
   }
   .json-copy-tooltip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); padding: .35rem .5rem; border: $border solid var(--line); border-radius: 4px; background: var(--surface); color: var(--text); white-space: nowrap; font: .75rem $font-sans; pointer-events: none; }

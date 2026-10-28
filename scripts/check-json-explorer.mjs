@@ -70,6 +70,50 @@ try {
   await first.click();
   assert.equal(await output.inputValue(), "outputs('List_rows')?['body/value'][0]['firstname']");
   const toolbar = page.locator('.json-selection-tools');
+  async function checkSelectionTools() {
+    const jsonIcon = toolbar.getByRole('button', { name: 'Chemin JSON', exact: true }).locator('[aria-hidden]');
+    assert(await jsonIcon.evaluate(element => {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      const rects = [...range.getClientRects()];
+      const button = element.parentElement.getBoundingClientRect();
+      return rects.length === 1 && rects[0].left >= button.left && rects[0].right <= button.right;
+    }), 'Le pictogramme {...} tient sur une seule ligne dans le bouton');
+    let overlaps = 0;
+    for (const interaction of ['hover', 'focus']) {
+      await page.mouse.move(0, 0);
+      for (const button of await toolbar.locator('button').all()) {
+        if (interaction === 'hover') await button.hover();
+        else {
+          await page.keyboard.press('Tab');
+          await button.focus();
+        }
+        const tooltip = button.locator('.json-copy-tooltip');
+        assert(await tooltip.isVisible());
+        overlaps += await tooltip.evaluate(element => {
+          const bounds = element.getBoundingClientRect();
+          let checked = 0;
+          for (const sibling of element.parentElement.parentElement.children) {
+            if (sibling === element.parentElement) continue;
+            const other = sibling.getBoundingClientRect();
+            const left = Math.max(bounds.left, other.left);
+            const right = Math.min(bounds.right, other.right);
+            const top = Math.max(bounds.top, other.top);
+            const bottom = Math.min(bounds.bottom, other.bottom);
+            if (left >= right || top >= bottom) continue;
+            element.style.pointerEvents = 'auto';
+            const topmost = document.elementFromPoint((left + right) / 2, (top + bottom) / 2);
+            element.style.removeProperty('pointer-events');
+            if (topmost !== element) throw new Error('Un bouton recouvre le tooltip');
+            checked++;
+          }
+          return checked;
+        });
+        await button.evaluate(element => element.blur());
+      }
+    }
+    assert(overlaps > 0, 'Vérification effective de la superposition des tooltips et des boutons');
+  }
   assert.equal(await toolbar.locator('button').count(), 3);
   assert.equal(await toolbar.evaluate(element => element.parentElement.id), 'json-diagram');
   await page.waitForFunction(() => document.querySelector('.json-selection-tools').style.left !== '');
@@ -80,8 +124,7 @@ try {
   assert(iconBoxes[1].y < iconBoxes[0].y && iconBoxes[1].y < iconBoxes[2].y, 'Disposition en arc');
   assert(iconBoxes.every(box => box.width === 40 && box.height === 40 && box.y + box.height <= afterSelection.y), 'Boutons compacts au-dessus du champ');
   assert(await iconButtons.first().evaluate(element => getComputedStyle(element).backgroundColor !== 'rgba(0, 0, 0, 0)'), 'Fond opaque');
-  await iconButtons.first().hover();
-  assert(await iconButtons.first().locator('.json-copy-tooltip').isVisible());
+  await checkSelectionTools();
   const fullscreen = page.locator('#json-fullscreen');
   await fullscreen.click();
   await page.waitForFunction(() => document.fullscreenElement?.id === 'json-diagram-panel');
@@ -178,6 +221,7 @@ try {
     for (const width of [1920, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 1080 });
       await first.click();
+      await checkSelectionTools();
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
       const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
       assert.deepEqual(axe.violations.map(item => item.id), [], `Diagramme ${theme} ${width}`);

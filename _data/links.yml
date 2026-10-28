@@ -35,3 +35,29 @@
     - IA
     - Power Platform
     - Blog
+- name: Power Apps Tools - Enhance Your Power Platform Experience
+  url: https://powerappstools.com/
+  description: Des outils pour enrichir votre expérience de développement sur Power Apps et la Power Platform.
+  tags:
+    - Power Apps
+    - Outils
+- name: Interactive Power Fx Formula Explorer A-Z | Flows Made Easy
+  url: https://flowsmadeeasy.com/formula-reference/
+  description: Un explorateur interactif des formules Power Fx, classées de A à Z.
+  tags:
+    - Power Apps
+    - Power Fx
+    - Référence
+- name: Power Automate Functions Reference & Examples | Flows Made Easy
+  url: https://flowsmadeeasy.com/reference-explorer/
+  description: Un référentiel des fonctions Power Automate accompagné d'exemples.
+  tags:
+    - Power Automate
+    - Référence
+- name: Power Automate HTML Table Styler | Outlook & Gmail
+  url: https://flowtablestyler.com/
+  description: Un outil de mise en forme des tableaux HTML pour les e-mails Power Automate, destinés à Outlook et Gmail.
+  tags:
+    - Power Automate
+    - HTML
+    - Outils

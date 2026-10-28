@@ -1,0 +1,74 @@
+---
+layout: page
+title: Explorateur JSON pour Power Automate
+description: Explorez les sorties JSON de vos flux sous forme de diagramme et copiez les expressions Power Automate de chaque champ.
+permalink: /outils/explorateur-json/
+tools: true
+json_explorer: true
+---
+<p><a href="{{ '/outils/' | relative_url }}">← Tous les outils</a></p>
+<noscript><p>Activez JavaScript pour utiliser l’explorateur JSON.</p></noscript>
+<fieldset class="powerfx-converter json-explorer" data-json-explorer data-clarity-mask="true" disabled>
+  <legend class="sr-only">Exploration JSON</legend>
+  <div class="json-source-heading">
+    <label for="json-source">JSON de sortie de l’action</label>
+    <button type="button" class="button secondary" id="json-example">Essayer avec un exemple</button>
+  </div>
+  <textarea id="json-source" rows="6" spellcheck="false" autocomplete="off" placeholder='{"value":[{"firstname":"David"}]}' aria-describedby="json-help json-status"></textarea>
+  <p id="json-help" class="muted">Collez le corps ou les sorties complètes d’une action. Maximum : 2 millions de caractères, 10 000 nœuds et 80 niveaux. Les grands entiers au-delà de la précision JavaScript peuvent être arrondis : transmettez-les comme chaînes si leur valeur exacte est nécessaire.</p>
+  <button type="button" class="button" id="json-explore">Explorer / configurer la source</button>
+  <p id="json-status" role="status" aria-live="polite" aria-atomic="true"></p>
+  <section id="json-diagram-panel" aria-labelledby="json-diagram-heading">
+    <div class="json-diagram-heading">
+      <h2 id="json-diagram-heading">Diagramme JSON</h2>
+      <button type="button" class="button secondary" id="json-fullscreen" aria-label="Afficher le diagramme en plein écran" title="Afficher le diagramme en plein écran" aria-pressed="false">
+        <svg id="json-fullscreen-expand" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg>
+        <svg id="json-fullscreen-reduce" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false" hidden><path d="M3 8h5V3m8 0v5h5M8 21v-5H3m18 0h-5v5"/></svg>
+      </button>
+    </div>
+    <div class="button-row json-diagram-controls">
+      <button type="button" class="button secondary" id="json-expand">Tout développer</button>
+      <button type="button" class="button secondary" id="json-collapse">Tout replier</button>
+      <button type="button" class="button secondary" id="json-zoom-out" aria-label="Réduire le zoom">−</button>
+      <output id="json-zoom" aria-live="polite">100 %</output>
+      <button type="button" class="button secondary" id="json-zoom-in" aria-label="Augmenter le zoom">+</button>
+      <div class="json-output-row">
+        <label class="sr-only" for="json-expression">Expression Power Automate</label>
+        <input id="json-expression" type="text" readonly aria-describedby="json-selected">
+        <button type="button" class="button secondary" id="json-copy" disabled>Copier l’expression</button>
+      </div>
+    </div>
+    <p id="json-selected" class="muted">Sélectionnez un champ ou une valeur dans le diagramme.</p>
+    <p id="json-copy-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <div class="json-viewport" tabindex="0" role="region" aria-label="Diagramme JSON défilable">
+      <div id="json-diagram"></div>
+    </div>
+  </section>
+  <p class="muted">Aucune donnée envoyée ni stockée. Les index [0], [1]… ciblent les éléments de cet exemple, pas tous les éléments d’une boucle. Pour une boucle, choisissez item() ou items() et collez le JSON d’un seul élément. Collez l’expression dans l’onglet Expression de Power Automate, sans @ ni @{…}.</p>
+  <dialog id="json-dialog" aria-labelledby="json-dialog-heading">
+    <form id="json-config">
+      <h2 id="json-dialog-heading">D’où provient le JSON ?</h2>
+      <p class="muted">Présélection selon la structure : body avec headers ou statusCode suggère outputs() et les sorties complètes ; sinon body(). Cette suggestion ne distingue pas une action d’un déclencheur : vérifiez et ajustez le choix.</p>
+      <label for="json-function">Fonction de référence</label>
+      <select id="json-function">
+        <option value="outputs">outputs() — sorties d’une action</option>
+        <option value="body">body() — corps d’une action</option>
+        <option value="triggerBody">triggerBody() — corps du déclencheur</option>
+        <option value="triggerOutputs">triggerOutputs() — sorties du déclencheur</option>
+        <option value="item">item() — élément courant</option>
+        <option value="items">items() — élément d’une boucle nommée</option>
+      </select>
+      <div id="json-action-field">
+        <label for="json-action">Nom interne de l’action ou de la boucle</label>
+        <input id="json-action" type="text" placeholder="Get_item" autocomplete="off">
+        <p class="muted">Utilisez le nom interne présent dans le code du flux, par exemple Get_item ou Apply_to_each.</p>
+      </div>
+      <div id="json-scope-field">
+        <label for="json-scope">Contenu collé</label>
+        <select id="json-scope"><option value="body">Corps seul (ajouter body/ au chemin)</option><option value="outputs">Sorties complètes (chemin depuis la racine)</option></select>
+      </div>
+      <p id="json-config-error" role="alert"></p>
+      <div class="button-row"><button type="submit" class="button">Afficher le diagramme</button><button type="button" class="button secondary" id="json-cancel">Annuler</button></div>
+    </form>
+  </dialog>
+</fieldset>

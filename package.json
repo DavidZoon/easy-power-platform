@@ -19,6 +19,7 @@
     "check:colors": "node scripts/check-colors.mjs",
     "check:cleaner": "node scripts/check-text-cleaner.mjs",
     "check:theme": "node scripts/check-theme.mjs",
+    "check:json": "node scripts/check-json-explorer.mjs",
     "preview": "node scripts/preview.mjs",
     "audit": "node scripts/audit.mjs"
   },

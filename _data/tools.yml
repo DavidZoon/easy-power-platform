@@ -16,6 +16,12 @@
   description: Nettoyez les espaces, retours à la ligne et caractères indésirables de vos textes, puis copiez le résultat en un clic.
   categories: [Canvas Apps, Cloud Flows]
   tags: [texte, code]
+- name: Explorateur JSON pour Power Automate
+  url: /outils/explorateur-json/
+  image: /assets/images/tools/explorateur-json.svg
+  description: Explorez les sorties JSON de vos flux sous forme de diagramme et copiez les expressions Power Automate de chaque champ.
+  categories: [Cloud Flows]
+  tags: [Requêtes, code]
 - name: Harmoniseur de couleurs
   url: /outils/harmoniseur-de-couleurs/
   image: /assets/images/tools/harmoniseur-de-couleurs.svg

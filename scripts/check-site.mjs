@@ -86,7 +86,14 @@ for (const file of files.filter(file => file.endsWith('.html'))) {
     const value = $(element).attr(element.tagName === 'a' || element.tagName === 'link' ? 'href' : 'src');
     if (!value || /^(mailto:|tel:|data:|javascript:)/i.test(value)) continue;
     const url = new URL(value, pageUrl);
-    if (url.origin !== canonical.origin) continue;
+    if (url.origin !== canonical.origin) {
+      if (element.tagName === 'a' && ['http:', 'https:'].includes(url.protocol)) {
+        if ($(element).attr('target') !== '_blank') failures.push(`${relative}: lien externe sans nouvel onglet ${value}`);
+        const rel = ($(element).attr('rel') || '').split(/\s+/);
+        if (!rel.includes('noopener') || !rel.includes('noreferrer')) failures.push(`${relative}: lien externe sans protection ${value}`);
+      }
+      continue;
+    }
     const target = await targetFor(url);
     if (!target) { failures.push(`${relative}: cible manquante ${value}`); continue; }
     if (url.hash && target.endsWith('.html')) {

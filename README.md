@@ -1069,6 +1069,66 @@ Validation : `node --test test/theme-builder.test.mjs test/theme-screen.test.mjs
 Jekyll `npm run check:theme` (interactions, copie, quatre sorties, responsive
 et accessibilité) et `npm run check:tools` (catalogue).
 
+Les liens HTTP/HTTPS externes s'ouvrent dans un nouvel onglet avec
+`rel="noopener noreferrer"`, appliqué à la génération HTML par
+`_plugins/external_links.rb` (Nokogiri), y compris sans JavaScript.
+Les liens internes, ancres, adresses e-mail et exemples de code restent inchangés.
+Validation : `bundle exec ruby test/external_links_test.rb` et `npm run check:site`.
+
+### Explorateur JSON pour Power Automate
+
+L'[explorateur JSON](outils/explorateur-json/index.html) analyse localement le JSON
+collé et affiche un arbre complet de cartes repliables avec connecteurs parent/enfant.
+Le diagramme se lit de gauche à droite sur un fond quadrillé : cartes compactes
+de champs/valeurs, enfants alignés verticalement à droite et courbes SVG
+ancrées sur leur champ parent, avec son nom sur la liaison. Les connecteurs
+s'ajustent au repli, au zoom, à la sélection et au redimensionnement.
+Les valeurs HEX disposent d'un aperçu de couleur. Sur petit écran, seul le
+diagramme défile horizontalement, sans élargir la page.
+Les noms de champs et les valeurs sont des boutons accessibles au clavier.
+La sélection génère l'expression et affiche trois actions : copier l'expression,
+le chemin JSON (`$["value"][0]["firstname"]`) ou le nom du champ.
+L'expression et son bouton de copie sont intégrés à la barre du diagramme,
+à droite du zoom + sur écran large, avec retour à la ligne sur mobile.
+Ces actions sont des boutons ronds opaques en arc au-dessus du champ ou de la
+valeur sélectionnée, superposés au diagramme sans modifier les cartes :
+`Aa` pour le nom, `{...}` pour le chemin et un éclair pour l'expression.
+Leurs libellés apparaissent au survol et au focus clavier.
+Un refus du presse-papier affiche une erreur et sélectionne le texte pour copie manuelle.
+
+Le collage ouvre une fenêtre de configuration ; « Explorer / configurer la source »
+permet aussi de la rouvrir après saisie. « Essayer avec un exemple » remplace
+la saisie par une enveloppe fictive de déclencheur et ouvre la configuration
+avec `triggerOutputs` et sorties complètes présélectionnés. L'exemple couvre
+objets imbriqués, collections, tableaux primitifs/mixtes/multidimensionnels,
+chaînes, nombres, booléens, null, valeurs vides et clés spéciales.
+Six sources sont disponibles : `triggerBody`,
+`triggerOutputs`, `item`, `items`, `outputs`, `body`. Une présélection heuristique propose `outputs` et
+« sorties complètes » si la racine contient `body` et `headers` ou `statusCode`,
+sinon `body`. Ce n'est pas une identification certaine d'action/déclencheur :
+le choix reste modifiable et est conservé à la réouverture pour un JSON inchangé.
+Les actions/boucles nommées
+demandent leur nom interne ; les espaces saisis sont remplacés par des `_`
+dans les expressions générées. `outputs` et `triggerOutputs` distinguent corps seul
+(préfixe `body/`) et sorties complètes. Les tableaux utilisent les index explicites
+du JSON, sans supposer de boucle ; `item`/`items` s'utilisent avec le JSON d'un élément.
+Les clés contenant des slashs ou apostrophes sont échappées sans ambiguïté.
+
+Le diagramme propose tout développer/replier et un zoom de 50 à 150 %.
+Un bouton à icône permet d'afficher le conteneur du diagramme en plein écran
+(barre d'outils et copie incluses), puis de revenir au mode normal.
+La touche Échap quitte également le plein écran ; le bouton est désactivé
+si l'API Fullscreen n'est pas prise en charge.
+Aucune dépendance d'exécution ni stockage/envoi des données. Le moteur et l'interface
+sont séparés dans `assets/js/json-explorer.js` et `assets/js/json-explorer-ui.js`.
+Les limites explicites (2 millions de caractères, 10 000 nœuds, 80 niveaux)
+rejettent les entrées trop grandes plutôt que de tronquer l'arbre.
+Le parseur natif JavaScript ne préserve pas la précision des entiers hors de sa
+plage sûre ; les identifiants numériques concernés doivent être fournis en chaînes.
+
+Validation : `node --test test/json-explorer.test.mjs`, puis après compilation
+`npm run check:json`, `npm run check:tools` et `npm run check:taxonomies`.
+
 ## 9. Microsoft Clarity
 
 Laisser `clarity_id: ""` pour désactiver entièrement le service.

@@ -245,8 +245,18 @@ if (tool) {
     details.className = 'json-card';
     details.open = true;
     const summary = document.createElement('summary');
-    summary.textContent = `${node.label} · ${node.type}`;
-    details.append(summary, field(node));
+    const heading = document.createElement('span');
+    heading.className = 'json-card-name';
+    heading.textContent = `${node.label} · ${node.type}`;
+    summary.append(heading);
+    if (node.type === 'object' || node.type === 'array') {
+      const count = document.createElement('span');
+      count.className = 'json-card-count';
+      count.textContent = jsonValueLabel(node);
+      summary.append(count);
+    }
+    details.append(summary);
+    if (node.type !== 'object' && node.type !== 'array') details.append(field(node));
     const children = document.createElement('div');
     children.className = 'json-children';
     group.append(details, children);

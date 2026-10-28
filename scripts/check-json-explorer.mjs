@@ -59,6 +59,11 @@ try {
   await page.locator('#json-action').fill('List_rows');
   await page.getByRole('button', { name: 'Afficher le diagramme', exact: true }).click();
   assert.equal(await page.locator('.json-card').count(), 5);
+  assert.deepEqual(await page.locator('.json-card-count').allTextContents(),
+    ['{ 4 champ(s) }', '{ 2 champ(s) }', '{ 1 champ(s) }', '{ 1 champ(s) }', '[ 0 élément(s) ]']);
+  assert.deepEqual(await page.locator('.json-card').evaluateAll(cards =>
+    cards.map(card => card.querySelectorAll(':scope > .json-field').length)),
+  [4, 2, 1, 1, 0], 'Les containers affichent uniquement leurs champs, sans répéter leur en-tête');
   await page.waitForFunction(() => document.querySelectorAll('.json-connections path').length === 4);
   const rootBox = await page.locator('.json-card').first().boundingBox();
   const childBox = await page.locator('.json-card').nth(1).boundingBox();
@@ -220,6 +225,17 @@ try {
     await page.locator('html').evaluate((element, theme) => { element.dataset.theme = theme; }, theme);
     for (const width of [1920, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 1080 });
+      assert(await page.locator('.json-card').first().evaluate(card => {
+        const summary = card.querySelector('summary');
+        const name = summary.querySelector('.json-card-name').getBoundingClientRect();
+        const count = summary.querySelector('.json-card-count').getBoundingClientRect();
+        const style = getComputedStyle(card);
+        const header = getComputedStyle(summary);
+        const field = getComputedStyle(card.querySelector('.json-field button'));
+        return parseFloat(style.borderRadius) >= 8 && style.overflow === 'hidden'
+          && Math.abs(name.y - count.y) < 1 && count.x >= name.right
+          && header.backgroundColor !== style.backgroundColor && header.color !== field.color;
+      }), `Cartes arrondies et en-tête contrasté avec compteur en ligne : ${theme} ${width}`);
       await first.click();
       await checkSelectionTools();
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
@@ -242,6 +258,7 @@ try {
   await input.fill('false');
   await explore.click();
   await page.getByRole('button', { name: 'Afficher le diagramme', exact: true }).click();
+  assert.equal(await page.locator('.json-card > .json-field').count(), 1, 'La valeur racine primitive reste affichée');
   await page.locator('.json-value').click();
   assert.equal(await output.inputValue(), "body('Action')");
   await input.fill('{"body":{"name":"David"},"statusCode":200}');

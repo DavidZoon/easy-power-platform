@@ -1079,6 +1079,9 @@ Validation : `bundle exec ruby test/external_links_test.rb` et `npm run check:si
 
 L'[explorateur JSON](outils/explorateur-json/index.html) analyse localement le JSON
 collé et affiche un arbre complet de cartes repliables avec connecteurs parent/enfant.
+Les cartes ont des angles arrondis et un en-tête contrasté affichant le nom et le
+nombre de champs (ou d'éléments pour les tableaux) sur la même ligne, sans ligne
+redondante sous l'en-tête.
 Le diagramme se lit de gauche à droite sur un fond quadrillé : cartes compactes
 de champs/valeurs, enfants alignés verticalement à droite et courbes SVG
 ancrées sur leur champ parent, avec son nom sur la liaison. Les connecteurs

@@ -20,7 +20,9 @@ for (const tool of tools) {
   assert.match(tool.created_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/, `Date de creation en UTC requise : ${tool.name}`);
   assert(Number.isFinite(Date.parse(tool.created_at)), `Date de creation invalide : ${tool.name}`);
 }
-const latestTools = [...tools].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 3);
+const latestTools = [...tools].sort((a, b) =>
+  Date.parse(b.created_at) - Date.parse(a.created_at) || (a.url < b.url ? -1 : a.url > b.url ? 1 : 0)
+).slice(0, 3);
 const latestPosts = [...index].sort((a, b) => Date.parse(b.date) - Date.parse(a.date)).slice(0, 3);
 assert.equal(home('.hero a.button').first().attr('href'), `${base}/articles/`, 'Le bouton principal ouvre les articles');
 assert.deepEqual(
@@ -31,7 +33,7 @@ assert.deepEqual(
 assert.deepEqual(
   home('#latest-tools .post-card h2 a').map((_, element) => home(element).attr('href')).get(),
   latestTools.map(tool => base + tool.url),
-  'Accueil : les trois outils les plus recents par date de creation'
+  'Accueil : les trois outils les plus recents par date de creation, puis par URL'
 );
 assert.equal(home('#latest .section-heading a').attr('href'), `${base}/articles/`);
 assert.equal(home('#latest-tools .section-heading a').attr('href'), `${base}/outils/`);

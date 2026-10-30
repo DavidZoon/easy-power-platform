@@ -25,10 +25,17 @@ layout: default
     </section>
     <section id="latest-tools" class="post-list" aria-labelledby="latest-tools-title">
       <div class="section-heading"><h2 id="latest-tools-title">Les 3 derniers outils</h2><a href="{{ '/outils/' | relative_url }}">Tous les outils →</a></div>
-      {% assign latest_tools = site.data.tools | sort: 'created_at' | reverse %}
+      {% assign tool_groups = site.data.tools | group_by: 'created_at' | sort: 'name' | reverse %}
+      {% assign tool_count = 0 %}
       <ul class="post-gallery home-tool-gallery" role="list">
-        {% for tool in latest_tools limit:3 %}
-        <li>{% include tool-card.html tool=tool taxonomy=true %}</li>
+        {% for group in tool_groups %}
+          {% assign tools_at_date = group.items | sort: 'url' %}
+          {% for tool in tools_at_date %}
+            <li>{% include tool-card.html tool=tool taxonomy=true %}</li>
+            {% assign tool_count = tool_count | plus: 1 %}
+            {% if tool_count == 3 %}{% break %}{% endif %}
+          {% endfor %}
+          {% if tool_count == 3 %}{% break %}{% endif %}
         {% endfor %}
       </ul>
     </section>

@@ -52,10 +52,10 @@ Il existe bien entendu des solutions tierces qui sont très efficace pour cette 
 
 
 
-Pour ce flux, nous utiliserons une récupération de contenu de fichier depuis une table [Dataverse](https://learn.microsoft.com/fr-fr/training/paths/get-started-cds/?WT.mc_id=MVP_339053).  
+Pour ce flux, nous utiliserons une récupération de contenu de fichier depuis une table [Dataverse](https://learn.microsoft.com/fr-fr/training/paths/get-started-cds/?wt.mc_id=MVP_339053).<br>
 Nous disposerons d'une table "**Produit**", dotée d'une colonne nommée "**Photo du produit**"
 
-Dans cet article, nous créerons un flux qui a pour but de réduire la résolution de visuels dans une colonne de type Image d'une source Dataverse, même si la source implique des actions[💠**premium**](https://learn.microsoft.com/fr-fr/connectors/connector-reference/connector-reference-premium-connectors?WT.mc_id=MVP_339053), rien ne vous empêche d’utiliser ce tuto si vous pouvez devez redimensionner des images dans une source [🔶**standard**](https://learn.microsoft.com/fr-fr/connectors/connector-reference/connector-reference-standard-connectors?WT.mc_id=MVP_339053) comme SharePoint, qu'elles soient dans une bibliothèque de documents ou une liste. Cet article peut donc être utilisé en parallèle de ces deux autres tutos :
+Dans cet article, nous créerons un flux qui a pour but de réduire la résolution de visuels dans une colonne de type Image d'une source Dataverse, même si la source implique des actions[💠**premium**](https://learn.microsoft.com/fr-fr/connectors/connector-reference/connector-reference-premium-connectors?wt.mc_id=MVP_339053), rien ne vous empêche d’utiliser ce tuto si vous pouvez devez redimensionner des images dans une source [🔶**standard**](https://learn.microsoft.com/fr-fr/connectors/connector-reference/connector-reference-standard-connectors?wt.mc_id=MVP_339053) comme SharePoint, qu'elles soient dans une bibliothèque de documents ou une liste. Cet article peut donc être utilisé en parallèle de ces deux autres tutos :
 
 - [Récupéer le contenu d'une colonne Image dans une liste SharePoint]({{ '/2025/02/25/recuperer-le-contenu-dune-colonne-image-depuis-une-liste-sharepoint/' | relative_url }})
 
@@ -67,9 +67,9 @@ Dans cet article, nous créerons un flux qui a pour but de réduire la résoluti
 
 
 
-Afin d'optimiser notre flux, nous ferons en sorte de ne traiter que les images **qui dépassent une certaine taille: 200 ko et qui n'ont pas été compressées**. Ces données ne pouvant être accessibles facilement dans [une condition de déclenchement](https://learn.microsoft.com/en-us/power-automate/triggers-introduction?tabs=new-designer&WT.mc_id=MVP_339053) nous n'utiliserons pas un déclencheur automatique, car notre flux serait déclenché sur chaque modification d'un élément dans notre table "**Produit**", que l'image ait été mise à jour ou non.
+Afin d'optimiser notre flux, nous ferons en sorte de ne traiter que les images **qui dépassent une certaine taille: 200 ko et qui n'ont pas été compressées**. Ces données ne pouvant être accessibles facilement dans [une condition de déclenchement](https://learn.microsoft.com/en-us/power-automate/triggers-introduction?tabs=new-designer&wt.mc_id=MVP_339053) nous n'utiliserons pas un déclencheur automatique, car notre flux serait déclenché sur chaque modification d'un élément dans notre table "**Produit**", que l'image ait été mise à jour ou non.
 
-A la place, nous utiliserons un [déclencheur planif](https://learn.microsoft.com/fr-fr/power-automate/triggers-introduction?tabs=classic-designer&WT.mc_id=MVP_339053#choose-the-right-trigger)[ié](https://learn.microsoft.com/fr-fr/power-automate/triggers-introduction?tabs=classic-designer&WT.mc_id=MVP_339053#choose-the-right-trigger) le flux se déclenchera tous les jours et ne traitera que les nouvelles images.
+A la place, nous utiliserons un [déclencheur planif](https://learn.microsoft.com/fr-fr/power-automate/triggers-introduction?tabs=classic-designer&wt.mc_id=MVP_339053#choose-the-right-trigger)[ié](https://learn.microsoft.com/fr-fr/power-automate/triggers-introduction?tabs=classic-designer&wt.mc_id=MVP_339053#choose-the-right-trigger) le flux se déclenchera tous les jours et ne traitera que les nouvelles images.
 
 
 
@@ -77,7 +77,7 @@ A la place, nous utiliserons un [déclencheur planif](https://learn.microsoft.co
 
 
 
-Plutôt que de lister les lignes de la table "**Produit**", nous allons effectuer une action "[lister les lignes](https://learn.microsoft.com/fr-fr/connectors/commondataserviceforapps/?WT.mc_id=MVP_339053#lister-les-lignes)" dans la table "**FileAttachments**" pour obtenir directement les propriétés des images à redimensionner. Cette table contient tous les contenus ajoutés dans des champs de type **image, fichier ou pièces jointes**.
+Plutôt que de lister les lignes de la table "**Produit**", nous allons effectuer une action "[lister les lignes](https://learn.microsoft.com/fr-fr/connectors/commondataserviceforapps/?wt.mc_id=MVP_339053#lister-les-lignes)" dans la table "**FileAttachments**" pour obtenir directement les propriétés des images à redimensionner. Cette table contient tous les contenus ajoutés dans des champs de type **image, fichier ou pièces jointes**.
 
 <img src="{{ '/assets/media/2025/03/image-11.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="1288" height="742">
 
@@ -118,7 +118,7 @@ Seuls les fichiers qui répondent à l'ensemble de ces critères seront listés 
 
 
 
-Nous créerons ensuite une boucle "[appliquer à chacun](https://learn.microsoft.com/fr-fr/power-automate/apply-to-each?tabs=classic-designer&WT.mc_id=MVP_339053)", nous bouclerons sur la sortie "body/value" de l'action précédente
+Nous créerons ensuite une boucle "[appliquer à chacun](https://learn.microsoft.com/fr-fr/power-automate/apply-to-each?tabs=classic-designer&wt.mc_id=MVP_339053)", nous bouclerons sur la sortie "body/value" de l'action précédente
 
 <img src="{{ '/assets/media/2025/03/image-12.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="430" height="94">
 
@@ -196,7 +196,7 @@ Nous ajouterons ensuite une action de création de fichier avec OneDrive. Nous r
 
 
 
-Nous pouvons ensuite ajouter l'action qui va réduire la taille de notre image, il s'agit encore d'une action OneDrive : "[Obtenir la miniature du fichier](https://learn.microsoft.com/fr-fr/connectors/onedriveforbusiness/?WT.mc_id=MVP_339053#get-file-thumbnail)". Dans cette action, nous récupérerons l'Id dans l'étape précédente et nous mettrons la taille de la miniature sur "Large":
+Nous pouvons ensuite ajouter l'action qui va réduire la taille de notre image, il s'agit encore d'une action OneDrive : "[Obtenir la miniature du fichier](https://learn.microsoft.com/fr-fr/connectors/onedriveforbusiness/?wt.mc_id=MVP_339053#get-file-thumbnail)". Dans cette action, nous récupérerons l'Id dans l'étape précédente et nous mettrons la taille de la miniature sur "Large":
 
 <img src="{{ '/assets/media/2025/03/image-15.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="1190" height="456">
 
@@ -214,9 +214,9 @@ La largeur de 800 pixels est généralement suffisante pour afficher des contenu
 
 
 
-L'étape précédente générera une miniature ainsi qu'une URL pour la consulter, nous allons donc pouvoir récupérer le contenu de cette miniature avec l'action OneDrive: "[Charger un fichier à l'aide de l'URL](https://learn.microsoft.com/fr-fr/connectors/onedriveforbusiness/?WT.mc_id=MVP_339053#get-file-thumbnail)". C'est dans cette étape que nous ajouterons au nom de fichier la balise (Mini) qui permettra de ne plus traiter ce fichier dans les prochaines exécutions du flux.
+L'étape précédente générera une miniature ainsi qu'une URL pour la consulter, nous allons donc pouvoir récupérer le contenu de cette miniature avec l'action OneDrive: "[Charger un fichier à l'aide de l'URL](https://learn.microsoft.com/fr-fr/connectors/onedriveforbusiness/?wt.mc_id=MVP_339053#get-file-thumbnail)". C'est dans cette étape que nous ajouterons au nom de fichier la balise (Mini) qui permettra de ne plus traiter ce fichier dans les prochaines exécutions du flux.
 
-Il ne nous restera plus qu'à ajouter une action "[Obtenir le contenu du fichier](https://learn.microsoft.com/fr-fr/connectors/onedriveforbusiness/?WT.mc_id=MVP_339053#get-file-content)" pour pouvoir utiliser notre version redimensionnée.
+Il ne nous restera plus qu'à ajouter une action "[Obtenir le contenu du fichier](https://learn.microsoft.com/fr-fr/connectors/onedriveforbusiness/?wt.mc_id=MVP_339053#get-file-content)" pour pouvoir utiliser notre version redimensionnée.
 
 <img src="{{ '/assets/media/2025/03/image-16.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="1096" height="531">
 

@@ -99,6 +99,6 @@ Lorsque vous ouvrirez une application existante, les anciens contrôles modernes
 
 Cette mise à jour de février 2026 marque une phase de maturité pour les contrôles modernes. En imposant des pratiques de développement plus propres (Enums) et en optimisant les événements coûteux en ressources (`OnChange`), Microsoft pousse les Makers vers la création d'applications plus rapides, plus fiables et plus esthétiques. Le petit effort de refactorisation du code demandé est un investissement très rentable pour l'avenir de vos Canvas apps !
 
-[Source Microsoft Learn](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/controls/modern-controls/modern-control-text?WT.mc_id=MVP_339053#recent-updates)
+[Source Microsoft Learn](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/controls/modern-controls/modern-control-text?wt.mc_id=MVP_339053#recent-updates)
 
 Beaucoup d'évolutions ne sont pas forcément référencées dans la doc MS, exemple, l'apparition d'un évènement `OnSelect` sur certains contrôles (`TextInput, infoButton`). Vous en avez trouvé vous aussi ? n'hésitez pas à l'indiquer en commentaire 👇

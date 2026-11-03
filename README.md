@@ -88,7 +88,7 @@ Depuis le dossier du projet, dans PowerShell :
 
 ```powershell
 bundle install
-bundle exec jekyll serve --livereload --baseurl ""
+bundle exec jekyll serve --livereload --baseurl=
 ```
 
 Ouvrir `http://127.0.0.1:4000/`.
@@ -376,6 +376,12 @@ newsletter_image: /assets/images/newsletter/2026-11-05-mon-article.jpg
 ajouter `permalink` ni `wordpress_id` : ces champs sont réservés aux articles
 migrés depuis WordPress.
 
+**Liens Microsoft Learn :** ajouter `wt.mc_id=MVP_339053` à chaque lien vers
+`learn.microsoft.com` : `?wt.mc_id=MVP_339053` sans autre paramètre, ou
+`&wt.mc_id=MVP_339053` après les paramètres existants, toujours avant une ancre
+`#`. La génération l'ajoute aussi automatiquement et la vérification du site
+contrôle les liens produits.
+
 **Date future :** Jekyll ne publie pas un article daté dans le futur. Le
 workflow ne s’exécute qu’à chaque push : après la date prévue, relancer
 **Actions → Build and deploy GitHub Pages → Run workflow**, sinon l’article
@@ -383,7 +389,7 @@ n’apparaîtra qu’au prochain push.
 
 **Brouillon :** un article en cours peut être placé dans `_drafts/mon-article.md`,
 sans date dans le nom. Il est visible localement avec
-`bundle exec jekyll serve --drafts --baseurl ""` et n’est jamais publié. Le
+`bundle exec jekyll serve --drafts --baseurl=` et n’est jamais publié. Le
 déplacer dans `_posts` avec le nom daté une fois terminé.
 
 ### Étape 4 – Ajouter les images
@@ -419,7 +425,7 @@ article doivent apparaître comme nouveaux dans `git status`.
 ### Étape 5 – Vérifier localement
 
 ```powershell
-bundle exec jekyll serve --livereload --baseurl ""
+bundle exec jekyll serve --livereload --baseurl=
 ```
 
 Relire l’article sur `http://127.0.0.1:4000/` : mise en page, images, sommaire,
@@ -1151,6 +1157,11 @@ et accessibilité) et `npm run check:tools` (catalogue).
 Les liens HTTP/HTTPS externes s'ouvrent dans un nouvel onglet avec
 `rel="noopener noreferrer"`, appliqué à la génération HTML par
 `_plugins/external_links.rb` (Nokogiri), y compris sans JavaScript.
+Les liens vers `learn.microsoft.com` reçoivent exactement une fois le paramètre
+`wt.mc_id=MVP_339053` : les autres paramètres sont conservés et l'ancre reste
+après la chaîne de requête. Le paramètre existant, quelle que soit sa casse,
+est remplacé plutôt que dupliqué. `npm run check:site` vérifie la règle sur tous
+les liens HTML générés, et le workflow exécute aussi les tests du plugin.
 Les liens internes, ancres, adresses e-mail et exemples de code restent inchangés.
 Validation : `bundle exec ruby test/external_links_test.rb` et `npm run check:site`.
 
@@ -1227,7 +1238,7 @@ Une variable vide maintient Clarity désactivé.
 Renseigner [_config.clarity.yml](_config.clarity.yml), puis :
 
 ```powershell
-bundle exec jekyll serve --config _config.yml,_config.clarity.yml --baseurl ""
+bundle exec jekyll serve --config _config.yml,_config.clarity.yml --baseurl=
 ```
 
 L’inclusion de ce fichier est volontaire : une valeur placée seulement dans
@@ -1343,7 +1354,7 @@ Stocker les identifiants déjà envoyés (par exemple dans SharePoint) pour évi
 les doublons après une réactivation du flux et vérifier le comportement initial
 sur une adresse de test avant d’activer la liste complète.
 
-Selon la [documentation du connecteur RSS](https://learn.microsoft.com/en-us/connectors/rss/),
+Selon la [documentation du connecteur RSS](https://learn.microsoft.com/en-us/connectors/rss/?wt.mc_id=MVP_339053),
 l’intervalle minimal est de **30 minutes** : une récurrence configurée à une minute
 ne garantit donc pas un contrôle chaque minute. Le flux est limité à 20 entrées ;
 éviter une interruption couvrant plus de 20 nouvelles publications sans rattrapage.

@@ -37,7 +37,7 @@ n’est chargé.
 {% endif %}
 
 Pour en savoir plus : [confidentialité Microsoft](https://privacy.microsoft.com/fr-fr/privacystatement)
-et [documentation Clarity](https://learn.microsoft.com/en-us/clarity/).
+et [documentation Clarity](https://learn.microsoft.com/en-us/clarity/?wt.mc_id=MVP_339053).
 
 ## Commentaires et liens externes
 

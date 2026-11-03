@@ -33,6 +33,6 @@ Il suffit ensuite de sélectionner l'option "Rôles de sécurité spécifiques",
 
 Attention de ne pas désigner comme vue par défaut une vue dont l'accès est réservé à certains rôles de sécurité.
 
-La disponibilité générale de cette fonctionnalité est prévue pour mars 2025. [Plus d'informations sur Microsoft learn en cliquant sur ce lien.](https://learn.microsoft.com/fr-fr/power-platform/release-plan/2024wave2/data-platform/share-system-views-security-role?WT.mc_id=MVP_339053)
+La disponibilité générale de cette fonctionnalité est prévue pour mars 2025. [Plus d'informations sur Microsoft learn en cliquant sur ce lien.](https://learn.microsoft.com/fr-fr/power-platform/release-plan/2024wave2/data-platform/share-system-views-security-role?wt.mc_id=MVP_339053)
 
 Cette fonctionnalité permet de définir rapidement et efficacement des vues dédiées à des équipes, ou une vue accessible uniquement à l'administrateur système...

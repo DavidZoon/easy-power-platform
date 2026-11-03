@@ -56,9 +56,9 @@ Nous aurons besoin :
 
 - du nom technique de la colonne image (ex : **Photo**)
 
-- de l' **ID** de l'enregistrement dont il faut récupérer le contenu du fichier, dans mon exemple, je récupérerai l' **ID** dans [une action Sharepoint "Obtenir les éléments"](https://learn.microsoft.com/en-us/sharepoint/dev/business-apps/power-automate/guidance/working-with-get-items-and-get-files?WT.mc_id=MVP_339053)
+- de l' **ID** de l'enregistrement dont il faut récupérer le contenu du fichier, dans mon exemple, je récupérerai l' **ID** dans [une action Sharepoint "Obtenir les éléments"](https://learn.microsoft.com/en-us/sharepoint/dev/business-apps/power-automate/guidance/working-with-get-items-and-get-files?wt.mc_id=MVP_339053)
 
-- Dans ce flux Nous utiliserons une action de requête HTTP avec une action [💠**premium**](https://learn.microsoft.com/fr-fr/connectors/connector-reference/connector-reference-premium-connectors?WT.mc_id=MVP_339053), mais rien ne vous empêche d'utiliser ce tuto si vous pouvez récupérer le contenu du fichier avec une action [🔶**standard**](https://learn.microsoft.com/fr-fr/connectors/connector-reference/connector-reference-standard-connectors?WT.mc_id=MVP_339053) (Pièce jointe de mail, fichier sur Onedrive ou SP... )
+- Dans ce flux Nous utiliserons une action de requête HTTP avec une action [💠**premium**](https://learn.microsoft.com/fr-fr/connectors/connector-reference/connector-reference-premium-connectors?wt.mc_id=MVP_339053), mais rien ne vous empêche d'utiliser ce tuto si vous pouvez récupérer le contenu du fichier avec une action [🔶**standard**](https://learn.microsoft.com/fr-fr/connectors/connector-reference/connector-reference-standard-connectors?wt.mc_id=MVP_339053) (Pièce jointe de mail, fichier sur Onedrive ou SP... )
 
 
 
@@ -126,7 +126,7 @@ Afin d'optimiser le temps d'exécution du flux, nous activerons le parallélisme
 
 
 
-A l'étape suivante nous devrons fournir un nom de fichier avec son extension, nous allons donc récupérer cette extension dans la sortie de requête HTTP avec un message. Nous utiliserons les fonctions [last()](https://learn.microsoft.com/fr-fr/azure/logic-apps/workflow-definition-language-functions-reference?WT.mc_id=MVP_339053#last) et [split()](https://learn.microsoft.com/fr-fr/azure/logic-apps/workflow-definition-language-functions-reference?WT.mc_id=MVP_339053#split) pour isoler la valeur recherchée dans le champ "**$content-type**".
+A l'étape suivante nous devrons fournir un nom de fichier avec son extension, nous allons donc récupérer cette extension dans la sortie de requête HTTP avec un message. Nous utiliserons les fonctions [last()](https://learn.microsoft.com/fr-fr/azure/logic-apps/workflow-definition-language-functions-reference?wt.mc_id=MVP_339053#last) et [split()](https://learn.microsoft.com/fr-fr/azure/logic-apps/workflow-definition-language-functions-reference?wt.mc_id=MVP_339053#split) pour isoler la valeur recherchée dans le champ "**$content-type**".
 
 
 
@@ -166,7 +166,7 @@ Nous devrons ajouter une action "Créer un fichier" dans laquelle nous fourniron
 
 
 
-Il ne nous reste plus qu'a associer le fichier nouvellement créé à la colonne "**Photo**" qui est de type image. Il n'y a malheureusement pas d'action SharePoint toute prête pour cette opération, nous utiliserons donc un  [Envoi de requête HTTP à SharePoint](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/guidance/working-with-send-sp-http-request?WT.mc_id=MVP_339053) pour réaliser celle-ci.
+Il ne nous reste plus qu'a associer le fichier nouvellement créé à la colonne "**Photo**" qui est de type image. Il n'y a malheureusement pas d'action SharePoint toute prête pour cette opération, nous utiliserons donc un  [Envoi de requête HTTP à SharePoint](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/guidance/working-with-send-sp-http-request?wt.mc_id=MVP_339053) pour réaliser celle-ci.
 
 Voici les paramètres à utiliser :
 

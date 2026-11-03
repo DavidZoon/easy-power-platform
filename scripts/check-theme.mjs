@@ -170,7 +170,7 @@ try {
       await screenCopy.click();
       assert.equal(await page.evaluate(() => window.copiedTheme), await screenOutput.inputValue());
       assert.equal(await page.locator('#theme-onstart-warning').isVisible(), target === 'onstart');
-      if (target === 'onstart') assert.equal(await page.locator('#theme-onstart-warning a').getAttribute('href'), 'https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/working-with-formulas');
+      if (target === 'onstart') assert.equal(await page.locator('#theme-onstart-warning a').getAttribute('href'), 'https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/working-with-formulas?wt.mc_id=MVP_339053');
       await copy.click();
       assert.equal(await page.evaluate(() => window.copiedTheme), await output.inputValue());
       for (const [field, kinds] of [[output, ['nf', 's', 'c']], [screenOutput, ['nt', 'nf', 's', 'm']]]) {

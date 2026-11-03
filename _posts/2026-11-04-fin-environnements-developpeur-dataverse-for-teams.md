@@ -1,7 +1,11 @@
 ---
 title: "Fin de Dataverse for Teams et des environnements développeur non gérés : comment continuer à apprendre Dataverse ?"
+date: 2026-11-04T00:00:00+01:00
 author: David Zoonekyndt
 description: "Les environnements développeur non gérés et Dataverse for Teams disparaissent : dates clés, solutions et pistes pour continuer à apprendre Dataverse demain."
+image: /assets/media/2026/11/dataverse-apprentissage-couverture.webp
+card_image: /assets/images/cards/dataverse-apprentissage.webp
+newsletter_image: /assets/images/newsletter/dataverse-apprentissage.jpg
 categories:
   - Dataverse
   - Power Apps
@@ -16,6 +20,10 @@ Bonjour à tous les makers ! Aujourd'hui, nous allons aborder un sujet qui risqu
 Pendant longtemps, ces environnements ont constitué une porte d'entrée précieuse pour découvrir Dataverse : créer des tables, comprendre les relations, construire une application ou simplement tester une idée, sans toucher à un environnement de production. Il fallait tout de même disposer d'un compte et d'un tenant éligibles, mais ces espaces facilitaient l'expérimentation.
 
 Microsoft a annoncé deux changements distincts. Les échéances ne sont pas les mêmes et, surtout, **tous les environnements développeur ne disparaissent pas**. Voyons ce qui change, comment préserver vos travaux et quelles possibilités restent ouvertes pour apprendre.
+
+<figure>
+  <img src="{{ '/assets/media/2026/11/dataverse-apprentissage-couverture.webp' | relative_url }}" alt="Les mascottes Power Apps, Dataverse et Power Automate devant deux chemins : l'un s'efface, l'autre s'ouvre vers un portail lumineux." loading="eager" decoding="async" fetchpriority="high" width="1600" height="900">
+</figure>
 
 > **⚠️ Point d'attention :** les dates ci-dessous correspondent aux annonces Microsoft consultées le **3 novembre 2026**. Vérifiez la documentation avant d'agir : les conditions et les échéances peuvent évoluer.
 
@@ -35,7 +43,7 @@ La nuance importante se situe au niveau des licences : le Developer Plan ne comp
 
 À partir du 15 novembre, la création est limitée à **un environnement développeur géré par utilisateur** ; les environnements gérés existants ne sont pas modifiés si un utilisateur en possède déjà plusieurs.
 
-➡️ [Annonce Microsoft : environnements développeur non gérés](https://learn.microsoft.com/en-us/power-platform/important-changes-coming#deprecation-of-unmanaged-developer-environments-and-the-power-apps-developer-plan) · [FAQ du Developer Plan](https://learn.microsoft.com/en-us/power-platform/developer/plan)
+➡️ [Annonce Microsoft : environnements développeur non gérés](https://learn.microsoft.com/en-us/power-platform/important-changes-coming?wt.mc_id=MVP_339053#deprecation-of-unmanaged-developer-environments-and-the-power-apps-developer-plan) · [FAQ du Developer Plan](https://learn.microsoft.com/en-us/power-platform/developer/plan?wt.mc_id=MVP_339053)
 
 ## 👥 Dataverse for Teams : une autre échéance, un autre impact
 
@@ -51,9 +59,13 @@ Sa disparition suit un calendrier différent :
 
 Les environnements existants continuent donc à fonctionner jusqu'à leur suspension. **Teams ne disparaît pas** : les applications, flux et agents créés dans Dataverse pourront toujours être utilisés dans Teams, avec les licences nécessaires.
 
+<figure>
+  <img src="{{ '/assets/media/2026/11/dataverse-teams-fin.webp' | relative_url }}" alt="Les mascottes Power Apps et Power Automate observent un environnement vert qui se dissout en particules, tandis que Dataverse reste serein." loading="lazy" decoding="async" width="1600" height="900">
+</figure>
+
 Pour conserver un environnement Dataverse for Teams, un administrateur peut le **mettre à niveau vers Dataverse complet**. L'opération conserve les applications, les flux, les agents et les données de l'environnement, mais elle nécessite une capacité Dataverse suffisante et des licences adaptées. Mieux vaut préparer cette transition avant la suspension, puis tester les usages et les accès.
 
-➡️ [Annonce Microsoft : Dataverse for Teams](https://learn.microsoft.com/en-us/power-platform/important-changes-coming#deprecation-of-microsoft-dataverse-for-teams-environments) · [Procédure de mise à niveau](https://learn.microsoft.com/en-us/power-platform/admin/about-teams-environment#upgrade-process)
+➡️ [Annonce Microsoft : Dataverse for Teams](https://learn.microsoft.com/en-us/power-platform/important-changes-coming?wt.mc_id=MVP_339053#deprecation-of-microsoft-dataverse-for-teams-environments) · [Procédure de mise à niveau](https://learn.microsoft.com/en-us/power-platform/admin/about-teams-environment?wt.mc_id=MVP_339053#upgrade-process)
 
 ## 🛠️ Vous utilisez déjà ces environnements ? Voici le plan d'action
 
@@ -75,6 +87,10 @@ Cette logique se comprend pour une organisation qui souhaite encadrer ses ressou
 
 À mes yeux, c'est là que se trouve le véritable enjeu. Un étudiant, un indépendant ou une personne en reconversion n'a pas toujours accès à un environnement professionnel. Or, beaucoup de projets personnels, de démonstrations et de tutoriels commencent justement par une simple envie de tester.
 
+<figure>
+  <img src="{{ '/assets/media/2026/11/dataverse-seul-sur-son-ile.webp' | relative_url }}" alt="Dataverse se tient sur une île flottante tandis que Power Apps et Power Automate observent un pont interrompu." loading="lazy" decoding="async" width="1600" height="900">
+</figure>
+
 Si l'accès devient plus complexe, cela peut freiner :
 
 - **L'expérimentation personnelle :** essayer, se tromper et recommencer sans impacter les données de son organisation.
@@ -93,7 +109,7 @@ Leur création dépend des autorisations du tenant et d'une licence adaptée. Ce
 
 > **Astuce :** préparez vos objectifs avant de démarrer l'essai : créer quelques tables, établir une relation, construire une application et tester un flux. Pensez aussi à exporter vos travaux et vos données avant expiration.
 
-➡️ [Microsoft Learn : environnements d'essai](https://learn.microsoft.com/en-us/power-platform/admin/trial-environments)
+➡️ [Microsoft Learn : environnements d'essai](https://learn.microsoft.com/en-us/power-platform/admin/trial-environments?wt.mc_id=MVP_339053)
 
 ### 2. Un environnement fourni par votre organisation
 
@@ -107,7 +123,7 @@ C'est aussi l'occasion de découvrir les bonnes pratiques en conditions réelles
 
 Les établissements d'enseignement, organismes de formation et programmes académiques peuvent proposer des environnements ou des laboratoires dans le cadre d'un parcours encadré. Les conditions varient : renseignez-vous auprès de votre établissement ou de votre formateur avant de vous inscrire.
 
-En parallèle, la documentation et les modules théoriques restent utiles pour se familiariser avec les concepts. Par exemple, le module Microsoft Learn [Découvrir Microsoft Dataverse](https://learn.microsoft.com/fr-fr/training/modules/describe-microsoft-dataverse/) présente les tables, colonnes et relations. Les exercices pratiques peuvent toutefois nécessiter un environnement adapté.
+En parallèle, la documentation et les modules théoriques restent utiles pour se familiariser avec les concepts. Par exemple, le module Microsoft Learn [Découvrir Microsoft Dataverse](https://learn.microsoft.com/fr-fr/training/modules/describe-microsoft-dataverse/?wt.mc_id=MVP_339053) présente les tables, colonnes et relations. Les exercices pratiques peuvent toutefois nécessiter un environnement adapté.
 
 ### 4. La communauté et les laboratoires
 
@@ -115,9 +131,17 @@ User Groups, événements communautaires, ateliers et formations peuvent égalem
 
 Ce n'est pas un remplacement permanent d'un environnement personnel, mais c'est une bonne manière de découvrir la plateforme, de poser ses questions et de rencontrer d'autres makers !
 
+<figure>
+  <img src="{{ '/assets/media/2026/11/nouvelle-generation-makers.webp' | relative_url }}" alt="Les mascottes Power Apps, Dataverse et Power Automate accompagnent de jeunes créateurs autour d'applications holographiques." loading="lazy" decoding="async" width="1600" height="900">
+</figure>
+
 ## 🤖 Et si l'IA nous aidait à préparer le terrain ?
 
 Un assistant comme Copilot peut aider à **comprendre un concept**, proposer un exemple de modèle de données ou expliquer les différences entre plusieurs types de relations. Il peut aussi servir de point de départ pour préparer un exercice avant d'avoir accès à un environnement.
+
+<figure>
+  <img src="{{ '/assets/media/2026/11/ia-guide-dataverse.webp' | relative_url }}" alt="Les trois mascottes suivent un guide lumineux entouré de schémas de données, d'applications et de flux automatisés." loading="lazy" decoding="async" width="1600" height="900">
+</figure>
 
 Mais gardons les pieds sur terre : **une réponse générée peut être inexacte** et ne remplace ni la documentation officielle ni la pratique dans Dataverse. Pensez également à respecter les règles de confidentialité de votre organisation et à ne pas transmettre de données sensibles dans vos demandes.
 

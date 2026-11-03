@@ -24,7 +24,7 @@ image: /assets/media/2025/04/appy-ninja-e1745559172630.png.webp
 card_image: /assets/images/cards/672.webp
 ---
 
-Nous allons parler ici de l'utilisation avancée [de la barre de formules](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/working-with-formulas?WT.mc_id=MVP_339053#use-power-fx-formula-bar). La plupart des utilisateurs l'utilisent comme un simple champ texte, mais saviez-vous que celle-ci regorge de fonctionnalités ?
+Nous allons parler ici de l'utilisation avancée [de la barre de formules](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/working-with-formulas?wt.mc_id=MVP_339053#use-power-fx-formula-bar). La plupart des utilisateurs l'utilisent comme un simple champ texte, mais saviez-vous que celle-ci regorge de fonctionnalités ?
 
 La plupart d'entre nous ne font que survoler ses fonctionnalités et nous ne l'utilisons qu'à une fraction de son plein potentiel !
 
@@ -109,7 +109,7 @@ J'ai ajouté des repères pour indiquer les raccourcis qui me semblent les plus 
 
 
 
-Ces raccourcis sont dédiés à la fenêtre "[Rechercher et remplacer](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/formula-bar-find-replace?WT.mc_id=MVP_339053)" située dans la barre de formules.
+Ces raccourcis sont dédiés à la fenêtre "[Rechercher et remplacer](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/formula-bar-find-replace?wt.mc_id=MVP_339053)" située dans la barre de formules.
 
 <img src="{{ '/assets/media/2025/05/image-1.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="427" height="103">
 
@@ -151,6 +151,6 @@ Ces raccourcis **ne fonctionnement malheureusement pas avec Power Apps 😿**, m
 
 Ressources
 
-- [Power BI - Barre de formule DAX](https://learn.microsoft.com/fr-fr/power-bi/create-reports/desktop-accessibility-keyboard-shortcuts?WT.mc_id=MVP_339053#dax-formula-bar)
+- [Power BI - Barre de formule DAX](https://learn.microsoft.com/fr-fr/power-bi/create-reports/desktop-accessibility-keyboard-shortcuts?wt.mc_id=MVP_339053#dax-formula-bar)
 
 - [Visual Studio Code](https://code.visualstudio.com/docs/reference/default-keybindings?WT.mc_id=MVP_339053)

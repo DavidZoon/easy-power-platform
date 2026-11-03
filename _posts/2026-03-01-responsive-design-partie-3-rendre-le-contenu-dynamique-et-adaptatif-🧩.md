@@ -572,7 +572,7 @@ Grâce à cette jonglerie intelligente sur les propriétés **Visible** et **Fil
 > 
 > _(\*) Pour la disposition adaptative de l'écran "entête et table", c'est surtout lié au que le design adaptatif est directement intégré à l'objet Table_
 > 
-> Microsoft a récemment mis à jour sa documentation sur ces écrans, [n'hésitez pas à la consulter](https://learn.microsoft.com/fr-fr/windows/apps/design/layout/responsive-design?WT.mc_id=MVP_339053).
+> Microsoft a récemment mis à jour sa documentation sur ces écrans, [n'hésitez pas à la consulter](https://learn.microsoft.com/fr-fr/windows/apps/design/layout/responsive-design?wt.mc_id=MVP_339053).
 
 
 

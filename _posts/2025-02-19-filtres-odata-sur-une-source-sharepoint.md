@@ -90,7 +90,7 @@ En bref, c'est une manière simple et standardisée de demander et de partager d
 > 
 > OData aide les applications à se concentrer sur la logique métier sans se soucier des différentes approches API pour définir les en-têtes de requête et de réponse, les codes d’état, les méthodes HTTP, les conventions d’URL, les types de médias, les formats de charge utile, les options de requête, etc. Il fournit des conseils pour le suivi des modifications, la définition de fonctions/actions pour les procédures réutilisables et l’envoi de demandes asynchrones/par lots.
 > 
-> [Plus d'infos sur Ms Learn](https://learn.microsoft.com/fr-fr/odata/overview?WT.mc_id=MVP_339053) et [toute la documentation ici](https://learn.microsoft.com/en-us/odata/?WT.mc_id=MVP_339053)
+> [Plus d'infos sur Ms Learn](https://learn.microsoft.com/fr-fr/odata/overview?wt.mc_id=MVP_339053) et [toute la documentation ici](https://learn.microsoft.com/en-us/odata/?wt.mc_id=MVP_339053)
 > 
 > 
 
@@ -136,9 +136,9 @@ Dans la plupart des actions qui vont Obtenir une liste d'enregistrements, il est
 
 Les champs "Requête de filtre", "Tri" et "Étendue de la requête" dans les actions Power Automate sont destinés à accueillir les paramètres des fonctions filter(), sort() et expand(), il ne faut donc pas écrire ces fonctions, seuls les arguments sont à fournir, lesquels peuvent traiter les fonctions suivantes :
 
-Dans le cas qui nous intéresse, nous allons utiliser le OData avec [l'API Sharepoint REST](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/get-to-know-the-sharepoint-rest-service?tabs=csom&WT.mc_id=MVP_339053) qui autorise [certaines requêtes OData](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/use-odata-query-operations-in-sharepoint-rest-requests?WT.mc_id=MVP_339053). A titre de comparaison, l'API Dataverse traitera plus de fonctions (+ de 60) que l'API SharePoint.
+Dans le cas qui nous intéresse, nous allons utiliser le OData avec [l'API Sharepoint REST](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/get-to-know-the-sharepoint-rest-service?tabs=csom&wt.mc_id=MVP_339053) qui autorise [certaines requêtes OData](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/use-odata-query-operations-in-sharepoint-rest-requests?wt.mc_id=MVP_339053). A titre de comparaison, l'API Dataverse traitera plus de fonctions (+ de 60) que l'API SharePoint.
 
-https://learn.microsoft.com/en-us/sharepoint/dev/images/spf15con\_rest\_queryoptionsyntax.png
+https://learn.microsoft.com/en-us/sharepoint/dev/images/spf15con\_rest\_queryoptionsyntax.png?wt.mc_id=MVP_339053
 
 
 

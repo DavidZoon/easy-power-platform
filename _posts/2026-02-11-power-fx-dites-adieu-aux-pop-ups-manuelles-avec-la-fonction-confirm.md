@@ -432,4 +432,4 @@ Avant de déployer cette fonction partout, gardez en tête ces limitations techn
 
 - **Retour "Blank" :** Si l'utilisateur appuie sur la touche `Echap` ou clique en dehors de la boîte (sur le web), la fonction peut renvoyer `Blank` (vide). Heureusement, dans un `If`, `Blank` est traité comme `false`, donc la logique de sécurité est préservée.
 
-La page de référence de la fonction sur MS Learn c'est [via ce lien](https://learn.microsoft.com/fr-fr/power-platform/power-fx/reference/function-confirm)
+La page de référence de la fonction sur MS Learn c'est [via ce lien](https://learn.microsoft.com/fr-fr/power-platform/power-fx/reference/function-confirm?wt.mc_id=MVP_339053)

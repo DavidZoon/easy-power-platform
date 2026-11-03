@@ -180,7 +180,7 @@ Enfin, le type de données peut être défini par l'utilisateur, soit champ par 
 
 
 
-On définit le type de données avec le symbole := et la fonction **[Type()](https://learn.microsoft.com/fr-fr/power-platform/power-fx/reference/function-type?WT.mc_id=MVP_339053)**
+On définit le type de données avec le symbole := et la fonction **[Type()](https://learn.microsoft.com/fr-fr/power-platform/power-fx/reference/function-type?wt.mc_id=MVP_339053)**
 
 
 
@@ -209,7 +209,7 @@ udtCalendrier:=Type([udtCalJour]);;
 
 
 
-On peut définir un type de données "enregistrement" d'après un type de données "Table" avec la fonction **[RecordOf()](https://learn.microsoft.com/fr-fr/power-platform/power-fx/reference/function-type?WT.mc_id=MVP_339053)**
+On peut définir un type de données "enregistrement" d'après un type de données "Table" avec la fonction **[RecordOf()](https://learn.microsoft.com/fr-fr/power-platform/power-fx/reference/function-type?wt.mc_id=MVP_339053)**
 
 
 

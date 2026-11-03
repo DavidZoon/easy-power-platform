@@ -113,6 +113,15 @@ for (const file of files.filter(file => file.endsWith('.html'))) {
     const value = $(element).attr(element.tagName === 'a' || element.tagName === 'link' ? 'href' : 'src');
     if (!value || /^(mailto:|tel:|data:|javascript:)/i.test(value)) continue;
     const url = new URL(value, pageUrl);
+    if (element.tagName === 'a' && ['http:', 'https:'].includes(url.protocol)
+        && url.hostname.toLowerCase().replace(/\.$/, '') === 'learn.microsoft.com') {
+      const parameters = [...url.searchParams.entries()];
+      const tracking = parameters.filter(([key]) => key.toLowerCase() === 'wt.mc_id');
+      if (tracking.length !== 1 || tracking[0][0] !== 'wt.mc_id' || tracking[0][1] !== 'MVP_339053'
+          || parameters.at(-1)?.[0] !== 'wt.mc_id') {
+        failures.push(`${relative}: lien Microsoft Learn sans parametre de suivi correct ${value}`);
+      }
+    }
     if (url.origin !== canonical.origin) {
       if (element.tagName === 'a' && ['http:', 'https:'].includes(url.protocol)) {
         if ($(element).attr('target') !== '_blank') failures.push(`${relative}: lien externe sans nouvel onglet ${value}`);

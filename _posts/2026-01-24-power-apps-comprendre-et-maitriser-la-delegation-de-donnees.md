@@ -319,8 +319,8 @@ L'objectif n'est pas de combattre la limite des 2000 enregistrements, mais de co
 
 
 
-- [Présentation de la délégation dans une application canevas - Power Apps | Microsoft Learn](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/delegation-overview)
+- [Présentation de la délégation dans une application canevas - Power Apps | Microsoft Learn](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/delegation-overview?wt.mc_id=MVP_339053)
 
-- [Se connecter à Microsoft Dataverse - Power Apps | Microsoft Learn](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/connections/connection-common-data-service#power-apps-delegable-functions-and-operations-for-dataverse)
+- [Se connecter à Microsoft Dataverse - Power Apps | Microsoft Learn](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/connections/connection-common-data-service?wt.mc_id=MVP_339053#power-apps-delegable-functions-and-operations-for-dataverse)
 
-- [Se connecter à SharePoint à partir d’une application canevas - Power Apps | Microsoft Learn](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/connections/connection-sharepoint-online#power-apps-delegable-functions-and-operations-for-sharepoint)
+- [Se connecter à SharePoint à partir d’une application canevas - Power Apps | Microsoft Learn](https://learn.microsoft.com/fr-fr/power-apps/maker/canvas-apps/connections/connection-sharepoint-online?wt.mc_id=MVP_339053#power-apps-delegable-functions-and-operations-for-sharepoint)

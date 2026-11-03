@@ -66,9 +66,9 @@ La requête aura besoin en entrée:
 
 Si vous souhaitez récupérer le contenu d'une colonne de type fichier ou image depuis une liste SharePoint, vous remarquerez qu'il n'existe pas d'action prédéfinie pour cet usage. Pour y parvenir, vous devrez utiliser deux actions :
 
-- "[Envoyer une requête HTTP à SharePoint](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/guidance/working-with-send-sp-http-request?WT.mc_id=MVP_339053)", afin de récupérer le chemin d'accès au fichier
+- "[Envoyer une requête HTTP à SharePoint](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/guidance/working-with-send-sp-http-request?wt.mc_id=MVP_339053)", afin de récupérer le chemin d'accès au fichier
 
-- "[Obtenir le contenu du fichier grâce au chemin d'accès](https://learn.microsoft.com/fr-fr/connectors/sharepointonline/?WT.mc_id=MVP_339053#get-file-content-using-path)" pour récupérer le contenu du fichier à l'aide du chemin d'accès
+- "[Obtenir le contenu du fichier grâce au chemin d'accès](https://learn.microsoft.com/fr-fr/connectors/sharepointonline/?wt.mc_id=MVP_339053#get-file-content-using-path)" pour récupérer le contenu du fichier à l'aide du chemin d'accès
 
 Les étapes suivantes dépendront ensuite de ce que vous souhaitez faire du fichier : l'ajouter à une bibliothèque, l'envoyer par mail... dans notre exemple nous l'enregistrerons simplement dans OneDrive.
 
@@ -128,7 +128,7 @@ Nous remarquons que dans ce JSON, nous allons pouvoir récupérer le nom du fich
 
 Pour extraire notre nom de fichier, nous devrons passer par deux action "Analyser JSON"
 
-Pour la première, nous allons d'abord exécuter le flux pour récupérer l'échantillon "body" en sortie de l'action "[Envoyer une requête HTTP à SharePoint](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/guidance/working-with-send-sp-http-request?WT.mc_id=MVP_339053)" que nous allons copier dans le presse-papier.
+Pour la première, nous allons d'abord exécuter le flux pour récupérer l'échantillon "body" en sortie de l'action "[Envoyer une requête HTTP à SharePoint](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/guidance/working-with-send-sp-http-request?wt.mc_id=MVP_339053)" que nous allons copier dans le presse-papier.
 
 De retour dans l'éditeur, nous allons :
 
@@ -140,7 +140,7 @@ De retour dans l'éditeur, nous allons :
 
 - Ensuite nous allons générer le schéma à l'aide de l'échantillon récupéré dans la précédente exécution du flux (3)
 
-- Enfin nous pouvons ajouter une action "[Message](https://learn.microsoft.com/fr-fr/power-automate/data-operations?WT.mc_id=MVP_339053#use-the-compose-action)" pour capturer la sortie de l'analyse JSON, sur le champ image :
+- Enfin nous pouvons ajouter une action "[Message](https://learn.microsoft.com/fr-fr/power-automate/data-operations?wt.mc_id=MVP_339053#use-the-compose-action)" pour capturer la sortie de l'analyse JSON, sur le champ image :
 
 <img src="{{ '/assets/media/2025/02/image-28.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="916" height="233">
 
@@ -186,7 +186,7 @@ dès lors, il est facile de recomposer ce chemin d'accès, en réutilisant l'ID 
 
 <img src="{{ '/assets/media/2025/02/image-30.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="766" height="476">
 
-Il ne reste plus qu'à ajouter la suite de l'url dans notre action : "[Obtenir le contenu du fichier grâce au chemin d'accès](https://learn.microsoft.com/fr-fr/connectors/sharepointonline/?WT.mc_id=MVP_339053#get-file-content-using-path)" , à savoir :
+Il ne reste plus qu'à ajouter la suite de l'url dans notre action : "[Obtenir le contenu du fichier grâce au chemin d'accès](https://learn.microsoft.com/fr-fr/connectors/sharepointonline/?wt.mc_id=MVP_339053#get-file-content-using-path)" , à savoir :
 
 .../Attachments/\[ID de l'item dans la liste\]/\[Nom du fichier\]
 
@@ -212,13 +212,13 @@ Voici une autre méthode pour parvenir au même résultat, nous allons cette foi
 
 <img src="{{ '/assets/media/2025/02/image-34.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="920" height="405">
 
-Lorsequ'on lance une action "[Obtenir les pièces jointes](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/sharepoint-connector-actions-triggers?WT.mc_id=MVP_339053#get-attachments)" sur un élément d'une liste, l'action va récupérer les fichiers en pièce jointe mais également... les fichiers des colonnes de type "image", ces derniers seront identifiables grâce à leur nom de fichier :
+Lorsequ'on lance une action "[Obtenir les pièces jointes](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/sharepoint-connector-actions-triggers?wt.mc_id=MVP_339053#get-attachments)" sur un élément d'une liste, l'action va récupérer les fichiers en pièce jointe mais également... les fichiers des colonnes de type "image", ces derniers seront identifiables grâce à leur nom de fichier :
 
 <img src="{{ '/assets/media/2025/02/image-35.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="1124" height="796">
 
 Le nom de fichier début par **Reserved\_ImageAttachment\_** et contient également le nom de la colonne image entre **\[\]**. L'avantage de cette méthode est que nous obtiendrons directement le chemin d'accès complet et même l'identifiant du fichier sans avoir besoin de les recomposer.
 
-Nous allons donc ajouter une action "[Filtrer un tableau](https://learn.microsoft.com/fr-fr/power-automate/data-operations?WT.mc_id=MVP_339053#use-the-filter-array-action)" et indiquer en source : la sortie de notre action "obtenir les pièces jointes" et en filtre : "contient \[Photo\]"
+Nous allons donc ajouter une action "[Filtrer un tableau](https://learn.microsoft.com/fr-fr/power-automate/data-operations?wt.mc_id=MVP_339053#use-the-filter-array-action)" et indiquer en source : la sortie de notre action "obtenir les pièces jointes" et en filtre : "contient \[Photo\]"
 
 <img src="{{ '/assets/media/2025/02/image-36.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="1101" height="393">
 
@@ -228,7 +228,7 @@ Nous allons donc ajouter une action "[Filtrer un tableau](https://learn.microsof
 
 
 
-Nous ajouterons ensuite une action "[obtenir le contenu du fichier](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/sharepoint-connector-actions-triggers?WT.mc_id=MVP_339053#get-file-content)" à laquelle nous fournirons l'Id récupéré et filtré dans les étapes précédentes. **Attention**: Nous avons récupéré les pièces jointes sous forme de table, afin d'éviter la création d'une boucle "appliquer à chacun", nous utiliserons une expression :
+Nous ajouterons ensuite une action "[obtenir le contenu du fichier](https://learn.microsoft.com/fr-fr/sharepoint/dev/business-apps/power-automate/sharepoint-connector-actions-triggers?wt.mc_id=MVP_339053#get-file-content)" à laquelle nous fournirons l'Id récupéré et filtré dans les étapes précédentes. **Attention**: Nous avons récupéré les pièces jointes sous forme de table, afin d'éviter la création d'une boucle "appliquer à chacun", nous utiliserons une expression :
 
 
 
@@ -238,7 +238,7 @@ outputs('Filter_array')['body'][0]?['Id']
 
 
 
-Filter\_array étant le nom de votre action "[Filtrer un tableau](https://learn.microsoft.com/fr-fr/power-automate/data-operations?WT.mc_id=MVP_339053#use-the-filter-array-action)", le \[0\] permet de sélectionner la première ligne de la sortie.
+Filter\_array étant le nom de votre action "[Filtrer un tableau](https://learn.microsoft.com/fr-fr/power-automate/data-operations?wt.mc_id=MVP_339053#use-the-filter-array-action)", le \[0\] permet de sélectionner la première ligne de la sortie.
 
 <img src="{{ '/assets/media/2025/02/image-37.png.webp' | relative_url }}" alt="" loading="lazy" decoding="async" width="1341" height="460">
 

@@ -819,7 +819,8 @@ Pour ajouter un outil, créer sa page sous `outils/<nom>/index.html`, puis ajout
 une entrée dans [_data/tools.yml](_data/tools.yml) avec sa date de création
 `created_at` au format ISO 8601 UTC (`AAAA-MM-JJTHH:MM:SSZ`). L’accueil affiche les
 trois outils les plus récents selon cette date, du plus récent à gauche au plus
-ancien à droite, indépendamment de leur position dans le fichier. Le catalogue
+ancien à droite, indépendamment de leur position dans le fichier. En cas de
+dates identiques, les outils sont départagés par URL croissante. Le catalogue
 conserve l’ordre du fichier. Les dates initiales proviennent des commits
 d’ajout des outils :
 

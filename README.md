@@ -1007,10 +1007,12 @@ déjà présentes qui n'ont pas été ajoutées, avec leur nom et leur HEX, une 
 fois par couleur même si plusieurs formats la désignent. Cette liste est
 actualisée à chaque importation et annoncée aux lecteurs d'écran.
 Les cases de formats sont indépendantes : Power Fx
-FR/EN (`RGBA`, `ColorValue`, `Color.Nom`), HEX, RGB, HSL, CMJN, noms HTML/CSS, RAL Classic.
+FR/EN (`RGBA`, `ColorValue`, `Color.Nom`), HEX, RGB, HSL, CMJN, noms HTML/CSS,
+RAL Classic, Pantone PMS et nuances / gris en pourcentage.
 Seuls les littéraux sont reconnus : les expressions calculées ne sont jamais exécutées.
-Les HEX utilisent `#` (3, 4, 6 ou 8 chiffres) ou `0x` ; les valeurs nues sans préfixe
-ne sont pas recherchées dans le texte pour limiter les faux positifs.
+Les HEX utilisent `#` (3, 4, 6 ou 8 chiffres), `0x` ou une étiquette explicite
+comme `HEX 005FB6` ou `HEX: #005FB6` ; les valeurs nues sans préfixe ni
+étiquette ne sont pas recherchées dans le texte pour limiter les faux positifs.
 
 L'alpha Power Fx est affiché avec le moins de décimales possible tout en conservant
 le même octet HEX : `80` est présenté comme `0,5` en FR ou `0.5` en EN,
@@ -1020,10 +1022,17 @@ opaques et leurs variantes alpha `FF` sont identiques ; toutes les couleurs
 totalement transparentes deviennent `#00000000`. Les doublons multiformats sont
 supprimés en conservant l'ordre de première apparition. Les noms HTML/CSS sont
 anglais ; leur détection peut aussi reconnaître ces mots dans le texte courant.
-RGB et HSL acceptent les virgules, les espaces, les pourcentages et l'alpha CSS ;
+Les composantes RVB `R0 V95 B182` ou RGB `R0 G95 B182` acceptent des valeurs
+de 0 à 255 ou des pourcentages. Les composantes CMJN `C100 M48 J0 N0` et CMYK
+`C100 M48 Y0 K0` sont des pourcentages de 0 à 100, avec ou sans signe `%` :
+`C1` signifie 1 %, et non 100 %. Les lettres sont insensibles à la casse ; les
+espaces, les séparateurs `,`, `;` ou `/` et les signes `:` ou `=` après une
+lettre sont facultatifs. Les décimales avec point ou virgule sont acceptées.
+Les valeurs hors limites sont signalées et ne produisent pas de couleur.
+Les fonctions RGB et HSL acceptent les virgules, les espaces, les pourcentages et l'alpha CSS ;
 un littéral `RGBA(255, 0, 0, 1)` est reconnu si Power Fx ou RGB est coché,
 car cette notation numérique est commune à Power Fx EN et à CSS.
-HSL accepte deg/rad/grad/turn. CMJN/CMYK accepte quatre fractions 0–1 ou
+HSL accepte deg/rad/grad/turn. Les fonctions CMJN/CMYK acceptent quatre fractions 0–1 ou
 pourcentages et utilise la conversion naïve `(1 - composante) × (1 - noir)` :
 pas de profil ICC ni de fidélité d'impression garantie.
 Les 215 correspondances RAL Classic sont des approximations sRGB issues de
@@ -1032,6 +1041,27 @@ Les 215 correspondances RAL Classic sont des approximations sRGB issues de
 incluses dans [le référentiel](assets/js/theme-color-references.js)).
 Elles ne sont pas une référence officielle pour la fabrication ; RAL Design et
 Effect ne sont pas inclus. Les littéraux invalides et codes RAL inconnus sont signalés.
+
+Les références `Pantone PROCESS BLUE`, `Pantone 186` ou `Pantone Cool Gray 5`
+sont reconnues sans distinction de casse. Les 1 148 correspondances sont issues de
+[adonald/Pantone-CMYK-RGB-Hex](https://github.com/adonald/Pantone-CMYK-RGB-Hex)
+(commit `9991a2040ab8b4501ecaec00af86e5c0474ae0b4`, licence MIT et attribution
+incluses dans [le référentiel Pantone](assets/js/theme-pantone-references.js)).
+Ce sont des approximations sRGB non officielles, sans garantie d'impression :
+les suffixes C/U sont acceptés mais ne changent pas la valeur, faute de
+simulation du papier. Les références absentes sont signalées ; les gammes
+textiles ne sont pas incluses. Aucun service externe n'est appelé à la détection.
+
+Les nuances comme `Noir 20%`, `Black 20 %`, `Rouge 30 %` et `Red 80%`
+utilisent les noms CSS anglais ou les noms français usuels. Chaque canal est
+calculé par `255 + (canal - 255) × pourcentage / 100`, puis arrondi :
+0 % donne du blanc, 100 % la couleur pleine, avec une opacité totale.
+Les décimales FR/EN sont acceptées ; les pourcentages hors de 0–100 et les noms
+inconnus sont signalés, sans importer la couleur pleine à leur place.
+Une référence Pantone peut aussi être suivie d'un pourcentage, pris en charge
+par le filtre Pantone indépendamment du filtre nuances.
+Les deux nouveaux filtres sont indépendants des noms HTML/CSS : décocher un
+format composé ne réimporte pas ses mots comme couleurs isolées.
 
 Chaque couleur tient sur une ligne : nom éditable (`couleur_01`, etc. par défaut),
 liste Fond/Texte, rectangle d'aperçu sur damier de transparence et bouton corbeille à icône accessible.

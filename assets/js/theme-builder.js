@@ -1,9 +1,33 @@
 import { hslToHex, hexToRgb, contrastRatio, contrastLevel } from './color-harmonizer.js';
 import { htmlColors, ralClassic } from './theme-color-references.js';
+import { pantoneColors } from './theme-pantone-references.js';
 
-export const colorFormats = ['powerfx', 'hex', 'rgb', 'hsl', 'cmyk', 'html', 'ral'];
+export const colorFormats = ['powerfx', 'hex', 'rgb', 'hsl', 'cmyk', 'html', 'ral', 'pantone', 'tint'];
 const own = (object, key) => Object.hasOwn(object, key);
 const numeric = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/;
+const frenchColors = {
+  noir: 'black', blanc: 'white', rouge: 'red', vert: 'green', bleu: 'blue',
+  jaune: 'yellow', gris: 'gray', orange: 'orange', rose: 'pink', violet: 'violet',
+  marron: 'brown', brun: 'brown', cyan: 'cyan', magenta: 'magenta',
+  turquoise: 'turquoise', pourpre: 'purple', indigo: 'indigo', argent: 'silver',
+  or: 'gold', beige: 'beige', fuchsia: 'fuchsia', olive: 'olive', marine: 'navy'
+};
+const tintEnding = /[ \t\u00a0\u202f]+([+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+))[ \t\u00a0\u202f]*%$/;
+const space = String.raw`[ \t\u00a0\u202f]`;
+const channelValue = String.raw`([+-]?(?:\d+(?:[.,]\d+)?|[.,]\d+)(?:${space}*%)?)`;
+const channelPrefix = String.raw`${space}*(?:[:=]${space}*)?`;
+const channelSeparator = String.raw`${space}*(?:[,;/]${space}*)?`;
+const rgbChannelsToken = String.raw`R${channelPrefix}${channelValue}${channelSeparator}[VG]${channelPrefix}${channelValue}${channelSeparator}B${channelPrefix}${channelValue}`;
+const cmykChannelsToken = String.raw`C${channelPrefix}${channelValue}${channelSeparator}M${channelPrefix}${channelValue}${channelSeparator}[JY]${channelPrefix}${channelValue}${channelSeparator}[NK]${channelPrefix}${channelValue}`;
+const rgbChannels = new RegExp(`^${rgbChannelsToken}$`, 'i');
+const cmykChannels = new RegExp(`^${cmykChannelsToken}$`, 'i');
+const hexLabel = new RegExp(String.raw`^HEX(?:${space}*[:=]${space}*|${space}+)`, 'i');
+
+function tintHex(hex, percentage) {
+  const amount = number(percentage.replace(',', '.'), 100);
+  if (!hex || hex.length !== 7 || amount === null) return null;
+  return rgbaHex(hexToRgb(hex).map(channel => 255 + (channel - 255) * amount / 100));
+}
 
 export function normalizeThemeHex(value) {
   if (/^0x/i.test(value.trim()) && !/^0x(?:[a-f\d]{6}|[a-f\d]{8})$/i.test(value.trim())) return null;
@@ -28,6 +52,10 @@ function number(value, max, percent = false) {
 function rgbaHex(channels, alpha = 1) {
   const rgb = '#' + channels.map(value => Math.round(value).toString(16).padStart(2, '0')).join('');
   return normalizeThemeHex(rgb + Math.round(alpha * 255).toString(16).padStart(2, '0'));
+}
+
+function cmykHex([cyan, magenta, yellow, black]) {
+  return rgbaHex([cyan, magenta, yellow].map(value => 255 * (1 - value) * (1 - black)));
 }
 
 function components(body, french = false) {
@@ -74,13 +102,17 @@ function functionColor(name, body, format) {
     if (parts.length !== 4) return null;
     const values = parts.map(value => number(value, 1, true));
     if (values.includes(null)) return null;
-    const [c, m, y, k] = values;
-    return rgbaHex([c, m, y].map(value => 255 * (1 - value) * (1 - k)));
+    return cmykHex(values);
   }
   return null;
 }
 
 function classify(token) {
+  if (/^Pantone[\s-]/i.test(token)) return 'pantone';
+  if (hexLabel.test(token)) return 'hex';
+  if (rgbChannels.test(token)) return 'rgb';
+  if (cmykChannels.test(token)) return 'cmyk';
+  if (tintEnding.test(token)) return 'tint';
   if (/^(?:#|0x)/i.test(token)) return 'hex';
   if (/^RAL/i.test(token)) return 'ral';
   if (/^Color\s*\./i.test(token) || /^ColorValue\s*\(/i.test(token)) return 'powerfx';
@@ -93,7 +125,29 @@ function classify(token) {
 }
 
 function readToken(token, format) {
-  if (format === 'hex') return normalizeThemeHex(token);
+  if (format === 'pantone' || format === 'tint') {
+    const tint = token.match(tintEnding);
+    const base = (tint ? token.slice(0, tint.index) : token).toLowerCase();
+    let hex;
+    if (format === 'pantone') {
+      const code = base.replace(/^pantone[\s-]+/, '').replace(/[ \t\u00a0\u202f]+[cu]$/, '').replace(/[ \t\u00a0\u202f]+/g, ' ');
+      hex = own(pantoneColors, code) ? pantoneColors[code] : null;
+    } else {
+      const name = own(frenchColors, base) ? frenchColors[base] : base;
+      hex = own(htmlColors, name) ? htmlColors[name] : null;
+    }
+    return tint ? tintHex(hex, tint[1]) : hex;
+  }
+  if (format === 'hex') return normalizeThemeHex(token.replace(hexLabel, ''));
+  if (format === 'rgb' || format === 'cmyk') {
+    const match = token.match(format === 'rgb' ? rgbChannels : cmykChannels);
+    if (match) {
+      const max = format === 'rgb' ? 255 : 100;
+      const values = match.slice(1).map(value => number(value.replace(',', '.').replace(/\s+%$/, '%'), max, true));
+      if (values.includes(null)) return null;
+      return format === 'rgb' ? rgbaHex(values) : cmykHex(values.map(value => value / 100));
+    }
+  }
   if (format === 'ral') {
     const code = token.match(/\d{4}/)?.[0];
     return own(ralClassic, code) ? ralClassic[code] : null;
@@ -108,7 +162,13 @@ function readToken(token, format) {
 }
 
 // Match literals only; never evaluate pasted code or expressions.
-const colorTokens = /(?<![\p{L}\p{N}_#])(?:ColorValue\s*\([^()]*\)|(?:rgba?|hsla?|cmyk|cmjn|device-cmyk)\s*\([^()]*\)|Color\s*\.\s*[a-z]+|RAL[\s-]*\d{4}(?![\p{L}\p{N}_])|#[a-z\d]+|0x[a-z\d]+|[a-z]+)(?![\p{L}\p{N}_])/giu;
+const percentage = String.raw`${space}+[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)${space}*%`;
+const pantoneNames = Object.keys(pantoneColors).sort((a, b) => b.length - a.length)
+  .map(name => name.replaceAll(' ', space + '+')).join('|');
+const pantoneToken = String.raw`Pantone(?:${space}|-)+(?:${pantoneNames}|\d+[\p{L}\p{N}_-]*|[a-z]+(?:${space}+[a-z]+){0,2}(?:${space}+\d+)?)(?![\p{L}\p{N}_-])(?:${space}+[cu](?![\p{L}\p{N}_]))?(?:${percentage})?`;
+const labeledHexToken = String.raw`HEX(?:${space}*[:=]${space}*|${space}+)(?:#|0x)?[a-z\d]+(?!${space}*\()`;
+const channelBoundary = String.raw`(?![\p{L}\p{N}_%]|[.,]\d)`;
+const colorTokens = new RegExp(String.raw`(?<![\p{L}\p{N}_#])(?:${pantoneToken}|${labeledHexToken}|${rgbChannelsToken}${channelBoundary}|${cmykChannelsToken}${channelBoundary}|[\p{L}]+${percentage}|ColorValue\s*\([^()]*\)|(?:rgba?|hsla?|cmyk|cmjn|device-cmyk)\s*\([^()]*\)|Color\s*\.\s*[a-z]+|RAL[\s-]*\d{4}(?![\p{L}\p{N}_])|#[a-z\d]+|0x[a-z\d]+|[a-z]+)(?![\p{L}\p{N}_])`, 'giu');
 
 export function detectColors(text, enabledFormats = colorFormats) {
   const enabled = new Set(enabledFormats);

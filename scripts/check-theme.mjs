@@ -84,7 +84,9 @@ try {
     hsl: ['hsl(180deg 100% 50%)', '#00FFFF'],
     cmyk: ['CMJN(0%; 100%; 0%; 0%)', '#FF00FF'],
     html: ['rebeccapurple', '#663399'],
-    ral: ['RAL 5015', '#2874B2']
+    ral: ['RAL 5015', '#2874B2'],
+    pantone: ['Pantone PROCESS BLUE', '#00CFE6'],
+    tint: ['Noir 20% Black 20 %', '#CCCCCC']
   };
   for (const [format, [text, hex]] of Object.entries(formats)) {
     const checkbox = page.locator(`.theme-formats input[value="${format}"]`);
@@ -96,7 +98,38 @@ try {
     await cards.locator('.theme-remove').click();
     await checkbox.uncheck();
   }
+  for (const [format, text, hex] of [
+    ['cmyk', 'C100 M48 J0 N0', '#0085FF'],
+    ['rgb', 'R0 V95 B182', '#005FB6'],
+    ['hex', 'HEX 005FB6', '#005FB6']
+  ]) {
+    const checkbox = page.locator(`.theme-formats input[value="${format}"]`);
+    await checkbox.check();
+    await source.fill(text);
+    await detect.click();
+    assert.equal(await cards.count(), 1);
+    assert.equal(await cards.locator('.theme-hex').inputValue(), hex);
+    await cards.locator('.theme-remove').click();
+    await checkbox.uncheck();
+  }
   for (const box of await page.locator('.theme-formats input').all()) await box.check();
+  await source.fill('C100 M48 J0 N0\nR0 V95 B182\nHEX 005FB6\nR256 V95 B182');
+  await detect.click();
+  assert.deepEqual(await cards.locator('.theme-hex').evaluateAll(inputs => inputs.map(input => input.value)), ['#0085FF', '#005FB6']);
+  assert.match(await page.locator('#theme-detection-status').textContent(), /1 doublon/);
+  assert.match(await page.locator('#theme-detection-status').textContent(), /CMJN : conversions sRGB approximatives/);
+  assert.match(await page.locator('#theme-detection-issues').textContent(), /R256 V95 B182/);
+  while (await cards.count()) await cards.last().locator('.theme-remove').click();
+  await source.fill('Pantone 186; Rouge 30 %; Red 80%; Pantone 186 C; Black 101%; Pantone 99999');
+  await detect.click();
+  assert.equal(await cards.count(), 3);
+  assert.deepEqual(await cards.locator('.theme-hex').evaluateAll(inputs => inputs.map(input => input.value)), ['#F5002F', '#FFB3B3', '#FF3333']);
+  assert.match(await page.locator('#theme-detection-status').textContent(), /1 doublon/);
+  assert.match(await page.locator('#theme-detection-status').textContent(), /Pantone : approximations sRGB/);
+  assert.equal(await page.locator('#theme-detection-issues li').count(), 2);
+  assert.match(await page.locator('#theme-detection-issues').textContent(), /Black 101%/);
+  assert.match(await page.locator('#theme-detection-issues').textContent(), /Pantone 99999/);
+  while (await cards.count()) await cards.last().locator('.theme-remove').click();
   const text = '#F00 RGBA(255;0;0;1) rgb(255,0,0) hsl(0,100%,50%) CMJN(0;1;1;0) red RAL3026 #12345680';
   await source.fill(text);
   await detect.click();
@@ -399,7 +432,7 @@ try {
   assert(await staticPage.locator('noscript').isVisible());
   assert(await staticPage.locator('#theme-detect').isDisabled());
   await noScript.close();
-  console.log('Constructeur de thème : sept formats, déduplication, édition, quatre sorties Power Fx, copie, aucune requête, responsive et accessibilité : OK.');
+  console.log('Constructeur de thème : neuf formats dont Pantone et nuances, déduplication, édition, quatre sorties Power Fx, copie, aucune requête, responsive et accessibilité : OK.');
 } finally {
   if (browser) await browser.close();
   await new Promise(resolve => server.close(resolve));

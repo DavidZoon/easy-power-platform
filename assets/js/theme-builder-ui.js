@@ -278,6 +278,7 @@ if (tool) {
     detectionStatus.textContent = `${added} couleur(s) ajoutée(s), ${duplicates} doublon(s) ignoré(s).`
       + (existingColors.length ? ` Couleurs déjà présentes, non ajoutées : ${existingColors.join(', ')}.` : '')
       + (detected.colors.some(color => ['ral', 'cmyk'].includes(color.format)) ? ' RAL et CMJN : conversions sRGB approximatives.' : '')
+      + (detected.colors.some(color => color.format === 'pantone') ? ' Pantone : approximations sRGB, sans distinction de papier C/U ni garantie d’impression.' : '')
       + (detected.issues.length ? ` ${detected.issues.length} valeur(s) non reconnue(s).` : '');
     for (const message of detected.issues.slice(0, 10)) {
       const li = document.createElement('li');

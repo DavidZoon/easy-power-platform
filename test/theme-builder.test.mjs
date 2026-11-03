@@ -4,6 +4,7 @@ import {
   detectColors, normalizeThemeHex, parseThemeColor, readHarmonyPalette, themeRgba, generateThemeCode, powerFxIdentifier, themeCombinations
 } from '../assets/js/theme-builder.js';
 import { htmlColors, ralClassic } from '../assets/js/theme-color-references.js';
+import { pantoneColors } from '../assets/js/theme-pantone-references.js';
 
 test('HEX court, long, alpha, opaque et transparent sont canoniques', () => {
   for (const [value, expected] of [
@@ -24,10 +25,73 @@ test('déduplique tous les formats et conserve l’ordre des premières occurren
 });
 
 test('chaque filtre de format fonctionne indépendamment', () => {
-  const text = '#123456 RGBA(1;2;3;1) rgb(4,5,6) hsl(0 0% 50%) CMJN(0; 1; 1; 0) blue RAL-5015';
-  const expected = { hex: '#123456', powerfx: '#010203', rgb: '#040506', hsl: '#808080', cmyk: '#FF0000', html: '#0000FF', ral: '#2874B2' };
+  const text = '#123456 RGBA(1;2;3;1) rgb(4,5,6) hsl(0 0% 50%) CMJN(0; 1; 1; 0) blue RAL-5015 Pantone 186 Noir 20%';
+  const expected = { hex: '#123456', powerfx: '#010203', rgb: '#040506', hsl: '#808080', cmyk: '#FF0000', html: '#0000FF', ral: '#2874B2', pantone: '#F5002F', tint: '#CCCCCC' };
   for (const [format, hex] of Object.entries(expected)) assert.deepEqual(detectColors(text, [format]).colors.map(color => color.hex), [hex]);
   assert.deepEqual(detectColors(text, []).colors, []);
+});
+
+test('Pantone : codes, noms composés, suffixes et ordre des sources', () => {
+  const { colors, issues, duplicates } = detectColors('Pantone PROCESS BLUE; pantone 186; PANTONE 186 C; Pantone 186 U; Pantone Cool Gray 5; Pantone Reflex Blue; Pantone 186 50%');
+  assert.deepEqual(colors, [
+    { hex: '#00CFE6', source: 'Pantone PROCESS BLUE', format: 'pantone' },
+    { hex: '#F5002F', source: 'pantone 186', format: 'pantone' },
+    { hex: '#A8A8A8', source: 'Pantone Cool Gray 5', format: 'pantone' },
+    { hex: '#0043FA', source: 'Pantone Reflex Blue', format: 'pantone' },
+    { hex: '#FA8097', source: 'Pantone 186 50%', format: 'pantone' }
+  ]);
+  assert.equal(duplicates, 2);
+  assert.deepEqual(issues, []);
+  assert.equal(detectColors('Pantone PROCESS BLUE 2X').colors[0].hex, '#0096FF');
+  assert.equal(detectColors('Pantone 186 C 50 %', ['pantone']).colors[0].hex, '#FA8097');
+});
+
+test('nuances FR/EN : mélange opaque avec du blanc et déduplication', () => {
+  const { colors, issues, duplicates } = detectColors('Noir 20% Black 20 % Rouge 30 % Red 80% gris 50% RoyalBlue 50 %');
+  assert.deepEqual(colors.map(color => color.hex), ['#CCCCCC', '#FFB3B3', '#FF3333', '#C0C0C0', '#A0B4F0']);
+  assert.equal(duplicates, 1);
+  assert.deepEqual(issues, []);
+  assert.deepEqual(colors[0], { hex: '#CCCCCC', source: 'Noir 20%', format: 'tint' });
+  for (const [source, hex] of [
+    ['Noir 0 %', '#FFFFFF'], ['Black 100%', '#000000'],
+    ['rouge 100 %', '#FF0000'], ['Red 0%', '#FFFFFF'],
+    ['Noir 12,5 %', '#DFDFDF'], ['Black 12.5%', '#DFDFDF'],
+    ['Bleu 50%', '#8080FF'], ['jaune 50%', '#FFFF80'],
+    ['Vert 100%', '#008000'], ['Gris 100%', '#808080'],
+    ['white 30%', '#FFFFFF'], ['RED\u00a080\u202f%', '#FF3333']
+  ]) assert.equal(detectColors(source).colors[0]?.hex, hex, source);
+  const deduplicated = detectColors('Noir 20% #CCC rgb(204,204,204)');
+  assert.equal(deduplicated.colors.length, 1);
+  assert.equal(deduplicated.duplicates, 2);
+});
+
+test('formats composés désactivés et invalides : aucune couleur de repli', () => {
+  const text = 'Pantone PROCESS BLUE; Pantone Red 032; Red 80%; Black 20 %';
+  assert.deepEqual(detectColors(text, ['html']), { colors: [], issues: [], duplicates: 0 });
+  assert.deepEqual(detectColors('Pantone 186 50%', ['tint']).colors, []);
+  assert.deepEqual(detectColors('Red 80%', ['pantone']).colors, []);
+  const invalid = [
+    'Pantone 99999', 'Pantone Unknown Blue', 'Pantone 186XYZ',
+    'Pantone 19-4052 TCX', 'Pantone 186 120%',
+    'Noir -1%', 'Black 101 %', 'Rouge 100,1 %', 'Red -20%', 'transparent 50%', 'Inconnu 50%'
+  ];
+  for (const source of invalid) {
+    const result = detectColors(source);
+    assert.deepEqual(result.colors, [], source);
+    assert.equal(result.issues.length, 1, source);
+  }
+  assert.deepEqual(detectColors('infrared 20% my_Red 30% Red2 30% myPantone 186').colors, []);
+  assert.deepEqual(detectColors('Pantone 186 Red 80% #123456').colors.map(color => color.hex), ['#F5002F', '#FF3333', '#123456']);
+});
+
+test('référentiel Pantone : toutes les références importées sont détectables', () => {
+  assert.equal(Object.keys(pantoneColors).length, 1148);
+  for (const [code, hex] of Object.entries(pantoneColors)) {
+    assert.equal(normalizeThemeHex(hex), hex);
+    const result = detectColors(`Pantone ${code}`, ['pantone']);
+    assert.deepEqual(result.colors, [{ hex, source: `Pantone ${code}`, format: 'pantone' }], code);
+    assert.deepEqual(result.issues, []);
+  }
 });
 
 test('Power Fx FR décimal et EN, ColorValue et énumérations', () => {
@@ -81,6 +145,70 @@ test('CMJN : conversion naïve documentée, fractions et pourcentages', () => {
   assert.equal(detectColors('device-cmyk(0% 0% 0% 50%)').colors[0].hex, '#808080');
   assert.equal(detectColors('cmjn(0; 0,5; 1; 0)').colors[0].hex, '#FF8000');
   assert.equal(detectColors('cmyk(0,100,100,0)').issues.length, 1);
+});
+
+test('composantes CMJN, RVB et HEX de charte : valeurs exactes, filtres et doublons', () => {
+  const text = 'C100 M48 J0 N0\nR0 V95 B182\nHEX 005FB6\n#005FB6';
+  const result = detectColors(text);
+  assert.deepEqual(result.colors, [
+    { hex: '#0085FF', source: 'C100 M48 J0 N0', format: 'cmyk' },
+    { hex: '#005FB6', source: 'R0 V95 B182', format: 'rgb' }
+  ]);
+  assert.equal(result.duplicates, 2);
+  assert.deepEqual(result.issues, []);
+  for (const [format, hex, source] of [
+    ['cmyk', '#0085FF', 'C100 M48 J0 N0'],
+    ['rgb', '#005FB6', 'R0 V95 B182'],
+    ['hex', '#005FB6', 'HEX 005FB6']
+  ]) {
+    assert.deepEqual(detectColors(source, [format]).colors, [{ hex, source, format }]);
+    assert.deepEqual(detectColors(source, []).colors, []);
+    assert.deepEqual(detectColors(source, ['html']).colors, []);
+  }
+  assert.deepEqual(detectColors('005FB6').colors, []);
+  for (const source of ['HEX rgb(0,95,182)', 'HEX RGBA(0,95,182,1)']) {
+    const result = detectColors(source);
+    assert.deepEqual(result.colors.map(color => color.hex), ['#005FB6'], source);
+    assert.deepEqual(result.issues, [], source);
+  }
+});
+
+test('composantes de charte : langues, séparateurs, bornes et décimales', () => {
+  for (const [source, format, hex] of [
+    ['c:100%, m:48%, j:0%, n:0%', 'cmyk', '#0085FF'],
+    ['C100M48Y0K0', 'cmyk', '#0085FF'],
+    ['C 100 ; M 48 ; J 0 ; N 0', 'cmyk', '#0085FF'],
+    ['C100 M48,5 J0 N0', 'cmyk', '#0083FF'],
+    ['C1 M0 J0 N0', 'cmyk', '#FCFFFF'],
+    ['C0 M0 J0 N100', 'cmyk', '#000000'],
+    ['C0 M0 J0 N0', 'cmyk', '#FFFFFF'],
+    ['r:0, v:95, b:182', 'rgb', '#005FB6'],
+    ['R0G95B182', 'rgb', '#005FB6'],
+    ['R = 0 / V = 95 / B = 182', 'rgb', '#005FB6'],
+    ['R0% G50% B100%', 'rgb', '#0080FF'],
+    ['R255 V0 B0', 'rgb', '#FF0000'],
+    ['HEX: #05f', 'hex', '#0055FF'],
+    ['hex=0x005fb6ff', 'hex', '#005FB6'],
+    ['HEX 005FB680', 'hex', '#005FB680'],
+    ['Hex ABC', 'hex', '#AABBCC']
+  ]) {
+    assert.deepEqual(detectColors(source, [format]), {
+      colors: [{ hex, source, format }], issues: [], duplicates: 0
+    }, source);
+  }
+});
+
+test('composantes de charte invalides : signalement sans résultat partiel', () => {
+  for (const source of [
+    'C101 M48 J0 N0', 'C100 M48 J0 N-1', 'C100 M101% J0 N0',
+    'R256 V95 B182', 'R0 V-1 B182', 'R0 V95 B101%',
+    'HEX 005FB6Z', 'HEX #12345', 'HEX 0x1234'
+  ]) {
+    const result = detectColors(source);
+    assert.deepEqual(result.colors, [], source);
+    assert.deepEqual(result.issues, [`Valeur non reconnue : ${source}`], source);
+  }
+  assert.deepEqual(detectColors('myR0 V95 B182 ref_C100 M48 J0 N0').colors, []);
 });
 
 test('littéraux invalides signalés et absence d’exécution du code', () => {

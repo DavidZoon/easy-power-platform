@@ -15,28 +15,32 @@ theme_builder: true
       <section aria-labelledby="theme-source-heading">
         <h2 id="theme-source-heading">1. Importez vos couleurs</h2>
         <label for="theme-source">Texte, charte graphique ou code source</label>
-        <textarea id="theme-source" rows="7" spellcheck="false" placeholder='#6750A4, RGBA(255; 127; 0; 1), rgb(0, 120, 212), hsl(180 100% 50%), CMJN(0%; 100%; 100%; 0%), RoyalBlue, RAL 5015' aria-describedby="theme-detection-help"></textarea>
+        <textarea id="theme-source" rows="7" spellcheck="false" placeholder='C100 M48 J0 N0, R0 V95 B182, HEX 005FB6, #6750A4, RGBA(255; 127; 0; 1), rgb(0, 120, 212), hsl(180 100% 50%), CMJN(0%; 100%; 100%; 0%), RoyalBlue, RAL 5015, Pantone PROCESS BLUE, Pantone 186, Noir 20 %, Rouge 30 %' aria-describedby="theme-detection-help"></textarea>
         <fieldset class="theme-formats">
           <legend>Formats à détecter</legend>
           <label><input type="checkbox" value="powerfx" checked> Power Fx (FR et EN)</label>
           <label><input type="checkbox" value="hex" checked> HEX</label>
-          <label><input type="checkbox" value="rgb" checked> RGB / RGBA</label>
+          <label><input type="checkbox" value="rgb" checked> RVB / RGB / RGBA</label>
           <label><input type="checkbox" value="hsl" checked> HSL / HSLA</label>
           <label><input type="checkbox" value="cmyk" checked> CMJN / CMYK</label>
           <label><input type="checkbox" value="html" checked> Noms HTML / CSS</label>
           <label><input type="checkbox" value="ral" checked> RAL Classic</label>
+          <label><input type="checkbox" value="pantone" checked> Pantone PMS</label>
+          <label><input type="checkbox" value="tint" checked> Nuances / gris (%)</label>
         </fieldset>
         <button type="button" class="button" id="theme-detect">Ajouter les couleurs détectées</button>
         <p class="muted" id="theme-detection-help">Ajoute uniquement les nouvelles couleurs, sans écraser vos retouches. Aucune détection si tous les formats sont décochés.</p>
         <details class="theme-help">
           <summary>Formats et limites de conversion</summary>
           <ul>
-            <li>HEX : #RGB, #RGBA, #RRGGBB et #RRGGBBAA ; 0xRRGGBB et 0xRRGGBBAA. L’alpha est conservé sur 8 bits.</li>
+            <li>HEX : #RGB, #RGBA, #RRGGBB et #RRGGBBAA ; 0xRRGGBB et 0xRRGGBBAA ; ou HEX 005FB6, HEX: #005FB6. L’alpha est conservé sur 8 bits.</li>
             <li>Power Fx : RGBA() avec valeurs numériques FR ou EN, ColorValue("…") et Color.Nom. Les variables et expressions calculées ne sont pas évaluées.</li>
-            <li>RGB et HSL : virgules ou syntaxe CSS avec espaces et « / » ; pourcentages et angles deg, rad, grad ou turn.</li>
-            <li>CMJN / CMYK : fonctions cmjn(), cmyk() ou device-cmyk(), avec quatre pourcentages ou fractions de 0 à 1. Conversion sRGB approximative sans profil d’impression ICC.</li>
+            <li>RVB / RGB : composantes comme R0 V95 B182 ou R0 G95 B182 (0 à 255 ou pourcentages). RGB et HSL acceptent aussi les virgules ou la syntaxe CSS avec espaces et « / » ; HSL accepte les angles deg, rad, grad ou turn.</li>
+            <li>CMJN / CMYK : composantes comme C100 M48 J0 N0 ou C100 M48 Y0 K0, en pourcentages de 0 à 100, avec ou sans signe %. Les fonctions cmjn(), cmyk() et device-cmyk() acceptent quatre pourcentages ou fractions de 0 à 1. Conversion sRGB approximative sans profil d’impression ICC.</li>
             <li>Les noms HTML / CSS sont les noms anglais standards. Dans un texte libre, un mot comme « red » sera aussi reconnu comme une couleur.</li>
             <li>RAL Classic : codes comme RAL 5015, RAL-5015 ou RAL5015 ; 215 correspondances issues du <a href="https://github.com/ieskudero/ral-colors">nuancier libre ral-colors</a>. Il s’agit d’approximations à l’écran, pas de valeurs RAL officielles pour fabrication. RAL Design et Effect ne sont pas pris en charge.</li>
+            <li>Pantone PMS : références numériques ou nommées comme Pantone 186, Pantone PROCESS BLUE ou Pantone Cool Gray 5, sans distinction de casse. Les 1 148 correspondances du <a href="https://github.com/adonald/Pantone-CMYK-RGB-Hex">nuancier libre Pantone-CMYK-RGB-Hex</a> sont des approximations sRGB, non des valeurs officielles. Les suffixes C/U sont acceptés mais utilisent la même approximation, sans simulation du papier couché ou non couché. Les références absentes sont signalées ; les gammes textiles ne sont pas prises en charge.</li>
+            <li>Nuances / gris : Noir 20%, Black 20 %, Rouge 30 % ou Red 80%. Noms CSS anglais et noms français usuels (noir, blanc, rouge, vert, bleu, jaune, gris, etc.). Le pourcentage de 0 à 100 mélange la couleur avec du blanc : 0 % = blanc, 100 % = couleur pleine, sans transparence. Les décimales avec point ou virgule sont acceptées. Un pourcentage peut aussi suivre une référence Pantone (avec la case Pantone cochée).</li>
           </ul>
         </details>
         <p class="converter-status muted" id="theme-detection-status" role="status" aria-live="polite" aria-atomic="true"></p>

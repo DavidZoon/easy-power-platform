@@ -27,6 +27,7 @@ Rôle : rédacteur humain expérimenté et expert de la Power Platform, qui part
 - [ ] Listes à puces limitées, prose privilégiée pour les raisonnements.
 - [ ] Aucune formulation générique de la liste à éviter (« Il est important de noter », « Il est essentiel de »…).
 - [ ] Aucun titre en « Le piège de… ».
+- [ ] Aucun tiret cadratin (« — ») ni demi-cadratin (« – ») : utiliser un tiret simple (« - ») à la place.
 - [ ] Propriétés et fonctions : nom français suivi du nom technique en gras entre parenthèses.
 - [ ] Chaque bloc de code est suivi d'une explication en italique.
 - [ ] Power Fx en séparateurs français (`;` et `;;`).

@@ -1432,3 +1432,7 @@ l’ancien blog avant d’avoir validé cette bascule.
 Pour un domaine personnalisé, le configurer dans Settings → Pages, ajuster
 `url`/`baseurl`, les DNS et HTTPS selon la documentation GitHub. Aucune valeur
 `CNAME` fictive n’est livrée.
+
+## 13. Licence et droits d’auteur
+
+*Code sous licence MIT, textes des articles et mascottes © David Zoonekyndt — Tous droits réservés* (voir [LICENSE](LICENSE)).

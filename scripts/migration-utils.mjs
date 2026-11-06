@@ -1,5 +1,15 @@
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+
+export async function readOptionalDirectory(directory) {
+  try {
+    return await fs.readdir(directory);
+  } catch (error) {
+    if (error.code === 'ENOENT') return [];
+    throw error;
+  }
+}
 
 export function slugify(value) {
   return value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '')

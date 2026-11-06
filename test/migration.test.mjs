@@ -1,7 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import { categoryHierarchy, escapeLiquid, inferLanguage, mediaKey, safePath, taxonomySlug } from '../scripts/migration-utils.mjs';
+import { categoryHierarchy, escapeLiquid, inferLanguage, mediaKey, readOptionalDirectory, safePath, taxonomySlug } from '../scripts/migration-utils.mjs';
+
+test('optional directories ignore absence but propagate other errors', async () => {
+  const missing = new URL('../_no-such-optional-directory/', import.meta.url);
+  const file = new URL('../package.json', import.meta.url);
+  const tests = new URL('.', import.meta.url);
+  assert.deepEqual(await readOptionalDirectory(missing), []);
+  await assert.rejects(readOptionalDirectory(file), { code: 'ENOTDIR' });
+  assert((await readOptionalDirectory(tests)).includes('migration.test.mjs'));
+});
 
 test('WordPress URLs, CDN variants and query strings map to original media', () => {
   assert.equal(mediaKey('https://dz13n.wordpress.com/wp-content/uploads/2025/02/textunits.png?w=1024'), '2025/02/textunits.png');

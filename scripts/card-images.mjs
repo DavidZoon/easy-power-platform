@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { parse } from 'yaml';
-import { safePath } from './migration-utils.mjs';
+import { readOptionalDirectory, safePath } from './migration-utils.mjs';
 
 export function createCardImage(input) {
   return sharp(input).rotate().resize({ width: 960, withoutEnlargement: true }).webp({ quality: 88 }).toBuffer();
@@ -12,20 +12,24 @@ export function createCardImage(input) {
 async function regenerate() {
   const root = fileURLToPath(new URL('..', import.meta.url));
   let count = 0;
-  for (const filename of await fs.readdir(path.join(root, '_posts'))) {
-    if (!filename.endsWith('.md')) continue;
-    const markdown = await fs.readFile(path.join(root, '_posts', filename), 'utf8');
-    const frontmatter = parse(markdown.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]+?)\r?\n---/)[1]);
-    if (!frontmatter.card_image) continue;
-    const source = safePath(root, frontmatter.image.replace(/^\//, ''));
-    const target = safePath(root, frontmatter.card_image.replace(/^\//, ''));
-    const bytes = await createCardImage(source);
-    const { width, height } = await sharp(bytes).metadata();
-    await fs.mkdir(path.dirname(target), { recursive: true });
-    await fs.writeFile(target, bytes);
-    console.log(`${frontmatter.wordpress_id || filename}: ${width}x${height}`);
-    if (width < 640) console.warn(`Source de faible resolution : ${frontmatter.image} (${width}px, aucun agrandissement artificiel).`);
-    count++;
+  for (const dir of ['_posts', '_drafts']) {
+    const dirPath = path.join(root, dir);
+    const entries = dir === '_drafts' ? await readOptionalDirectory(dirPath) : await fs.readdir(dirPath);
+    for (const filename of entries) {
+      if (!filename.endsWith('.md')) continue;
+      const markdown = await fs.readFile(path.join(dirPath, filename), 'utf8');
+      const frontmatter = parse(markdown.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]+?)\r?\n---/)[1]);
+      if (!frontmatter.card_image) continue;
+      const source = safePath(root, frontmatter.image.replace(/^\//, ''));
+      const target = safePath(root, frontmatter.card_image.replace(/^\//, ''));
+      const bytes = await createCardImage(source);
+      const { width, height } = await sharp(bytes).metadata();
+      await fs.mkdir(path.dirname(target), { recursive: true });
+      await fs.writeFile(target, bytes);
+      console.log(`${frontmatter.wordpress_id || filename}: ${width}x${height}`);
+      if (width < 640) console.warn(`Source de faible resolution : ${frontmatter.image} (${width}px, aucun agrandissement artificiel).`);
+      count++;
+    }
   }
   console.log(`${count} miniatures regenerees.`);
 }

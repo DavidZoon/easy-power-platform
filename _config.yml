@@ -83,3 +83,5 @@ exclude:
   - .migration
   - .github
   - .bundle
+  - assets/images/Mascots
+  - LICENSE

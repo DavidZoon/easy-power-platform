@@ -6,9 +6,12 @@ image: /assets/media/2026/11/parametres-liste-sharepoint.webp
 card_image: /assets/images/cards/bonnes-pratiques-sharepoint-power-platform.webp
 newsletter_image: /assets/images/newsletter/bonnes-pratiques-sharepoint-power-platform.jpg
 categories:
-  - Listes
   - Canvas Apps
   - Cloud Flows
+  - Listes
+  - Power Apps
+  - Power Automate
+  - SharePoint
 tags:
   - ⭐⭐Débutant
   - 🔶Standard

@@ -7,10 +7,12 @@ card_image: /assets/images/cards/parametres-environnement.webp
 newsletter_image: /assets/images/newsletter/parametres-environnement.jpg
 categories:
   - Canvas Apps
-  - Listes
-  - Power Automate
   - Cloud Flows
   - Dataverse
+  - Listes
+  - Power Apps
+  - Power Automate
+  - SharePoint
 tags:
   - ⭐⭐⭐Intermédiaire
   - 🔶Standard

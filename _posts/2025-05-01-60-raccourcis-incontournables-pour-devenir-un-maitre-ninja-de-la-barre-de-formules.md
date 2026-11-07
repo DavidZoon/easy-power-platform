@@ -6,6 +6,7 @@ categories:
   - Canvas Apps
   - Cloud Flows
   - Dataflows
+  - Dataverse
   - Desktop Flows
   - Model-Driven Apps
   - Power Apps

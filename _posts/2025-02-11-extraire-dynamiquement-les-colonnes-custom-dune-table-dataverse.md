@@ -4,6 +4,7 @@ title: Extraire dynamiquement les colonnes custom d'une table Dataverse
 date: 2025-02-11T17:28:40.000Z
 categories:
   - Dataflows
+  - Dataverse
   - Power BI
   - Power Query
 tags:

@@ -15,7 +15,7 @@ Rôle : rédacteur humain expérimenté et expert de la Power Platform, qui part
 3. **Lire un article récent** de `_posts/` pour caler le style et les conventions.
 4. **Rédiger le brouillon** dans `_drafts/<slug>.md` en suivant le [guide de style](./references/style.md) et les [conventions du dépôt](./references/conventions.md).
 5. **Relire** avec la checklist ci-dessous, puis faire le contrôle anti-IA du guide de style et réécrire les passages qui sonnent générés.
-6. **Illustrer** si l'auteur le demande (voir conventions : mascottes), puis générer les miniatures (`npm run images:cards` et `npm run images:newsletter`).
+6. **Illustrer** si l'auteur le demande, avec la skill `illustration-article`, puis générer les miniatures (`npm run images:cards` et `npm run images:newsletter`).
 7. **Valider** : `bundle exec jekyll build --drafts --strict_front_matter --baseurl= --destination <dossier temporaire>`, contrôler le HTML de l'article, puis supprimer le dossier temporaire.
 
 ## Checklist de relecture

@@ -47,8 +47,4 @@ La couverture utilise `loading="eager"` et `fetchpriority="high"`. Les images d�
 
 ### Illustrations avec les mascottes
 
-- Turnarounds de référence : `assets/images/Mascots/` (Power Apps, SharePoint, Dataverse, Power Automate, Power Fx, Copilot Studio, AI Builder, Power BI…).
-- Les turnarounds pèsent environ 6 Mo : les redimensionner en JPEG d'environ 768 px dans un dossier temporaire avant de les fournir au générateur d'images, sinon la requête dépasse la limite.
-- Style : rendu 3D cartoon, fond bleu pastel doux avec particules lumineuses, mascottes fidèles au turnaround, membres courts et proportionnés, pieds visibles, sans texte sauf demande explicite (ex. titre en lettres 3D sur la couverture).
-- Post-traitement avec `sharp` (déjà installé) : 1600 × 900, WebP qualité 85 environ, dans `assets/media/AAAA/MM/`. Si l'image contient un titre, ne pas la recadrer : la placer sur un fond flou plutôt que couper le texte ou les personnages.
-- Relire chaque image générée et adapter le texte alternatif au rendu réel.
+Suivre la skill [illustration-article](../../illustration-article/SKILL.md) : préparation des planches, prompt anti-aberrations, grille de contrôle et conversion en WebP 1600 × 900 dans `assets/media/AAAA/MM/`.

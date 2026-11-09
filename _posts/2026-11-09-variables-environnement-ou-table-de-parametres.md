@@ -1,5 +1,6 @@
 ---
 title: "La table de paramètres : une alternative complémentaire aux variables d’environnement"
+date: 2026-11-09T00:00:00+01:00
 author: David Zoonekyndt
 description: "Variables d'environnement, liste SharePoint ou table Dataverse : licences, sécurité et ALM pour bien gérer les paramètres de vos applications et de vos flux."
 image: /assets/media/2026/11/parametres-couverture.webp
@@ -149,6 +150,8 @@ fParam.MessageMaintenance
 ```
 
 _Explication : à l'ouverture, l'application redirige vers l'écran de maintenance tant que l'interrupteur est actif, et affiche le message saisi dans la liste._
+
+La propriété **StartScreen** n'est évaluée qu'au chargement de l'application. Activer le mode maintenance ne redirige donc pas les utilisateurs qui ont déjà l'application ouverte. Si ceux-ci doivent aussi être bloqués, prévoyez un contrôle supplémentaire pendant leur session. [La documentation de l'objet App](https://learn.microsoft.com/fr-fr/power-platform/power-fx/reference/object-app?wt.mc_id=MVP_339053) détaille le comportement de **StartScreen**.
 
 Le message se contextualise à chaque intervention : nature de l'opération, heure de reprise prévue, contact en cas d'urgence. Et si la maintenance déborde, on modifie l'heure dans la liste, à chaud, sans toucher à l'application. Sans ce fonctionnement, j'aurais certainement dû jongler avec des couches (_layers_) non gérées en production pour arriver au même résultat. Pas le genre de manipulation qu'on a envie de faire un soir de mise en production.
 

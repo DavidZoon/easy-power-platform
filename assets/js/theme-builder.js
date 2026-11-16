@@ -1,6 +1,8 @@
 import { hslToHex, hexToRgb, contrastRatio, contrastLevel } from './color-harmonizer.js';
 import { htmlColors, ralClassic } from './theme-color-references.js';
 import { pantoneColors } from './theme-pantone-references.js';
+import { powerFxIdentifier } from './powerfx-identifier.js';
+export { powerFxIdentifier } from './powerfx-identifier.js';
 
 export const colorFormats = ['powerfx', 'hex', 'rgb', 'hsl', 'cmyk', 'html', 'ral', 'pantone', 'tint'];
 const own = (object, key) => Object.hasOwn(object, key);
@@ -231,11 +233,6 @@ export function themeRgba(hex, locale = 'fr') {
   if (!['fr', 'en'].includes(locale)) throw new RangeError('Langue Power Fx invalide');
   const values = [...hexToRgb(normalized.slice(0, 7)), themeAlpha(normalized)];
   return `RGBA(${values.map(value => locale === 'fr' ? String(value).replace('.', ',') : String(value)).join(locale === 'fr' ? '; ' : ', ')})`;
-}
-
-export function powerFxIdentifier(name) {
-  return /^[A-Za-z_][A-Za-z_0-9]*$/.test(name) && !/^(?:true|false|blank|as|in|exactin|and|or|not|self|parent|thisrecord|thisitem)$/i.test(name)
-    ? name : "'" + name.replaceAll("'", "''") + "'";
 }
 
 export function readHarmonyPalette(fragment) {

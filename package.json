@@ -20,6 +20,8 @@
     "check:cleaner": "node scripts/check-text-cleaner.mjs",
     "check:theme": "node scripts/check-theme.mjs",
     "check:json": "node scripts/check-json-explorer.mjs",
+    "check:svg": "node scripts/check-svg-library.mjs",
+    "assets:excel": "node scripts/excel-assets.mjs",
     "check:sizing": "node scripts/check-sizing.mjs",
     "check:a11y": "node scripts/check-accessibility.mjs",
     "preview": "node scripts/preview.mjs",
@@ -28,6 +30,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "cheerio": "^1.1.2",
+    "exceljs": "4.4.0",
     "chrome-launcher": "^1.1.2",
     "lighthouse": "^13.5.0",
     "playwright": "^1.56.0",

@@ -40,3 +40,10 @@
   description: Extrayez les couleurs d’un texte, personnalisez votre palette et générez un thème Power Fx FR ou EN pour App.Formulas ou App.OnStart.
   categories: [Canvas Apps, Power Apps]
   tags: [Design, UX /UI, Accessibilité, Power Fx]
+- name: Bibliothécaire SVG
+  created_at: "2026-11-16T16:07:21Z"
+  url: /outils/bibliothecaire-svg/
+  image: /assets/images/tools/bibliothecaire-svg.svg
+  description: Constituez votre bibliothèque de SVG, personnalisez les noms de vos images et exportez une formule nommée Power Fx FR ou EN ou un tableau Excel.
+  categories: [Canvas Apps, Power Apps]
+  tags: [Design, Power Fx, code]

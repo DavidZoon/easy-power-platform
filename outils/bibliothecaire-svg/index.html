@@ -1,0 +1,115 @@
+---
+layout: page
+title: Bibliothécaire SVG
+description: Constituez votre bibliothèque de SVG et générez une formule nommée Power Fx ou un tableau Excel pour vos applications canvas.
+permalink: /outils/bibliothecaire-svg/
+tools: true
+svg_library: true
+---
+<p><a href="{{ '/outils/' | relative_url }}">← Tous les outils</a></p>
+<div class="tool-content">
+  <noscript><p>Activez JavaScript pour utiliser le Bibliothécaire SVG.</p></noscript>
+  <fieldset class="powerfx-converter svg-library" data-svg-library data-clarity-mask="true" disabled>
+    <legend class="sr-only">Bibliothèque d’images SVG</legend>
+    <section aria-labelledby="svg-source-heading">
+      <h2 id="svg-source-heading">1. Ajoutez vos SVG</h2>
+      <fieldset id="svg-sources">
+        <legend class="sr-only">Sources SVG</legend>
+        <fieldset class="svg-options">
+          <legend>Source</legend>
+          <label><input type="radio" name="svg-source-mode" value="files" checked> Fichiers SVG</label>
+          <label><input type="radio" name="svg-source-mode" value="code"> Coller du code SVG</label>
+        </fieldset>
+        <div id="svg-files-panel">
+          <div class="svg-drop-zone" id="svg-drop-zone">
+            <label for="svg-files">Déposez vos fichiers SVG ici ou sélectionnez-les</label>
+            <input id="svg-files" type="file" accept=".svg,image/svg+xml" multiple aria-describedby="svg-files-help">
+            <p class="muted" id="svg-files-help">Sélection multiple possible. Les fichiers attendent votre clic sur « Ajouter à la bibliothèque ».</p>
+          </div>
+          <ul id="svg-pending" aria-label="Fichiers en attente"></ul>
+          <button type="button" class="button secondary" id="svg-clear-files" disabled>Vider la sélection</button>
+        </div>
+        <div id="svg-code-panel" hidden>
+          <label for="svg-source">Code d’une image SVG</label>
+          <textarea id="svg-source" rows="7" spellcheck="false" placeholder="&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'&gt;…&lt;/svg&gt;"></textarea>
+        </div>
+        <button type="button" class="button" id="svg-add">Ajouter à la bibliothèque</button>
+      </fieldset>
+      <p class="converter-status muted" id="svg-import-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <ul id="svg-import-errors" class="svg-errors" aria-label="Sources refusées" hidden></ul>
+      <details>
+        <summary>SVG acceptés et confidentialité</summary>
+        <p>Le traitement reste dans votre navigateur, sans envoi de vos SVG. Les aperçus sont des images isolées : le code n’est jamais injecté dans la page. Utilisez des SVG autonomes : scripts, événements, animations, HTML intégré, DTD et ressources externes sont refusés avec une explication. Les références internes (#id), dégradés, masques et styles internes simples sont acceptés.</p>
+        <p>Le XML est normalisé sans modifier les valeurs : les attributs utilisent des apostrophes, les caractères spéciaux sont échappés et les commentaires XML sont retirés. Power Apps peut ne pas prendre en charge toutes les fonctions SVG visibles dans votre navigateur.</p>
+      </details>
+    </section>
+    <section aria-labelledby="svg-gallery-heading">
+      <h2 id="svg-gallery-heading">2. Organisez votre bibliothèque</h2>
+      <label for="svg-library-name">Nom de la bibliothèque (formule nommée)</label>
+      <input id="svg-library-name" type="text" value="MaBibliotheque" required spellcheck="false" autocomplete="off" aria-describedby="svg-name-error">
+      <p id="svg-name-error" class="svg-error" hidden></p>
+      <div class="svg-toolbar">
+        <div class="svg-options" role="group" aria-label="Taille des vignettes">
+          <span>Taille des vignettes</span>
+          <button type="button" class="button secondary" data-svg-size="small" aria-pressed="false">Petite</button>
+          <button type="button" class="button secondary" data-svg-size="medium" aria-pressed="true">Moyenne</button>
+          <button type="button" class="button secondary" data-svg-size="large" aria-pressed="false">Grande</button>
+        </div>
+        <label for="svg-copy-mode">Contenu copié par vignette
+          <select id="svg-copy-mode">
+            <option value="raw">Code SVG brut</option>
+            <option value="image">Expression Power Fx pour Image</option>
+          </select>
+        </label>
+      </div>
+      <p id="svg-empty" class="muted">Ajoutez des SVG pour commencer. Chaque ajout complète la bibliothèque sans remplacer les images présentes.</p>
+      <ul id="svg-gallery" class="svg-gallery" data-size="medium" aria-label="Images de la bibliothèque"></ul>
+      <p id="svg-gallery-status" class="converter-status muted" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div id="svg-manual-panel" hidden>
+        <label for="svg-manual">Copie manuelle du contenu de la vignette</label>
+        <textarea id="svg-manual" readonly rows="4" spellcheck="false"></textarea>
+      </div>
+    </section>
+    <section aria-labelledby="svg-output-heading">
+      <div class="converter-heading">
+        <h2 id="svg-output-heading">3. Récupérez votre bibliothèque</h2>
+        <button type="button" class="button secondary" id="svg-copy-library" disabled>Copier la formule</button>
+      </div>
+      <fieldset class="svg-options">
+        <legend>Syntaxe Power Fx</legend>
+        <label><input type="radio" name="svg-locale" value="fr" checked> Power Fx FR</label>
+        <label><input type="radio" name="svg-locale" value="en"> Power Fx EN</label>
+      </fieldset>
+      <p>Collez cette formule dans <strong>App.Formulas</strong>. Chaque champ contient le <strong>SVG brut</strong>, pas une URI d’image.</p>
+      <label class="sr-only" for="svg-output">Formule nommée Power Fx</label>
+      <textarea id="svg-output" readonly rows="10" spellcheck="false" aria-describedby="svg-output-status"></textarea>
+      <p id="svg-output-status" class="converter-status muted" role="status" aria-live="polite" aria-atomic="true"></p>
+      <label for="svg-image-example">Exemple à utiliser dans la propriété Image d’un contrôle</label>
+      <textarea id="svg-image-example" readonly rows="3" spellcheck="false"></textarea>
+      <div class="converter-heading">
+        <h3>Fichier Excel statique</h3>
+        <button type="button" class="button secondary" id="svg-export" disabled>Télécharger Excel (.xlsx)</button>
+      </div>
+      <p>Le classeur contient un vrai tableau : une colonne par image (son nom en en-tête) et une ligne de SVG bruts. Importez ce tableau comme données statiques dans Power Apps si cette option est disponible dans votre Studio, puis utilisez <code>"data:image/svg+xml;utf8," &amp; EncodeUrl(First(NomDuTableau).Image1)</code> dans la propriété Image.</p>
+      <p class="muted">Limites Excel : 32 767 caractères par cellule et 16 384 colonnes. Aucun SVG n’est tronqué ; si une limite est dépassée, la formule Power Fx reste disponible.</p>
+      <p id="svg-excel-status" class="converter-status muted" role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
+    <p class="svg-warning"><strong>Bibliothèque temporaire :</strong> vos images ne sont pas sauvegardées dans le navigateur. Copiez la formule ou téléchargez le fichier Excel avant de recharger ou fermer cette page.</p>
+  </fieldset>
+  <template id="svg-card-template">
+    <li class="svg-card">
+      <label class="svg-card-name"><span class="sr-only">Nom de l’image</span><input type="text" required spellcheck="false" autocomplete="off"></label>
+      <div class="svg-preview">
+        <img alt="" width="192" height="192">
+        <button type="button" class="button secondary svg-card-copy">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 5H5v16h14V5h-4M9 3h6v4H9zM8 11h8M8 15h8"/></svg>
+        </button>
+      </div>
+      <button type="button" class="button secondary svg-card-remove">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
+      </button>
+      <p class="svg-error svg-card-error" hidden></p>
+      <p class="svg-error svg-preview-error" hidden></p>
+    </li>
+  </template>
+</div>

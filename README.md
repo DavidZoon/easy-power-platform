@@ -1222,6 +1222,71 @@ plage sûre ; les identifiants numériques concernés doivent être fournis en c
 Validation : `node --test test/json-explorer.test.mjs`, puis après compilation
 `npm run check:json`, `npm run check:tools` et `npm run check:taxonomies`.
 
+### Bibliothécaire SVG
+
+Le [Bibliothécaire SVG](outils/bibliothecaire-svg/index.html) constitue une
+bibliothèque temporaire en ajoutant des fichiers SVG (sélection multiple ou
+glisser-déposer), ou un SVG collé, puis en cliquant sur **Ajouter à la bibliothèque**.
+Chaque ajout complète les précédents. Les noms viennent des fichiers sans extension
+ou de `Image1`, `Image2`, etc. Les collisions à l’import reçoivent un suffixe ;
+un doublon créé par renommage est signalé et bloque les sorties jusqu’à correction.
+La galerie propose trois tailles, le renommage, la suppression individuelle et une
+copie par icône, au choix en SVG brut ou en expression Power Fx d’image autonome.
+
+La sortie FR/EN est destinée à **App.Formulas** :
+
+```powerfx
+MaBibliotheque = {
+    Image1: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10'></circle></svg>"
+};;
+```
+
+Il s’agit de **chaînes SVG brutes**, pas de data URI. Dans la propriété Image :
+
+```powerfx
+"data:image/svg+xml;utf8," & EncodeUrl(MaBibliotheque.Image1)
+```
+
+Le XML est validé et normalisé avec des attributs entre apostrophes, sans
+remplacement aveugle des guillemets dans les valeurs ou le texte. Les guillemets
+restants sont doublés pour la chaîne Power Fx. Les aperçus passent uniquement
+par des images isolées, jamais par injection de SVG dans la page. Les documents
+malformés, DTD, scripts, événements, animations, HTML intégré et ressources
+externes sont refusés explicitement ; les références internes, dégradés, masques
+et styles internes simples sont acceptés. Les échappements CSS et imports ne sont
+pas pris en charge. Le rendu Power Apps peut différer de celui du navigateur.
+
+**Télécharger Excel (.xlsx)** produit un vrai tableau structuré avec une colonne
+par SVG et exactement une ligne de données, en plus des en-têtes. Chaque cellule
+contient le SVG brut sous forme de texte, jamais une formule Excel. Après import
+du tableau comme données statiques, si disponible dans votre Power Apps Studio,
+utiliser par exemple
+`"data:image/svg+xml;utf8," & EncodeUrl(First(MaBibliotheque).Image1)`.
+Le nom du tableau est adapté aux règles Excel et affiché avant l’export.
+Les limites de 32 767 caractères par cellule, 255 caractères par en-tête et
+16 384 colonnes sont contrôlées sans troncature ni omission. Un export Excel
+impossible n’empêche pas de récupérer la formule Power Fx.
+
+Toutes les images restent en mémoire dans l’onglet, sans sauvegarde locale ni
+transmission. Copier la formule ou exporter avant de fermer ou recharger la page.
+La copie manuelle reste proposée si le presse-papier est indisponible ou refusé.
+Les sources erronées d’un lot sont signalées sans perdre les SVG valides.
+
+Le moteur et l’interface sont séparés dans
+[svg-library.js](assets/js/svg-library.js) et
+[svg-library-ui.js](assets/js/svg-library-ui.js).
+L’export utilise ExcelJS, chargé à la demande depuis sa distribution locale
+[assets/js/third-party/exceljs](assets/js/third-party/exceljs), avec sa licence MIT.
+Pour actualiser cette distribution après changement de la dépendance npm :
+`npm run assets:excel`, puis reconstruire Jekyll. Aucun CDN ni service externe
+n’est utilisé pour générer le classeur.
+
+Validation : `node --test test/svg-library.test.mjs test/theme-builder.test.mjs`,
+puis `bundle exec jekyll build --strict_front_matter`, `npm run check:svg`,
+`npm run check:tools` et `npm run check:site`. La vérification SVG contrôle les
+imports et refus, les copies, le téléchargement réel du tableau, les limites
+Excel, l’isolation des aperçus, l’accessibilité et l’affichage clair/sombre.
+
 ## 9. Microsoft Clarity
 
 Laisser `clarity_id: ""` pour désactiver entièrement le service.

@@ -101,7 +101,7 @@ export function validateSvgLibrary(name, images) {
   if (images.some(image => !image.svg.trim())) throw new RangeError('Chaque image doit contenir du code SVG.');
 }
 
-function powerFxString(value) {
+export function powerFxString(value) {
   return `"${value.replaceAll('"', '""')}"`;
 }
 
@@ -119,4 +119,57 @@ export function generateSvgLibrary(name, images, locale = 'fr') {
 
 export function svgImageReference(name, imageName) {
   return `"data:image/svg+xml;utf8," & EncodeUrl(${powerFxIdentifier(name.trim())}.${powerFxIdentifier(imageName.trim())})`;
+}
+
+export function parseSvgLibrary(source) {
+  let position = 0;
+  const fail = () => { throw new RangeError('Formule non reconnue : collez la formule nommée complète générée par cet outil (FR ou EN).'); };
+  const space = () => { while (/\s/.test(source[position] ?? '') && position < source.length) position++; };
+  function token(value) {
+    space();
+    if (!source.startsWith(value, position)) fail();
+    position += value.length;
+  }
+  function quoted(quote) {
+    token(quote);
+    let value = '';
+    while (position < source.length) {
+      const character = source[position++];
+      if (character !== quote) value += character;
+      else if (source[position] === quote) { value += quote; position++; }
+      else return value;
+    }
+    fail();
+  }
+  function identifier() {
+    space();
+    if (source[position] === "'") return quoted("'");
+    const match = /^[A-Za-z_][A-Za-z0-9_]*/.exec(source.slice(position));
+    if (!match) fail();
+    position += match[0].length;
+    return match[0];
+  }
+  const name = identifier();
+  token('=');
+  token('{');
+  const images = [];
+  let separator;
+  while (true) {
+    const imageName = identifier();
+    token(':');
+    const svg = quoted('"');
+    images.push({ name: imageName, svg });
+    space();
+    if (source[position] === '}') break;
+    const next = source[position];
+    if (![';', ','].includes(next) || (separator && separator !== next)) fail();
+    separator = next;
+    position++;
+  }
+  token('}');
+  space();
+  const end = source.slice(position);
+  if (![';', ';;'].includes(end.trim()) || (separator === ',' && end.trim() !== ';') || (separator === ';' && end.trim() !== ';;')) fail();
+  validateSvgLibrary(name, images);
+  return { name, images };
 }

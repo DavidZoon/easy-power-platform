@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Bibliothécaire SVG
-description: Constituez votre bibliothèque de SVG et générez une formule nommée Power Fx ou un tableau Excel pour vos applications canvas.
+description: Constituez ou rechargez votre bibliothèque SVG et générez une formule Power Fx, un tableau Excel et un écran Canvas YAML.
 permalink: /outils/bibliothecaire-svg/
 tools: true
 svg_library: true
@@ -17,23 +17,26 @@ svg_library: true
         <legend class="sr-only">Sources SVG</legend>
         <fieldset class="svg-options">
           <legend>Source</legend>
-          <label><input type="radio" name="svg-source-mode" value="files" checked> Fichiers SVG</label>
-          <label><input type="radio" name="svg-source-mode" value="code"> Coller du code SVG</label>
+          <label><input type="radio" name="svg-source-mode" value="files" checked> Fichiers SVG ou Excel</label>
+          <label><input type="radio" name="svg-source-mode" value="code"> Coller du code SVG ou Power Fx</label>
         </fieldset>
+        <div class="svg-source-input">
         <div id="svg-files-panel">
           <div class="svg-drop-zone" id="svg-drop-zone">
-            <label for="svg-files">Déposez vos fichiers SVG ici ou sélectionnez-les</label>
-            <input id="svg-files" type="file" accept=".svg,image/svg+xml" multiple aria-describedby="svg-files-help">
-            <p class="muted" id="svg-files-help">Sélection multiple possible. Les fichiers attendent votre clic sur « Ajouter à la bibliothèque ».</p>
+            <label for="svg-files">Déposez vos fichiers SVG ou Excel ici ou sélectionnez-les</label>
+            <input id="svg-files" type="file" accept=".svg,.xlsx,image/svg+xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" multiple aria-describedby="svg-files-help">
+            <p class="muted" id="svg-files-help">Sélection multiple possible. Rechargez aussi un classeur .xlsx exporté par cet outil pour retrouver ses images et le nom de la bibliothèque.</p>
           </div>
           <ul id="svg-pending" aria-label="Fichiers en attente"></ul>
           <button type="button" class="button secondary" id="svg-clear-files" disabled>Vider la sélection</button>
         </div>
         <div id="svg-code-panel" hidden>
-          <label for="svg-source">Code d’une image SVG</label>
+          <label for="svg-source">Code SVG ou formule nommée complète (FR ou EN)</label>
           <textarea id="svg-source" rows="7" spellcheck="false" placeholder="&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'&gt;…&lt;/svg&gt;"></textarea>
+          <p class="muted">Collez une formule App.Formulas exportée par cet outil pour retrouver la bibliothèque et les noms de ses images.</p>
         </div>
         <button type="button" class="button" id="svg-add">Ajouter à la bibliothèque</button>
+        </div>
       </fieldset>
       <p class="converter-status muted" id="svg-import-status" role="status" aria-live="polite" aria-atomic="true"></p>
       <ul id="svg-import-errors" class="svg-errors" aria-label="Sources refusées" hidden></ul>
@@ -41,6 +44,7 @@ svg_library: true
         <summary>SVG acceptés et confidentialité</summary>
         <p>Le traitement reste dans votre navigateur, sans envoi de vos SVG. Les aperçus sont des images isolées : le code n’est jamais injecté dans la page. Utilisez des SVG autonomes : scripts, événements, animations, HTML intégré, DTD et ressources externes sont refusés avec une explication. Les références internes (#id), dégradés, masques et styles internes simples sont acceptés.</p>
         <p>Le XML est normalisé sans modifier les valeurs : les attributs utilisent des apostrophes, les caractères spéciaux sont échappés et les commentaires XML sont retirés. Power Apps peut ne pas prendre en charge toutes les fonctions SVG visibles dans votre navigateur.</p>
+        <p>Les imports sont additifs ; les doublons de noms reçoivent un suffixe. Une bibliothèque importée portant un autre nom est refusée si des images sont déjà présentes : videz les vignettes ou donnez le même nom à la bibliothèque avant l’import. Pour les anciens exports Excel sans métadonnées, le nom du tableau sert de nom de bibliothèque.</p>
       </details>
     </section>
     <section aria-labelledby="svg-gallery-heading">
@@ -93,7 +97,23 @@ svg_library: true
       <p>Le classeur contient un vrai tableau : une colonne par image (son nom en en-tête) et une ligne de SVG bruts. Importez ce tableau comme données statiques dans Power Apps si cette option est disponible dans votre Studio, puis utilisez <code>"data:image/svg+xml;utf8," &amp; EncodeUrl(First(NomDuTableau).Image1)</code> dans la propriété Image.</p>
       <p class="muted">Limites Excel : 32 767 caractères par cellule et 16 384 colonnes. Aucun SVG n’est tronqué ; si une limite est dépassée, la formule Power Fx reste disponible.</p>
       <p id="svg-excel-status" class="converter-status muted" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="converter-heading">
+        <h3>Écran de visualisation Power Apps Canvas (YAML)</h3>
+        <button type="button" class="button secondary" id="svg-copy-screen" disabled>Copier le YAML</button>
+      </div>
+      <p>Définissez d’abord la bibliothèque dans <strong>App.Formulas</strong>, puis importez cet écran dans Studio. Sa galerie affiche les SVG et propose quatre copies : SVG brut, nom de variable, formule Image et valeur d’image encodée (URI complète). Le YAML utilise toujours la syntaxe Power Fx EN invariante. L’import dépend de la version de Studio et des contrôles disponibles.</p>
+      <label class="sr-only" for="svg-screen">Écran Canvas YAML</label>
+      <textarea id="svg-screen" readonly rows="12" spellcheck="false" aria-describedby="svg-screen-status"></textarea>
+      <p id="svg-screen-status" class="converter-status muted" role="status" aria-live="polite" aria-atomic="true"></p>
     </section>
+    <dialog id="svg-delete-dialog" aria-labelledby="svg-delete-title" aria-describedby="svg-delete-message">
+      <h2 id="svg-delete-title">Supprimer cette image ?</h2>
+      <p id="svg-delete-message"></p>
+      <div class="svg-options">
+        <button type="button" class="button secondary" id="svg-delete-cancel" autofocus>Annuler</button>
+        <button type="button" class="button" id="svg-delete-confirm">Supprimer</button>
+      </div>
+    </dialog>
     <p class="svg-warning"><strong>Bibliothèque temporaire :</strong> vos images ne sont pas sauvegardées dans le navigateur. Copiez la formule ou téléchargez le fichier Excel avant de recharger ou fermer cette page.</p>
   </fieldset>
   <template id="svg-card-template">
@@ -104,10 +124,10 @@ svg_library: true
         <button type="button" class="button secondary svg-card-copy">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 5H5v16h14V5h-4M9 3h6v4H9zM8 11h8M8 15h8"/></svg>
         </button>
+        <button type="button" class="button secondary svg-card-remove">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
+        </button>
       </div>
-      <button type="button" class="button secondary svg-card-remove">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
-      </button>
       <p class="svg-error svg-card-error" hidden></p>
       <p class="svg-error svg-preview-error" hidden></p>
     </li>

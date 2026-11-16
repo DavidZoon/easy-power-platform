@@ -1,5 +1,7 @@
 import { validateSvgLibrary } from './svg-library.js';
 
+const excelText = value => value.replace(/_x[0-9a-f]{4}_/gi, token => '_x005F_' + token.slice(1));
+
 export function excelTableName(name) {
   let value = name.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9_]/g, '_');
   if (!/^[A-Za-z_]/.test(value) || /^[A-Za-z]{1,3}\d+$|^R\d*C\d*$|^[RC]$/i.test(value)) value = 'SVG_' + value;
@@ -47,7 +49,6 @@ export async function createSvgWorkbook(name, images, excel) {
   const workbook = new Workbook();
   const sheet = workbook.addWorksheet('Bibliotheque SVG');
   // ExcelJS does not escape literal OOXML character tokens when writing strings.
-  const excelText = value => value.replace(/_x[0-9a-f]{4}_/gi, token => '_x005F_' + token.slice(1));
   sheet.addTable({
     name: excelTableName(name),
     ref: 'A1',
@@ -58,5 +59,41 @@ export async function createSvgWorkbook(name, images, excel) {
     rows: [images.map(image => excelText(image.svg))]
   });
   sheet.columns.forEach(column => { column.width = 32; });
+  const metadata = workbook.addWorksheet('_SVG_Metadata', { state: 'veryHidden' });
+  metadata.addRow(['EasyPowerPlatform.SVG.1', excelText(name.trim())]);
   return workbook.xlsx.writeBuffer();
+}
+
+export async function readSvgWorkbook(buffer, excel) {
+  const { Workbook } = excel ?? await loadExcel();
+  const workbook = new Workbook();
+  try {
+    await workbook.xlsx.load(buffer);
+  } catch (error) {
+    throw new RangeError(`Classeur Excel illisible : ${error.message}`);
+  }
+  const tables = workbook.worksheets.flatMap(sheet => sheet.getTables().map(table => ({ sheet, model: table.table })));
+  if (tables.length !== 1) throw new RangeError('Le classeur doit contenir exactement un tableau de bibliothèque SVG.');
+  const { sheet, model } = tables[0];
+  const [start, end] = model.tableRef.split(':').map(address => sheet.getCell(address));
+  if (!model.headerRow || model.totalsRow || !end || end.row !== start.row + 1) {
+    throw new RangeError('Le tableau SVG doit contenir des en-têtes et une seule ligne de données.');
+  }
+  const text = cell => {
+    if (typeof cell.value !== 'string') throw new RangeError('Les noms et les SVG du tableau doivent être du texte brut, sans formule Excel.');
+    return cell.value;
+  };
+  let name = model.name;
+  const metadata = workbook.getWorksheet('_SVG_Metadata');
+  if (metadata) {
+    if (metadata.getCell('A1').value !== 'EasyPowerPlatform.SVG.1') throw new RangeError('Métadonnées de bibliothèque SVG non reconnues.');
+    name = text(metadata.getCell('B1'));
+    if (excelTableName(name) !== model.name) throw new RangeError('Le nom de bibliothèque ne correspond pas au tableau Excel.');
+  }
+  const images = Array.from({ length: end.col - start.col + 1 }, (_, index) => ({
+    name: text(sheet.getCell(start.row, start.col + index)),
+    svg: text(sheet.getCell(start.row + 1, start.col + index))
+  }));
+  validateSvgLibrary(name, images);
+  return { name, images };
 }

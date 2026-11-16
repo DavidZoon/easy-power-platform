@@ -1,5 +1,6 @@
-import { normalizeSvg, uniqueSvgName, imageNameErrors, generateSvgLibrary, svgImageExpression, svgImageReference } from './svg-library.js';
-import { validateSvgExcel, excelTableName, createSvgWorkbook } from './svg-library-excel.js';
+import { normalizeSvg, uniqueSvgName, imageNameErrors, generateSvgLibrary, svgImageExpression, svgImageReference, parseSvgLibrary } from './svg-library.js';
+import { validateSvgExcel, excelTableName, createSvgWorkbook, readSvgWorkbook } from './svg-library-excel.js';
+import { generateSvgScreen } from './svg-library-screen.js';
 import { createCodeEditor, highlighters } from './code-editor.js';
 
 const tool = document.querySelector('[data-svg-library]');
@@ -26,6 +27,12 @@ if (tool) {
   const manualPanel = find('manual-panel');
   const manual = find('manual');
   const editor = createCodeEditor(output, highlighters.powerfx);
+  const screen = find('screen');
+  const screenStatus = find('screen-status');
+  const copyScreen = find('copy-screen');
+  const screenEditor = createCodeEditor(screen, highlighters.yaml);
+  const deleteDialog = find('delete-dialog');
+  let deleting = null;
   const template = document.querySelector('#svg-card-template');
   const images = [];
   let pending = [];
@@ -64,11 +71,16 @@ if (tool) {
     nameError.hidden = !nameError.textContent;
     name.setAttribute('aria-invalid', String(Boolean(nameError.textContent)));
     output.value = '';
+    screen.value = '';
+    copyScreen.disabled = true;
     example.value = '';
     copyLibrary.disabled = true;
     exportButton.disabled = true;
     try {
       output.value = generateSvgLibrary(name.value, images, locale());
+      screen.value = generateSvgScreen(name.value, images);
+      copyScreen.disabled = false;
+      screenStatus.textContent = `Écran YAML prêt : ${images.length} image(s), quatre boutons de copie par vignette.`;
       example.value = svgImageReference(name.value, images[0].name);
       copyLibrary.disabled = false;
       outputStatus.textContent = `Formule prête pour App.Formulas (${locale().toUpperCase()}) : ${images.length} image(s), SVG bruts.`;
@@ -83,9 +95,11 @@ if (tool) {
     } catch (error) {
       if (!(error instanceof RangeError)) throw error;
       outputStatus.textContent = error.message;
+      screenStatus.textContent = error.message;
       excelStatus.textContent = 'Corrigez la bibliothèque pour exporter le tableau Excel.';
     }
     editor.refresh();
+    screenEditor.refresh();
   }
 
   async function copyText(value, status, target = null) {
@@ -134,17 +148,33 @@ if (tool) {
       copyText(copyMode.value === 'raw' ? image.svg : svgImageExpression(image.svg), galleryStatus);
     });
     image.remove.addEventListener('click', () => {
-      const index = images.indexOf(image);
-      images.splice(index, 1);
-      image.card.remove();
-      manualPanel.hidden = true;
-      galleryStatus.textContent = `Image « ${image.name} » supprimée.`;
-      refresh();
-      (images[index]?.input ?? images[index - 1]?.input ?? name).focus();
+      deleting = image;
+      find('delete-message').textContent = `L’image « ${image.name} » sera retirée de la bibliothèque. Cette action est irréversible.`;
+      deleteDialog.showModal();
     });
     images.push(image);
     gallery.append(fragment);
   }
+
+  find('delete-cancel').addEventListener('click', () => deleteDialog.close());
+  find('delete-confirm').addEventListener('click', () => deleteDialog.close('delete'));
+  deleteDialog.addEventListener('close', () => {
+    const image = deleting;
+    deleting = null;
+    if (!image) return;
+    if (deleteDialog.returnValue !== 'delete') {
+      image.remove.focus();
+      return;
+    }
+    const index = images.indexOf(image);
+    images.splice(index, 1);
+    image.card.remove();
+    manualPanel.hidden = true;
+    galleryStatus.textContent = `Image « ${image.name} » supprimée.`;
+    refresh();
+    (images[index]?.input ?? images[index - 1]?.input ?? name).focus();
+  });
+  deleteDialog.addEventListener('cancel', () => { deleteDialog.returnValue = ''; });
 
   files.addEventListener('change', () => {
     pending.push(...files.files);
@@ -170,7 +200,7 @@ if (tool) {
     if (eventName === 'drop' && !importing) {
       const dropped = [...event.dataTransfer.files];
       if (!dropped.length) {
-        importStatus.textContent = 'Déposez des fichiers SVG, pas un lien ni du texte.';
+        importStatus.textContent = 'Déposez des fichiers SVG ou Excel, pas un lien ni du texte.';
         return;
       }
       pending.push(...dropped);
@@ -182,7 +212,7 @@ if (tool) {
     if (importing) return;
     const mode = sourceMode();
     if (mode === 'files' && !pending.length) {
-      importStatus.textContent = 'Choisissez ou déposez au moins un fichier SVG.';
+      importStatus.textContent = 'Choisissez ou déposez au moins un fichier SVG ou Excel.';
       return;
     }
     importing = true;
@@ -196,11 +226,23 @@ if (tool) {
     try {
       for (const file of batch) {
         try {
-          if (mode === 'files' && !/\.svg$/i.test(file.name)) throw new RangeError('Seuls les fichiers .svg sont acceptés.');
-          const svg = normalizeSvg(await file.text());
-          const proposed = mode === 'files' ? file.name.replace(/\.svg$/i, '') : `Image${++counter}`;
-          addImage(svg, proposed);
-          added++;
+          let library;
+          if (mode === 'files' && /\.xlsx$/i.test(file.name)) {
+            library = await readSvgWorkbook(await file.arrayBuffer());
+          } else {
+            if (mode === 'files' && !/\.svg$/i.test(file.name)) throw new RangeError('Seuls les fichiers .svg et .xlsx sont acceptés.');
+            const text = await file.text();
+            library = mode === 'code' && text.trim() && !text.trimStart().startsWith('<')
+              ? parseSvgLibrary(text)
+              : { images: [{ name: mode === 'files' ? file.name.replace(/\.svg$/i, '') : `Image${++counter}`, svg: text }] };
+          }
+          if (library.name && images.length && library.name.trim() !== name.value.trim()) {
+            throw new RangeError(`Cette source appartient à « ${library.name} », pas à « ${name.value.trim()} ». Videz la bibliothèque ou modifiez son nom avant cet import.`);
+          }
+          const entries = library.images.map(image => ({ name: image.name, svg: normalizeSvg(image.svg) }));
+          if (library.name) name.value = library.name;
+          for (const image of entries) addImage(image.svg, image.name);
+          added += entries.length;
         } catch (error) {
           if (!(error instanceof RangeError || error instanceof DOMException || error instanceof TypeError)) throw error;
           rejected.push(file);
@@ -229,6 +271,7 @@ if (tool) {
     for (const other of tool.querySelectorAll('[data-svg-size]')) other.setAttribute('aria-pressed', String(other === button));
   });
   copyLibrary.addEventListener('click', () => copyText(output.value, outputStatus, output));
+  copyScreen.addEventListener('click', () => copyText(screen.value, screenStatus, screen));
   exportButton.addEventListener('click', async () => {
     if (exporting) return;
     exporting = true;

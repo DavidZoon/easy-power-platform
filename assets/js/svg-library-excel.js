@@ -1,11 +1,21 @@
 import { validateSvgLibrary } from './svg-library.js';
+import { powerFxIdentifier } from './powerfx-identifier.js';
 
 const excelText = value => value.replace(/_x[0-9a-f]{4}_/gi, token => '_x005F_' + token.slice(1));
 
-export function excelTableName(name) {
+export function excelFileName(name) {
   let value = name.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9_]/g, '_');
   if (!/^[A-Za-z_]/.test(value) || /^[A-Za-z]{1,3}\d+$|^R\d*C\d*$|^[RC]$/i.test(value)) value = 'SVG_' + value;
-  return value.slice(0, 255);
+  return value.slice(0, 249);
+}
+
+export function excelTableName(name) {
+  return excelFileName(name) + '_Excel';
+}
+
+export function svgExcelFormula(name, locale = 'fr') {
+  if (!['fr', 'en'].includes(locale)) throw new RangeError('Choisissez une syntaxe FR ou EN.');
+  return `${powerFxIdentifier(name.trim())} = First(${excelTableName(name)})${locale === 'fr' ? ';;' : ';'}`;
 }
 
 export function validateSvgExcel(name, images) {
@@ -83,12 +93,13 @@ export async function readSvgWorkbook(buffer, excel) {
     if (typeof cell.value !== 'string') throw new RangeError('Les noms et les SVG du tableau doivent être du texte brut, sans formule Excel.');
     return cell.value;
   };
-  let name = model.name;
+  let name = model.name.replace(/_Excel$/, '');
   const metadata = workbook.getWorksheet('_SVG_Metadata');
   if (metadata) {
     if (metadata.getCell('A1').value !== 'EasyPowerPlatform.SVG.1') throw new RangeError('Métadonnées de bibliothèque SVG non reconnues.');
     name = text(metadata.getCell('B1'));
-    if (excelTableName(name) !== model.name) throw new RangeError('Le nom de bibliothèque ne correspond pas au tableau Excel.');
+    // Earlier exports named the table without the _Excel suffix.
+    if (![excelTableName(name), excelFileName(name)].includes(model.name)) throw new RangeError('Le nom de bibliothèque ne correspond pas au tableau Excel.');
   }
   const images = Array.from({ length: end.col - start.col + 1 }, (_, index) => ({
     name: text(sheet.getCell(start.row, start.col + index)),

@@ -1,5 +1,5 @@
 import { normalizeSvg, uniqueSvgName, imageNameErrors, generateSvgLibrary, svgImageExpression, svgImageReference, parseSvgLibrary } from './svg-library.js';
-import { validateSvgExcel, excelTableName, createSvgWorkbook, readSvgWorkbook } from './svg-library-excel.js';
+import { validateSvgExcel, excelFileName, excelTableName, svgExcelFormula, createSvgWorkbook, readSvgWorkbook } from './svg-library-excel.js';
 import { generateSvgScreen } from './svg-library-screen.js';
 import { createCodeEditor, highlighters } from './code-editor.js';
 
@@ -24,9 +24,12 @@ if (tool) {
   const example = find('image-example');
   const exportButton = find('export');
   const excelStatus = find('excel-status');
+  const excelFormula = find('excel-formula');
+  const copyExcelFormula = find('copy-excel-formula');
   const manualPanel = find('manual-panel');
   const manual = find('manual');
   const editor = createCodeEditor(output, highlighters.powerfx);
+  const excelFormulaEditor = createCodeEditor(excelFormula, highlighters.powerfx);
   const screen = find('screen');
   const screenStatus = find('screen-status');
   const copyScreen = find('copy-screen');
@@ -74,6 +77,8 @@ if (tool) {
     screen.value = '';
     copyScreen.disabled = true;
     example.value = '';
+    excelFormula.value = '';
+    copyExcelFormula.disabled = true;
     copyLibrary.disabled = true;
     exportButton.disabled = true;
     try {
@@ -86,6 +91,8 @@ if (tool) {
       outputStatus.textContent = `Formule prête pour App.Formulas (${locale().toUpperCase()}) : ${images.length} image(s), SVG bruts.`;
       try {
         validateSvgExcel(name.value, images);
+        excelFormula.value = svgExcelFormula(name.value, locale());
+        copyExcelFormula.disabled = false;
         exportButton.disabled = exporting;
         if (!exporting) excelStatus.textContent = `Tableau Excel : ${excelTableName(name.value)} — ${images.length} colonne(s), une ligne de données.`;
       } catch (error) {
@@ -99,6 +106,7 @@ if (tool) {
       excelStatus.textContent = 'Corrigez la bibliothèque pour exporter le tableau Excel.';
     }
     editor.refresh();
+    excelFormulaEditor.refresh();
     screenEditor.refresh();
   }
 
@@ -272,6 +280,7 @@ if (tool) {
   });
   copyLibrary.addEventListener('click', () => copyText(output.value, outputStatus, output));
   copyScreen.addEventListener('click', () => copyText(screen.value, screenStatus, screen));
+  copyExcelFormula.addEventListener('click', () => copyText(excelFormula.value, excelStatus, excelFormula));
   exportButton.addEventListener('click', async () => {
     if (exporting) return;
     exporting = true;
@@ -285,11 +294,11 @@ if (tool) {
       url = URL.createObjectURL(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${excelTableName(libraryName)}.xlsx`;
+      link.download = `${excelFileName(libraryName)}.xlsx`;
       document.body.append(link);
       link.click();
       link.remove();
-      excelStatus.textContent = `Téléchargement lancé : ${excelTableName(libraryName)}.xlsx, tableau ${excelTableName(libraryName)}, ${snapshot.length} colonne(s) et une ligne de SVG bruts.`;
+      excelStatus.textContent = `Téléchargement lancé : ${excelFileName(libraryName)}.xlsx, tableau ${excelTableName(libraryName)}, ${snapshot.length} colonne(s) et une ligne de SVG bruts.`;
     } catch (error) {
       excelStatus.textContent = `Échec de l’export Excel : ${error.message}`;
     } finally {

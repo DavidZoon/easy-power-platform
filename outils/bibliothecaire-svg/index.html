@@ -94,14 +94,19 @@ svg_library: true
         <h3>Fichier Excel statique</h3>
         <button type="button" class="button secondary" id="svg-export" disabled>Télécharger Excel (.xlsx)</button>
       </div>
-      <p>Le classeur contient un vrai tableau : une colonne par image (son nom en en-tête) et une ligne de SVG bruts. Importez ce tableau comme données statiques dans Power Apps si cette option est disponible dans votre Studio, puis utilisez <code>"data:image/svg+xml;utf8," &amp; EncodeUrl(First(NomDuTableau).Image1)</code> dans la propriété Image.</p>
+      <p>Le classeur contient un vrai tableau nommé <code>NomDeLaBibliotheque_Excel</code> : une colonne par image (son nom en en-tête) et une ligne de SVG bruts. Importez ce tableau comme données statiques dans Power Apps si cette option est disponible dans votre Studio, puis collez la formule ci-dessous dans <strong>App.Formulas</strong>. Elle expose la bibliothèque sous le même nom que la formule Power Fx : l’exemple de propriété Image et l’écran YAML fonctionnent alors sans modification.</p>
+      <div class="converter-heading">
+        <label for="svg-excel-formula">Formule App.Formulas pour la source Excel (syntaxe choisie ci-dessus)</label>
+        <button type="button" class="button secondary" id="svg-copy-excel-formula" disabled>Copier</button>
+      </div>
+      <textarea id="svg-excel-formula" readonly rows="2" spellcheck="false"></textarea>
       <p class="muted">Limites Excel : 32 767 caractères par cellule et 16 384 colonnes. Aucun SVG n’est tronqué ; si une limite est dépassée, la formule Power Fx reste disponible.</p>
       <p id="svg-excel-status" class="converter-status muted" role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="converter-heading">
         <h3>Écran de visualisation Power Apps Canvas (YAML)</h3>
         <button type="button" class="button secondary" id="svg-copy-screen" disabled>Copier le YAML</button>
       </div>
-      <p>Définissez d’abord la bibliothèque dans <strong>App.Formulas</strong>, puis importez cet écran dans Studio. Sa galerie affiche les SVG et propose quatre copies : SVG brut, nom de variable, formule Image et valeur d’image encodée (URI complète). Le YAML utilise toujours la syntaxe Power Fx EN invariante. L’import dépend de la version de Studio et des contrôles disponibles.</p>
+      <p>Définissez d’abord la bibliothèque dans <strong>App.Formulas</strong> (formule Power Fx complète ou formule <code>First(…_Excel)</code> pour la source Excel), puis importez cet écran dans Studio. Sa galerie affiche les SVG et propose quatre copies : SVG brut, nom de variable, formule Image et valeur d’image encodée (URI complète). Le YAML utilise toujours la syntaxe Power Fx EN invariante. L’import dépend de la version de Studio et des contrôles disponibles.</p>
       <label class="sr-only" for="svg-screen">Écran Canvas YAML</label>
       <textarea id="svg-screen" readonly rows="12" spellcheck="false" aria-describedby="svg-screen-status"></textarea>
       <p id="svg-screen-status" class="converter-status muted" role="status" aria-live="polite" aria-atomic="true"></p>

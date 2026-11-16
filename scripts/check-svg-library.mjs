@@ -188,6 +188,8 @@ try {
   const sheet = workbook.getWorksheet(1);
   const downloadedEntries = await entries();
   assert.equal(sheet.getTables().length, 1, 'Tableau structuré attendu dans le fichier téléchargé');
+  assert.equal(sheet.getTables()[0].table.name, 'MaBibliotheque_Excel');
+  assert.equal(await page.locator('#svg-excel-formula').inputValue(), 'MaBibliotheque = First(MaBibliotheque_Excel);');
   assert.equal(sheet.getTables()[0].table.tableRef, `A1:E2`);
   assert.equal(sheet.rowCount, 2);
   assert.deepEqual(sheet.getRow(1).values.slice(1), downloadedEntries.map(image => image.name));
@@ -200,6 +202,7 @@ try {
   assert.match(await excelStatus.textContent(), /32 767/);
   assert((await output.inputValue()).includes('a'.repeat(32768)));
   await cards.last().locator('.svg-card-remove').click();
+  await page.locator('#svg-delete-confirm').click();
   assert(!(await exportButton.isDisabled()));
 
   for (const [size, height] of [['small', 128], ['medium', 192], ['large', 272]]) {
